@@ -5,6 +5,7 @@
 #include <csignal>
 #include <cstdio>
 #include <string>
+#include <string.h>
 
 
 void HandleShutdownSignal();
