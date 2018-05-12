@@ -9,4 +9,18 @@ namespace lp {
     LampPost::~LampPost() {
 
     }
+
+    void LampPost::Start() {
+        mShouldRun = true;
+
+        while(mShouldRun) {
+          // TODO: Implement main runner functionality.
+
+          mShouldRun = false;
+        }
+    }
+
+    void LampPost::Stop() {
+        mShouldRun = false;
+    }
 }
