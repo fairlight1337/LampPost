@@ -1,0 +1,32 @@
+environment:
+ P: "c:/projects/lamppost"
+
+branches:
+ only:
+  - master
+
+os: Visual Studio 2015
+
+clone_folder: '%P%'
+
+platform: x64
+
+configuration: Release
+
+build:
+ project: '%P%\build\lamppost.sln'
+
+before_build:
+ - cd %P%
+ - git submodule update --init --recursive
+ - mkdir build
+ - cd build
+ - cmake -G "Visual Studio 14 2015 Win64" ..
+
+after_build:
+ - cd %P%
+ - 7z a %P%\LampPost.zip .\bin\Release\* .\lib\Release\*
+
+artifacts:
+ - path: LampPost.zip
+   name: LampPost.zip
