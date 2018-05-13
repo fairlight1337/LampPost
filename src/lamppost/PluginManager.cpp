@@ -3,6 +3,8 @@
 
 namespace lp {
 	PluginManager::PluginManager(PluginManagerConfiguration configuration) : mConfiguration(configuration) {
+		mConfiguration.mTemplateSearchPaths.push_back(Filesystem::GetWorkingDirectory());
+		mConfiguration.mTemplateSearchPaths.push_back(Filesystem::GetPathOfRunningExecutable());
 	}
 
 	PluginManager::~PluginManager() {

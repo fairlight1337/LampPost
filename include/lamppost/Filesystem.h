@@ -34,6 +34,9 @@ namespace lp {
 		static bool IsDirectory(std::string path);
 
 		static std::list<std::string> GetDirectoryContents(std::string path, FilesystemObjectType filter);
+
+		static std::string GetPathOfRunningExecutable();
+		static std::string GetWorkingDirectory();
 	};
 }
 

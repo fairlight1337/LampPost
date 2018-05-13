@@ -109,4 +109,50 @@ namespace lp {
 
 		return contents;
 	}
+
+	std::string Filesystem::GetPathOfRunningExecutable() {
+		std::string path;
+		char buffer[1024];
+		int bufferLength = sizeof(buffer);
+
+#if defined(_WIN32) || defined(_WIN64)
+		DWORD bytes = GetModuleFileName(nullptr, buffer, (DWORD)bufferLength);
+
+		if(bytes > 0) {
+			path = buffer;
+		}
+#elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
+		char tmp[32];
+		sprintf(tmp, "/proc/%d/exe", getpid());
+		int bytes = MIN(readlink(szTmp, buffer, bufferLength), len - 1);
+		if(bytes >= 0) {
+    	buffer[bytes] = '\0';
+		}
+
+		path = buffer;
+#endif
+
+		return path;
+	}
+
+	std::string Filesystem::GetWorkingDirectory() {
+		std::string path;
+
+		char buffer[1024];
+		int bufferLength = sizeof(buffer);
+
+#if defined(_WIN32) || defined(_WIN64)
+		DWORD result = GetCurrentDirectory((DWORD)bufferLength, buffer);
+
+		if(result > 0) {
+			path = buffer;
+		}
+#elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
+		if(getcwd(buffer, bufferLength) != NULL) {
+			path = buffer;
+		}
+#endif
+
+		return path;
+	}
 }
