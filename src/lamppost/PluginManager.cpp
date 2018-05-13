@@ -8,8 +8,14 @@ namespace lp {
 
 	std::string PluginManager::sTemplateFileExtension = "dll";
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__)
+	typedef PluginTemplateInfo (*PluginGetInfoFunctionType)();
+	typedef std::shared_ptr<PluginInstance> (*PluginCreateInstanceFunctionType)(PluginConfiguration);
+
 	std::string PluginManager::sTemplateFileExtension = "so";
 #elif defined(__APPLE__)
+	typedef PluginTemplateInfo (CALLBACK* PluginGetInfoFunctionType)();
+	typedef std::shared_ptr<PluginInstance> (CALLBACK* PluginCreateInstanceFunctionType)(PluginConfiguration);
+
 	std::string PluginManager::sTemplateFileExtension = "dylib";
 #endif
 
@@ -68,10 +74,41 @@ namespace lp {
 				}
 			}
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
-			exists = access(path.c_str(), F_OK) != -1;
-#endif
+			void *libHandle = nullptr;
+			libHandle = dlopen(filePath.c_str());
 
-			// TODO: Implement plugin template loading.
+			if(libHandle != nullptr) {
+				PluginGetInfoFunctionType GetInfo;
+				GetInfo = (PluginGetInfoFunctionType)dlsym(libHandle, "GetInfo");
+
+				if(GetInfo != nullptr) {
+					PluginTemplateInfo info = GetInfo();
+
+					if(!info.mIdentifier.empty()) {
+						PluginCreateInstanceFunctionType CreateInstance;
+						CreateInstance = (PluginCreateInstanceFunctionType)dlsym(libHandle, "CreateInstance");
+
+						if(CreateInstance != nullptr) {
+							PluginTemplateConfiguration configuration(
+								info.mIdentifier,
+								info.mVersion,
+								[CreateInstance](PluginConfiguration configuration) { return CreateInstance(configuration); },
+							  [libHandle]() { dlclose(libHandle); });
+
+							std::shared_ptr<PluginTemplate> pluginTemplate = std::make_shared<PluginTemplate>(configuration);
+
+							mTemplates[info.mIdentifier] = pluginTemplate;
+						} else {
+							dlclose(libHandle);
+						}
+					} else {
+						dlclose(libHandle);
+					}
+				} else {
+					dlclose(libHandle);
+				}
+			}
+#endif
 		}
 
 		return false;

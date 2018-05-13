@@ -7,6 +7,10 @@
 #include <map>
 #include <iostream>
 
+#if defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
+#include <dlfcn.h>
+#endif
+
 #include <lamppost/PluginTemplate.h>
 #include <lamppost/PluginInstance.h>
 #include <lamppost/Filesystem.h>
