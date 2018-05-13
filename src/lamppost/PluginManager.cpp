@@ -13,8 +13,8 @@ namespace lp {
 
 	std::string PluginManager::sTemplateFileExtension = "so";
 #elif defined(__APPLE__)
-	typedef PluginTemplateInfo (CALLBACK* PluginGetInfoFunctionType)();
-	typedef std::shared_ptr<PluginInstance> (CALLBACK* PluginCreateInstanceFunctionType)(PluginConfiguration);
+	typedef PluginTemplateInfo (*PluginGetInfoFunctionType)();
+	typedef std::shared_ptr<PluginInstance> (*PluginCreateInstanceFunctionType)(PluginConfiguration);
 
 	std::string PluginManager::sTemplateFileExtension = "dylib";
 #endif
