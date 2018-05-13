@@ -124,7 +124,7 @@ namespace lp {
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
 		char tmp[32];
 		sprintf(tmp, "/proc/%d/exe", getpid());
-		int bytes = std::min(readlink(tmp, buffer, bufferLength), bufferLength - 1);
+		int bytes = std::min((int)readlink(tmp, buffer, bufferLength), bufferLength - 1);
 		if(bytes >= 0) {
     	buffer[bytes] = '\0';
 		}
