@@ -2,7 +2,7 @@
 
 
 namespace lp {
-	PluginInstance::PluginInstance(std::string identifier) : Identifiable(identifier) {
+	PluginInstance::PluginInstance(PluginConfiguration configuration) : Identifiable(configuration.mIdentifier), mConfiguration(configuration) {
 	}
 
 	PluginInstance::~PluginInstance() {

@@ -3,6 +3,9 @@
 
 namespace lp {
 #if defined(_WIN32) || defined(_WIN64)
+	typedef PluginTemplateInfo (CALLBACK* PluginGetInfoFunctionType)();
+	typedef std::shared_ptr<PluginInstance> (CALLBACK* PluginCreateInstanceFunctionType)(PluginConfiguration);
+
 	std::string PluginManager::sTemplateFileExtension = "dll";
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__)
 	std::string PluginManager::sTemplateFileExtension = "so";
@@ -28,6 +31,45 @@ namespace lp {
 	bool PluginManager::LoadTemplate(std::string filePath) {
 		if(Filesystem::PathExists(filePath) && Filesystem::GetFileExtension(filePath) == sTemplateFileExtension) {
 			std::cout << "Loading: " << filePath << std::endl;
+
+#if defined(_WIN32) || defined(_WIN64)
+			HINSTANCE dllHandle = nullptr;
+			dllHandle = LoadLibrary(filePath.c_str());
+
+			if(dllHandle != nullptr) {
+				PluginGetInfoFunctionType GetInfo;
+				GetInfo = (PluginGetInfoFunctionType)GetProcAddress(dllHandle, "GetInfo");
+
+				if(GetInfo != nullptr) {
+					PluginTemplateInfo info = GetInfo();
+
+					if(!info.mIdentifier.empty()) {
+						PluginCreateInstanceFunctionType CreateInstance;
+						CreateInstance = (PluginCreateInstanceFunctionType)GetProcAddress(dllHandle, "CreateInstance");
+
+						if(CreateInstance != nullptr) {
+							PluginTemplateConfiguration configuration(
+								info.mIdentifier,
+								info.mVersion,
+								[CreateInstance](PluginConfiguration configuration) { return CreateInstance(configuration); },
+							  [dllHandle]() { FreeLibrary(dllHandle); });
+
+							std::shared_ptr<PluginTemplate> pluginTemplate = std::make_shared<PluginTemplate>(configuration);
+
+							mTemplates[info.mIdentifier] = pluginTemplate;
+						} else {
+							FreeLibrary(dllHandle);
+						}
+					} else {
+						FreeLibrary(dllHandle);
+					}
+				} else {
+					FreeLibrary(dllHandle);
+				}
+			}
+#elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
+			exists = access(path.c_str(), F_OK) != -1;
+#endif
 
 			// TODO: Implement plugin template loading.
 		}

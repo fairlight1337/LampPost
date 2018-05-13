@@ -5,12 +5,16 @@
 #include <string>
 
 #include <lamppost/Identifiable.h>
+#include <lamppost/PluginConfiguration.h>
 
 
 namespace lp {
 	class PluginInstance : public Identifiable {
+	private:
+		PluginConfiguration mConfiguration;
+
 	public:
-		PluginInstance(std::string identifier);
+		PluginInstance(PluginConfiguration configuration);
 		~PluginInstance();
 	};
 }

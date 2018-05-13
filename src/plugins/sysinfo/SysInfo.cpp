@@ -3,7 +3,7 @@
 
 namespace lp {
 	namespace plugins {
-		SysInfo::SysInfo() {
+		SysInfo::SysInfo(PluginConfiguration configuration) : PluginInstance(configuration) {
 			std::cout << "!" << std::endl;
 		}
 

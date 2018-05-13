@@ -9,18 +9,24 @@
 #include <lamppost/PluginManagerConfiguration.h>
 #include <lamppost/PluginInstance.h>
 #include <lamppost/Identifiable.h>
+#include <lamppost/PluginTemplateInfo.h>
+#include <lamppost/PluginTemplateConfiguration.h>
 
 
 namespace lp {
 	class PluginTemplate : public Identifiable {
 	private:
+		PluginTemplateConfiguration mConfiguration;
 		std::map<std::string, std::shared_ptr<PluginInstance>> mInstances;
 
 	public:
-		PluginTemplate(std::string identifier);
+		PluginTemplate(PluginTemplateConfiguration configuration);
 		~PluginTemplate();
 
-		PluginInstance Instantiate();
+		std::shared_ptr<PluginInstance> Instantiate(PluginConfiguration configuration);
+
+		bool IsValid();
+		std::string GetType();
 	};
 }
 
