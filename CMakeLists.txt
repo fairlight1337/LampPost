@@ -43,6 +43,11 @@ if(WIN32 OR WIN64)
         shlwapi.lib)
 endif(WIN32 OR WIN64)
 
+if(UNIX OR APPLE)
+    target_link_libraries(${PROJECT_NAME}
+        dl)
+endif(UNIX OR APPLE)
+
 add_executable(${PROJECT_NAME}-bin
     src/main.cpp)
 
