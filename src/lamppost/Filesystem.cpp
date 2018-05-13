@@ -59,4 +59,54 @@ namespace lp {
 
 		return exists;
 	}
+
+	std::list<std::string> Filesystem::GetDirectoryContents(std::string path, lp::FilesystemObjectType filter) {
+		std::list<std::string> contents;
+
+#if defined(_WIN32) || defined(_WIN64)
+		HANDLE hFind;
+		WIN32_FIND_DATA FindData;
+
+		hFind = FindFirstFile((path + "\\*").c_str(), &FindData);
+
+		if(FindData.cFileName != nullptr && FindData.cFileName[0] != 0) {
+			do {
+				std::string name = FindData.cFileName;
+				std::string fullPath = path + "\\" + name;
+
+				if(static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::File) && IsFile(fullPath)) {
+					contents.push_back(name);
+				}
+
+				if(static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::Directory) && IsDirectory(fullPath)) {
+					contents.push_back(name);
+				}
+			} while (FindNextFile(hFind, &FindData));
+		}
+#elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
+		DIR* d;
+		struct dirent* dir;
+
+		d = opendir(path.c_str());
+		if(d) {
+			while((dir = readdir(d)) != nullptr
+				) {
+				std::string name = dir->d_name;
+				std::string fullPath = path + "/" + name;
+
+				if(static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::File) && IsFile(fullPath)) {
+					contents.push_back(name);
+				}
+
+				if(static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::Directory) && IsDirectory(fullPath)) {
+					contents.push_back(name);
+				}
+			}
+
+			closedir(d);
+		}
+#endif
+
+		return contents;
+	}
 }

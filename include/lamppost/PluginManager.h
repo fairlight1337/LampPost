@@ -14,13 +14,17 @@
 namespace lp {
 	class PluginManager {
 	private:
+		PluginManagerConfiguration mConfiguration;
 		std::map<std::string, std::shared_ptr<PluginTemplate>> mTemplates;
 
+		bool LoadTemplate(std::string filePath);
+
 	public:
-		PluginManager();
+		PluginManager(PluginManagerConfiguration configuration);
 		~PluginManager();
 
-		bool LoadTemplate(std::string filePath);
+		void LoadTemplates();
+
 		std::shared_ptr<PluginInstance> InstantiateTemplate(std::string templateIdentifier);
 	};
 }

@@ -2,8 +2,9 @@
 
 
 namespace lp {
-    LampPost::LampPost() {
-
+    LampPost::LampPost(LampPostConfiguration configuration)
+      : mConfiguration(configuration),
+        mPluginManager(configuration.mPuginManagerConfiguration) {
     }
 
     LampPost::~LampPost() {

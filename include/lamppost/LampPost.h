@@ -8,16 +8,18 @@
 #include <string>
 
 #include <lamppost/PluginManager.h>
+#include <lamppost/LampPostConfiguration.h>
 
 
 namespace lp {
     class LampPost {
     private:
         std::atomic<bool> mShouldRun;
+        LampPostConfiguration mConfiguration;
         PluginManager mPluginManager;
 
     public:
-        LampPost();
+        LampPost(LampPostConfiguration configuration);
         ~LampPost();
 
         void Start();

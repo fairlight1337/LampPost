@@ -6,11 +6,11 @@
 
 
 // Globals
-lp::LampPost lamppost;
+std::shared_ptr<lp::LampPost> lamppost = nullptr;
 
 
 void HandleShutdownSignal() {
-	lamppost.Stop();
+	lamppost->Stop();
 }
 
 
@@ -20,7 +20,10 @@ int main() {
 	HookSystemSignals();
 
 	std::cout << "Starting LampPost." << std::endl;
-	lamppost.Start();
+	lp::LampPostConfiguration configuration;
+
+	lamppost = std::make_shared<lp::LampPost>(configuration);
+	lamppost->Start();
 
 	std::cout << "Exiting gracefully." << std::endl;
 
