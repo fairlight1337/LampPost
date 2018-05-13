@@ -75,7 +75,7 @@ namespace lp {
 			}
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
 			void *libHandle = nullptr;
-			libHandle = dlopen(filePath.c_str());
+			libHandle = dlopen(filePath.c_str(), RTLD_NOW);
 
 			if(libHandle != nullptr) {
 				PluginGetInfoFunctionType GetInfo;
