@@ -14,7 +14,7 @@ namespace lp {
 #if defined(_WIN32) || defined(_WIN64)
 		DWORD ftyp = GetFileAttributesA(path.c_str());
 
-		if (ftyp & FILE_ATTRIBUTE_DIRECTORY && !(ftyp & INVALID_FILE_ATTRIBUTES)) {
+		if (ftyp & FILE_ATTRIBUTE_DIRECTORY) {
 			isDirectory = true;
 		}
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
@@ -34,7 +34,7 @@ namespace lp {
 #if defined(_WIN32) || defined(_WIN64)
 		DWORD ftyp = GetFileAttributesA(path.c_str());
 
-		if (ftyp & FILE_ATTRIBUTE_NORMAL && !(ftyp & INVALID_FILE_ATTRIBUTES)) {
+		if (!(ftyp & FILE_ATTRIBUTE_DIRECTORY)) {
 			isFile = true;
 		}
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
@@ -67,19 +67,21 @@ namespace lp {
 		HANDLE hFind;
 		WIN32_FIND_DATA FindData;
 
-		hFind = FindFirstFile((path + "\\*").c_str(), &FindData);
-
+		hFind = FindFirstFile(Filesystem::CombinePaths(path, "*").c_str(), &FindData);
 		if(FindData.cFileName != nullptr && FindData.cFileName[0] != 0) {
 			do {
 				std::string name = FindData.cFileName;
-				std::string fullPath = path + "\\" + name;
 
-				if(static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::File) && IsFile(fullPath)) {
-					contents.push_back(name);
-				}
+				if(name != "." && name != "..") {
+					std::string fullPath = CombinePaths(path, name);
 
-				if(static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::Directory) && IsDirectory(fullPath)) {
-					contents.push_back(name);
+					if(static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::File) && IsFile(fullPath)) {
+						contents.push_back(name);
+					}
+
+					if(static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::Directory) && IsDirectory(fullPath)) {
+						contents.push_back(name);
+					}
 				}
 			} while (FindNextFile(hFind, &FindData));
 		}
@@ -92,7 +94,7 @@ namespace lp {
 			while((dir = readdir(d)) != nullptr
 				) {
 				std::string name = dir->d_name;
-				std::string fullPath = path + "/" + name;
+				std::string fullPath = CombinePaths(path, name);
 
 				if(static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::File) && IsFile(fullPath)) {
 					contents.push_back(name);
@@ -154,5 +156,66 @@ namespace lp {
 #endif
 
 		return path;
+	}
+
+	std::string Filesystem::CombinePaths(std::string root, std::string relative) {
+		std::string combined = root;
+
+#if defined(_WIN32) || defined(_WIN64)
+		combined += "\\";
+#elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
+		combined += "/";
+#endif
+
+		combined += relative;
+
+		return combined;
+	}
+
+	std::string Filesystem::GetFilename(std::string path) {
+		std::string filename;
+
+#if defined(_WIN32) || defined(_WIN64)
+		size_t pos = path.find_last_of('\\');
+#elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
+		size_t pos = path.find_last_of('/');
+#endif
+
+		if(pos != std::string::npos && path.size() > pos + 1) {
+			filename = path.substr(pos + 1);
+		}
+
+		return filename;
+	}
+
+	std::string Filesystem::GetBaseDirectory(std::string path) {
+		std::string directory;
+
+#if defined(_WIN32) || defined(_WIN64)
+		size_t pos = path.find_last_of('\\');
+#elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
+		size_t pos = path.find_last_of('/');
+#endif
+
+		if(pos != std::string::npos) {
+			directory = path.substr(0, pos);
+		}
+
+		return directory;
+	}
+
+	std::string Filesystem::GetFileExtension(std::string path) {
+		std::string extension;
+
+		std::string filename = GetFilename(path);
+		if(filename != "") {
+			size_t pos = filename.find_last_of('.');
+
+			if(pos != std::string::npos) {
+				extension = filename.substr(pos + 1);
+			}
+		}
+
+		return extension;
 	}
 }

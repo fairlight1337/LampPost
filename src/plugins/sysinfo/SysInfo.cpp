@@ -1,5 +1,14 @@
-//
-// Created by janwi on 5/12/2018.
-//
-
 #include "SysInfo.h"
+
+
+namespace lp {
+	namespace plugins {
+		SysInfo::SysInfo() {
+			std::cout << "!" << std::endl;
+		}
+
+		SysInfo::~SysInfo() {
+
+		}
+	}
+}

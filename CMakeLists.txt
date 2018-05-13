@@ -3,14 +3,16 @@ project(LampPost)
 
 set(CMAKE_CXX_STANDARD 14)
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 include_directories(
     include
 )
 
 set(SRC
-    src/main.cpp
     src/lamppost/LampPost.cpp
-    src/plugins/sysinfo/SysInfo.cpp
     src/lamppost/PluginTemplate.cpp
     src/lamppost/PluginInstance.cpp
     src/lamppost/PluginManager.cpp
@@ -29,10 +31,22 @@ if(APPLE)
     set(SRC "${SRC};src/lamppost/lowlevel/Osx.cpp")
 endif(APPLE)
 
-add_executable(LampPost
+add_library(${PROJECT_NAME}
     ${SRC})
 
 if(WIN32 OR WIN64)
-    target_link_libraries(LampPost
+    target_link_libraries(${PROJECT_NAME}
         shlwapi.lib)
 endif(WIN32 OR WIN64)
+
+add_executable(${PROJECT_NAME}-bin
+    src/main.cpp)
+
+target_link_libraries(${PROJECT_NAME}-bin
+    ${PROJECT_NAME})
+
+add_library(plugin_sysinfo SHARED
+    src/plugins/sysinfo/SysInfo.cpp)
+
+target_link_libraries(plugin_sysinfo
+    ${PROJECT_NAME})

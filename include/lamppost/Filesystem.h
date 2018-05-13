@@ -5,6 +5,7 @@
 #include <string>
 #include <list>
 #include <algorithm>
+#include <iostream>
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
@@ -38,6 +39,12 @@ namespace lp {
 
 		static std::string GetPathOfRunningExecutable();
 		static std::string GetWorkingDirectory();
+
+		static std::string CombinePaths(std::string root, std::string relative);
+
+		static std::string GetFilename(std::string path);
+		static std::string GetBaseDirectory(std::string path);
+		static std::string GetFileExtension(std::string path);
 	};
 }
 

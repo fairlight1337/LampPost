@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <map>
+#include <iostream>
 
 #include <lamppost/PluginTemplate.h>
 #include <lamppost/PluginInstance.h>
@@ -14,6 +15,8 @@
 namespace lp {
 	class PluginManager {
 	private:
+		static std::string sTemplateFileExtension;
+
 		PluginManagerConfiguration mConfiguration;
 		std::map<std::string, std::shared_ptr<PluginTemplate>> mTemplates;
 

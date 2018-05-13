@@ -2,6 +2,9 @@
 #define LAMPPOST_SYSINFO_H
 
 
+#include <iostream>
+
+
 namespace lp {
 	namespace plugins {
 		class SysInfo {

@@ -14,6 +14,8 @@ namespace lp {
     void LampPost::Start() {
         mShouldRun = true;
 
+        mPluginManager.LoadTemplates();
+
         while(mShouldRun) {
           // TODO: Implement main runner functionality.
 
