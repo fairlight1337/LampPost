@@ -25,7 +25,7 @@ namespace lp {
 		PluginTemplate(PluginTemplateConfiguration configuration);
 		~PluginTemplate();
 
-		std::shared_ptr<PluginInstance> Instantiate(PluginConfiguration configuration);
+		std::shared_ptr<PluginInstance> Instantiate(PluginConfiguration configuration, std::shared_ptr<bus::Bus> parentBus);
 
 		bool IsValid();
 		std::string GetType();

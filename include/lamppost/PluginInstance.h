@@ -6,6 +6,7 @@
 
 #include <lamppost/Identifiable.h>
 #include <lamppost/PluginConfiguration.h>
+#include <lamppost/bus/Bus.h>
 
 
 namespace lp {
@@ -16,6 +17,10 @@ namespace lp {
 	public:
 		PluginInstance(PluginConfiguration configuration);
 		~PluginInstance();
+
+		std::shared_ptr<bus::Publisher> GetPublisher(std::string topic);
+
+		virtual void Run() = 0;
 	};
 }
 

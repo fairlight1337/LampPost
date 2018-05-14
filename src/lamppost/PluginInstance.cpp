@@ -7,4 +7,8 @@ namespace lp {
 
 	PluginInstance::~PluginInstance() {
 	}
+
+	std::shared_ptr<bus::Publisher> PluginInstance::GetPublisher(std::string topic) {
+		return mConfiguration.mBus->CreatePublisher(topic);
+	}
 }

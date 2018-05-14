@@ -126,7 +126,7 @@ namespace lp {
 
 	std::shared_ptr<PluginInstance> PluginManager::InstantiateTemplate(std::string templateIdentifier, PluginConfiguration configuration) {
 		if(mTemplates.find(templateIdentifier) != mTemplates.end()) {
-			return mTemplates[templateIdentifier]->Instantiate(configuration);
+			return mTemplates[templateIdentifier]->Instantiate(configuration, mConfiguration.mBus);
 		}
 
 		return nullptr;
