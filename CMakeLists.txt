@@ -29,7 +29,7 @@ set(SRC
     src/lamppost/exceptions/IndexOutOfBoundsException.cpp
     src/lamppost/messages/Data.cpp
     src/lamppost/exceptions/Exception.cpp
-    src/lamppost/exceptions/InvalidOperationException.cpp)
+    src/lamppost/exceptions/InvalidOperationException.cpp include/lamppost/bus/Bus.cpp include/lamppost/bus/Bus.h include/lamppost/exceptions/DuplicateKeyException.cpp include/lamppost/exceptions/DuplicateKeyException.h)
 
 if(WIN32 OR WIN64)
     set(SRC "${SRC};src/lamppost/lowlevel/Windows.cpp")
