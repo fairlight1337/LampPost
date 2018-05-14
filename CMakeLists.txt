@@ -12,8 +12,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 include_directories(
-    include
-)
+    include)
 
 set(SRC
     src/lamppost/LampPost.cpp
@@ -21,7 +20,16 @@ set(SRC
     src/lamppost/PluginInstance.cpp
     src/lamppost/PluginManager.cpp
     src/lamppost/Identifiable.cpp
-    src/lamppost/Filesystem.cpp)
+    src/lamppost/Filesystem.cpp
+    src/lamppost/messages/Message.cpp
+    src/lamppost/messages/Datagram.cpp
+    src/lamppost/messages/DataBase.cpp
+    src/lamppost/exceptions/KeyNotFoundException.cpp
+    src/lamppost/exceptions/ArgumentNullException.cpp
+    src/lamppost/exceptions/IndexOutOfBoundsException.cpp
+    src/lamppost/messages/Data.cpp
+    src/lamppost/exceptions/Exception.cpp
+    src/lamppost/exceptions/InvalidOperationException.cpp)
 
 if(WIN32 OR WIN64)
     set(SRC "${SRC};src/lamppost/lowlevel/Windows.cpp")
