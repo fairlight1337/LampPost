@@ -12,11 +12,16 @@
 namespace lp {
 	namespace plugins {
 		class SysInfo : public PluginInstance {
+		private:
+			std::shared_ptr<bus::Publisher> mSysInfoPublisher;
+
 		public:
 			SysInfo(PluginConfiguration configuration);
 			~SysInfo();
 
+			virtual void Initialize() override;
 			virtual void Run() override;
+			virtual void Deinitialize() override;
 		};
 	}
 }

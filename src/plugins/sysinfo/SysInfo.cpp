@@ -10,13 +10,22 @@ namespace lp {
 		SysInfo::~SysInfo() {
 		}
 
+		void SysInfo::Initialize() {
+			mSysInfoPublisher = GetPublisher("/sysinfo");
+		}
+
 		void SysInfo::Run() {
-			std::shared_ptr<bus::Publisher> publisher = GetPublisher("/sysinfo");
+			while(mShouldRun) {
+				std::shared_ptr<messages::Datagram> datagram = std::make_shared<messages::Datagram>();
+				*datagram = "Hello Bus!";
 
-			std::shared_ptr<messages::Datagram> datagram = std::make_shared<messages::Datagram>();
-			*datagram = "Hello Bus!";
+				mSysInfoPublisher->Publish(datagram);
 
-			publisher->Publish(datagram);
+				Sleep(std::chrono::seconds(2));
+			}
+		}
+
+		void SysInfo::Deinitialize() {
 		}
 	}
 }
