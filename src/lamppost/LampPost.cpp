@@ -15,6 +15,7 @@ namespace lp {
         mShouldRun = true;
 
         mPluginManager.LoadTemplates();
+        std::shared_ptr<PluginInstance> instance = mPluginManager.InstantiateTemplate("SysInfo", PluginConfiguration());
 
         while(mShouldRun) {
           // TODO: Implement main runner functionality.

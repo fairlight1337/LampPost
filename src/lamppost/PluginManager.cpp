@@ -124,9 +124,9 @@ namespace lp {
 		}
 	}
 
-	std::shared_ptr<PluginInstance> PluginManager::InstantiateTemplate(std::string templateIdentifier) {
+	std::shared_ptr<PluginInstance> PluginManager::InstantiateTemplate(std::string templateIdentifier, PluginConfiguration configuration) {
 		if(mTemplates.find(templateIdentifier) != mTemplates.end()) {
-			// TODO: Implement template instantiation.
+			return mTemplates[templateIdentifier]->Instantiate(configuration);
 		}
 
 		return nullptr;

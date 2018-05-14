@@ -32,7 +32,7 @@ namespace lp {
 
 		void LoadTemplates();
 
-		std::shared_ptr<PluginInstance> InstantiateTemplate(std::string templateIdentifier);
+		std::shared_ptr<PluginInstance> InstantiateTemplate(std::string templateIdentifier, PluginConfiguration configuration);
 	};
 }
 

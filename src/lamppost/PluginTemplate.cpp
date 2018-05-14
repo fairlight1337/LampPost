@@ -11,7 +11,22 @@ namespace lp {
 		mConfiguration.mUnloadPluginFunction();
 	}
 
+	bool PluginTemplate::IndexedInstanceExists(int index) {
+		std::string identifier = mConfiguration.mIdentifier + std::to_string(index);
+
+		return mInstances.find(identifier) != mInstances.end();
+	}
+
 	std::shared_ptr<PluginInstance> PluginTemplate::Instantiate(PluginConfiguration configuration) {
-		return mConfiguration.mInstantiateFunction(configuration);
+		int index = 0;
+
+		while(IndexedInstanceExists(index)) {
+			index++;
+		}
+
+		configuration.mIdentifier = mConfiguration.mIdentifier + std::to_string(index);
+		mInstances[configuration.mIdentifier] = mConfiguration.mInstantiateFunction(configuration);
+
+		return mInstances[configuration.mIdentifier];
 	}
 }

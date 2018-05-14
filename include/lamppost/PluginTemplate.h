@@ -19,6 +19,8 @@ namespace lp {
 		PluginTemplateConfiguration mConfiguration;
 		std::map<std::string, std::shared_ptr<PluginInstance>> mInstances;
 
+		bool IndexedInstanceExists(int i);
+
 	public:
 		PluginTemplate(PluginTemplateConfiguration configuration);
 		~PluginTemplate();
