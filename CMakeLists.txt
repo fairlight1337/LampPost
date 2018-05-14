@@ -22,14 +22,17 @@ set(SRC
     src/lamppost/Identifiable.cpp
     src/lamppost/Filesystem.cpp
     src/lamppost/messages/Message.cpp
-    src/lamppost/messages/Datagram.cpp
     src/lamppost/messages/DataBase.cpp
+    src/lamppost/messages/Datagram.cpp
     src/lamppost/exceptions/KeyNotFoundException.cpp
     src/lamppost/exceptions/ArgumentNullException.cpp
     src/lamppost/exceptions/IndexOutOfBoundsException.cpp
     src/lamppost/messages/Data.cpp
     src/lamppost/exceptions/Exception.cpp
-    src/lamppost/exceptions/InvalidOperationException.cpp include/lamppost/bus/Bus.cpp include/lamppost/bus/Bus.h include/lamppost/exceptions/DuplicateKeyException.cpp include/lamppost/exceptions/DuplicateKeyException.h)
+    src/lamppost/exceptions/InvalidOperationException.cpp
+    src/lamppost/bus/Bus.cpp
+    src/lamppost/exceptions/DuplicateKeyException.cpp
+    src/lamppost/bus/Publisher.cpp)
 
 if(WIN32 OR WIN64)
     set(SRC "${SRC};src/lamppost/lowlevel/Windows.cpp")

@@ -17,8 +17,6 @@ namespace lp {
 			std::shared_ptr<Bus> childBus = std::make_shared<Bus>(name);
 			mChildBusses[name] = childBus;
 
-
-
 			return childBus;
 		}
 
@@ -32,6 +30,20 @@ namespace lp {
 
 		std::string Bus::GetName() {
 			return mName;
+		}
+
+		void Bus::Publish(std::string topic, std::shared_ptr<messages::Datagram> datagram) {
+			// TODO: Implement publishing.
+		}
+
+		std::shared_ptr<Publisher> Bus::CreatePublisher(std::string topic) {
+			std::shared_ptr<Publisher> publisher = std::make_shared<Publisher>(
+				topic,
+			  [this, topic](std::shared_ptr<messages::Datagram> datagram) {
+					this->Publish(topic, datagram);
+				});
+
+			return publisher;
 		}
 	}
 }

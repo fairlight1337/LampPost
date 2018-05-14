@@ -77,7 +77,7 @@ namespace lp {
 				if(data != nullptr) {
 					return data.Get();
 				} else {
-					return T();
+					throw exceptions::InvalidOperationException("Wrong data type.");
 				}
 			}
 		};

@@ -5,7 +5,11 @@
 #include <string>
 #include <memory>
 #include <map>
+#include <functional>
 
+#include <lamppost/messages/Message.h>
+#include <lamppost/messages/Datagram.h>
+#include <lamppost/bus/Publisher.h>
 #include <lamppost/exceptions/DuplicateKeyException.h>
 #include <lamppost/exceptions/KeyNotFoundException.h>
 
@@ -17,6 +21,8 @@ namespace lp {
 			std::string mName;
 			std::map<std::string, std::shared_ptr<Bus>> mChildBusses;
 
+			void Publish(std::string topic, std::shared_ptr<messages::Datagram> datagram);
+
 		public:
 			Bus(std::string name);
 			~Bus();
@@ -25,6 +31,8 @@ namespace lp {
 			std::shared_ptr<Bus> GetChildBus(std::string name);
 
 			std::string GetName();
+
+			std::shared_ptr<Publisher> CreatePublisher(std::string topic);
 		};
 	}
 }
