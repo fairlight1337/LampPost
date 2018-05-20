@@ -6,6 +6,7 @@
 #include <atomic>
 #include <thread>
 #include <chrono>
+#include <iostream>
 
 #include <lamppost/Identifiable.h>
 #include <lamppost/PluginConfiguration.h>
@@ -13,9 +14,45 @@
 
 
 namespace lp {
+#if defined(_WIN32) || defined(_WIN64)
+#define LIBEXPORT __declspec(dllexport)
+#else
+#define LIBEXPORT
+#endif
+
+#if defined(_WIN32) || defined(_WIN64)
+#define CALLINGCONVENTION __stdcall
+#else
+#define CALLINGCONVENTION
+#endif
+
+#define GENERATE_INSTANCE_CREATOR(cls) \
+  LIBEXPORT lp::PluginInstance* CALLINGCONVENTION CreateInstance(lp::PluginConfiguration configuration) { \
+	  return new cls(configuration); \
+	} \
+	\
+	LIBEXPORT void CALLINGCONVENTION DestroyInstance(lp::PluginInstance* instance) { \
+	  delete instance; \
+  }
+
+#define GENERATE_INFO_CREATOR(variablename, body) \
+	LIBEXPORT lp::PluginTemplateInfo* CALLINGCONVENTION CreateInfo() { \
+  	lp::PluginTemplateInfo* variablename = new lp::PluginTemplateInfo(); \
+    \
+	  body \
+    \
+  	return variablename; \
+	} \
+  \
+	LIBEXPORT void CALLINGCONVENTION DestroyInfo(lp::PluginTemplateInfo* info) { \
+		delete info; \
+	}
+
+
 	class PluginInstance : public Identifiable {
 	private:
 		PluginConfiguration mConfiguration;
+		std::thread mWorkerThread;
 
 	protected:
 		std::atomic<bool> mShouldRun;
@@ -30,6 +67,7 @@ namespace lp {
 		~PluginInstance();
 
 		std::shared_ptr<bus::Publisher> GetPublisher(std::string topic);
+		std::shared_ptr<bus::Subscriber> GetSubscriber(std::string topic, std::function<void(std::shared_ptr<messages::Datagram>)> callback);
 
 		virtual void Initialize() = 0;
 		virtual void Run() = 0;

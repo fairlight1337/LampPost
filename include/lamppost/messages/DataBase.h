@@ -7,7 +7,7 @@ namespace lp {
 		class DataBase {
 		public:
 			DataBase();
-			~DataBase();
+			virtual ~DataBase();
 		};
 	}
 }

@@ -5,6 +5,7 @@
 #include <memory>
 #include <string>
 #include <map>
+#include <iostream>
 
 #include <lamppost/PluginManagerConfiguration.h>
 #include <lamppost/PluginInstance.h>

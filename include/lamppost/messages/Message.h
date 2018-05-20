@@ -2,15 +2,26 @@
 #define LAMPPOST_MESSAGE_H
 
 
+#include <string>
+
 #include <lamppost/messages/Datagram.h>
 
 
 namespace lp {
 	namespace messages {
-		class Message : public Datagram {
+		class Message {
+		private:
+			std::string mSender;
+			std::string mTopic;
+			std::shared_ptr<Datagram> mDatagram;
+
 		public:
-			Message();
+			Message(std::string sender, std::string topic, std::shared_ptr<Datagram> datagram);
 			~Message();
+
+			std::string GetSender();
+			std::string GetTopic();
+			std::shared_ptr<Datagram> GetDatagram();
 		};
 	}
 }

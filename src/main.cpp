@@ -23,7 +23,14 @@ int main() {
 	lp::LampPostConfiguration configuration;
 
 	lamppost = std::make_shared<lp::LampPost>(configuration);
-	lamppost->Start();
+
+	try {
+		lamppost->Start();
+	} catch(std::runtime_error exception) {
+		std::cout << exception.what() << std::flush << std::endl;
+
+		throw;
+	}
 
 	std::cout << "Exiting gracefully." << std::endl;
 

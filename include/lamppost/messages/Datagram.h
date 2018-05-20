@@ -72,10 +72,10 @@ namespace lp {
 
 			template<typename T>
 			T Get() {
-				std::shared_ptr<Data<T>> data = std::dynamic_pointer_cast<T>(mValue);
+				std::shared_ptr<Data<T>> data = std::dynamic_pointer_cast<Data<T>>(mValue);
 
 				if(data != nullptr) {
-					return data.Get();
+					return data->Get();
 				} else {
 					throw exceptions::InvalidOperationException("Wrong data type.");
 				}

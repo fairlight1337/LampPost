@@ -4,27 +4,30 @@
 namespace lp {
     LampPost::LampPost(LampPostConfiguration configuration)
       : mConfiguration(configuration),
-        mPluginManager(configuration.mPuginManagerConfiguration) {
+        mPluginManager(configuration.mPuginManagerConfiguration),
+        mRootBus(std::make_shared<bus::Bus>("root")) {
     }
 
     LampPost::~LampPost() {
-
     }
 
     void LampPost::Start() {
-        mShouldRun = true;
+    	mPluginManager.SetBus(mRootBus);
+			PluginConfiguration pluginConfiguration;
 
-        mPluginManager.LoadTemplates();
-        std::shared_ptr<PluginInstance> instance = mPluginManager.InstantiateTemplate("SysInfo", PluginConfiguration());
+			mPluginManager.LoadTemplates();
+			std::shared_ptr<PluginInstance> instance = mPluginManager.InstantiateTemplate("SysInfo", pluginConfiguration);
 
-        while(mShouldRun) {
-          // TODO: Implement main runner functionality.
+			instance->Initialize();
+			instance->Start();
 
-          mShouldRun = false;
-        }
+			mRootBus->Start();
+
+			instance->Stop();
+			instance->Deinitialize();
     }
 
     void LampPost::Stop() {
-        mShouldRun = false;
+        mRootBus->Stop();
     }
 }

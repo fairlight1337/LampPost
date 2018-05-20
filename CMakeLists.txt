@@ -32,7 +32,8 @@ set(SRC
     src/lamppost/exceptions/InvalidOperationException.cpp
     src/lamppost/bus/Bus.cpp
     src/lamppost/exceptions/DuplicateKeyException.cpp
-    src/lamppost/bus/Publisher.cpp)
+    src/lamppost/bus/Publisher.cpp
+    src/lamppost/bus/Subscriber.cpp)
 
 if(WIN32 OR WIN64)
     set(SRC "${SRC};src/lamppost/lowlevel/Windows.cpp")

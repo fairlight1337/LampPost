@@ -14,7 +14,7 @@
 namespace lp {
     class LampPost {
     private:
-        std::atomic<bool> mShouldRun;
+        std::shared_ptr<bus::Bus> mRootBus;
         LampPostConfiguration mConfiguration;
         PluginManager mPluginManager;
 

@@ -14,6 +14,7 @@ namespace lp {
 		class SysInfo : public PluginInstance {
 		private:
 			std::shared_ptr<bus::Publisher> mSysInfoPublisher;
+			std::shared_ptr<bus::Subscriber> mSysInfoSubscriber;
 
 		public:
 			SysInfo(PluginConfiguration configuration);
@@ -26,17 +27,12 @@ namespace lp {
 	}
 }
 
-std::shared_ptr<lp::PluginInstance> CreateInstance(lp::PluginConfiguration configuration) {
-	return std::make_shared<lp::plugins::SysInfo>(configuration);
-}
-
-lp::PluginTemplateInfo GetInfo() {
-	lp::PluginTemplateInfo info;
-
-	info.mIdentifier = "SysInfo";
-	info.mVersion = lp::Version(0, 1, 0, 0);
-
-	return info;
+extern "C" {
+	GENERATE_INSTANCE_CREATOR(lp::plugins::SysInfo);
+	GENERATE_INFO_CREATOR(info,
+    info->mIdentifier = "SysInfo";
+		info->mVersion = lp::Version(0, 1, 0, 0);
+	)
 }
 
 

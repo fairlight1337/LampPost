@@ -3,22 +3,10 @@
 
 namespace lp {
 #if defined(_WIN32) || defined(_WIN64)
-	typedef PluginTemplateInfo (CALLBACK* PluginGetInfoFunctionType)();
-	typedef std::shared_ptr<PluginInstance> (CALLBACK* PluginCreateInstanceFunctionType)(PluginConfiguration);
-
 	std::string PluginManager::sTemplateFileExtension = "dll";
-#elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__)
-	typedef PluginTemplateInfo (*PluginGetInfoFunctionType)();
-	typedef std::shared_ptr<PluginInstance> (*PluginCreateInstanceFunctionType)(PluginConfiguration);
-
+#elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
 	std::string PluginManager::sTemplateFileExtension = "so";
-#elif defined(__APPLE__)
-	typedef PluginTemplateInfo (*PluginGetInfoFunctionType)();
-	typedef std::shared_ptr<PluginInstance> (*PluginCreateInstanceFunctionType)(PluginConfiguration);
-
-	std::string PluginManager::sTemplateFileExtension = "dylib";
 #endif
-
 
 	PluginManager::PluginManager(PluginManagerConfiguration configuration) : mConfiguration(configuration) {
 		std::string executableDirectory = Filesystem::GetBaseDirectory(Filesystem::GetPathOfRunningExecutable());
@@ -34,81 +22,60 @@ namespace lp {
 	PluginManager::~PluginManager() {
 	}
 
+	PluginLibraryHandle PluginManager::OpenPluginLibrary(std::string path) {
+#if defined(_WIN32) || defined(_WIN64)
+		return LoadLibrary(path.c_str());
+#elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
+		return dlopen(path.c_str(), RTLD_NOW);
+#endif
+	}
+
+	void PluginManager::ClosePluginLibrary(lp::PluginLibraryHandle handle) {
+#if defined(_WIN32) || defined(_WIN64)
+		FreeLibrary(handle);
+#elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
+		dlclose(handle);
+#endif
+	}
+
 	bool PluginManager::LoadTemplate(std::string filePath) {
 		if(Filesystem::PathExists(filePath) && Filesystem::GetFileExtension(filePath) == sTemplateFileExtension) {
 			std::cout << "Loading: " << filePath << std::endl;
 
-#if defined(_WIN32) || defined(_WIN64)
-			HINSTANCE dllHandle = nullptr;
-			dllHandle = LoadLibrary(filePath.c_str());
+			PluginLibraryHandle handle = OpenPluginLibrary(filePath);
+			if(handle != nullptr) {
+				PluginCreateInfoFunctionType CreateInfo = GetPluginLibaryFunction<PluginCreateInfoFunctionType>(handle, "_CreateInfo@0");
+				PluginDestroyInfoFunctionType DestroyInfo = GetPluginLibaryFunction<PluginDestroyInfoFunctionType>(handle, "_DestroyInfo@" + std::to_string(sizeof(PluginTemplateInfo*)));
 
-			if(dllHandle != nullptr) {
-				PluginGetInfoFunctionType GetInfo;
-				GetInfo = (PluginGetInfoFunctionType)GetProcAddress(dllHandle, "GetInfo");
+				if(CreateInfo != nullptr && DestroyInfo != nullptr) {
+					std::shared_ptr<PluginTemplateInfo> info = CreateSharedObject<PluginTemplateInfo>(CreateInfo, DestroyInfo);
 
-				if(GetInfo != nullptr) {
-					PluginTemplateInfo info = GetInfo();
+					if(!info->mIdentifier.empty()) {
+						PluginCreateInstanceFunctionType CreateInstance = GetPluginLibaryFunction<PluginCreateInstanceFunctionType>(handle, "_CreateInstance@" + std::to_string(sizeof(PluginConfiguration)));
+						PluginDestroyInstanceFunctionType DestroyInstance = GetPluginLibaryFunction<PluginDestroyInstanceFunctionType>(handle, "_DestroyInstance@" + std::to_string(sizeof(PluginInstance*)));
 
-					if(!info.mIdentifier.empty()) {
-						PluginCreateInstanceFunctionType CreateInstance;
-						CreateInstance = (PluginCreateInstanceFunctionType)GetProcAddress(dllHandle, "CreateInstance");
-
-						if(CreateInstance != nullptr) {
+						if(CreateInstance != nullptr && DestroyInstance != nullptr) {
 							PluginTemplateConfiguration configuration(
-								info.mIdentifier,
-								info.mVersion,
-								[CreateInstance](PluginConfiguration configuration) { return CreateInstance(configuration); },
-							  [dllHandle]() { FreeLibrary(dllHandle); });
+								info->mIdentifier,
+								info->mVersion,
+								[CreateInstance, DestroyInstance](PluginConfiguration configuration) {
+									return CreateSharedObject<PluginInstance>(CreateInstance, DestroyInstance, configuration);
+									},
+							  [handle]() { ClosePluginLibrary(handle); });
 
 							std::shared_ptr<PluginTemplate> pluginTemplate = std::make_shared<PluginTemplate>(configuration);
 
-							mTemplates[info.mIdentifier] = pluginTemplate;
+							mTemplates[info->mIdentifier] = pluginTemplate;
 						} else {
-							FreeLibrary(dllHandle);
+							ClosePluginLibrary(handle);
 						}
 					} else {
-						FreeLibrary(dllHandle);
+						ClosePluginLibrary(handle);
 					}
 				} else {
-					FreeLibrary(dllHandle);
+					ClosePluginLibrary(handle);
 				}
 			}
-#elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
-			void *libHandle = nullptr;
-			libHandle = dlopen(filePath.c_str(), RTLD_NOW);
-
-			if(libHandle != nullptr) {
-				PluginGetInfoFunctionType GetInfo;
-				GetInfo = (PluginGetInfoFunctionType)dlsym(libHandle, "GetInfo");
-
-				if(GetInfo != nullptr) {
-					PluginTemplateInfo info = GetInfo();
-
-					if(!info.mIdentifier.empty()) {
-						PluginCreateInstanceFunctionType CreateInstance;
-						CreateInstance = (PluginCreateInstanceFunctionType)dlsym(libHandle, "CreateInstance");
-
-						if(CreateInstance != nullptr) {
-							PluginTemplateConfiguration configuration(
-								info.mIdentifier,
-								info.mVersion,
-								[CreateInstance](PluginConfiguration configuration) { return CreateInstance(configuration); },
-							  [libHandle]() { dlclose(libHandle); });
-
-							std::shared_ptr<PluginTemplate> pluginTemplate = std::make_shared<PluginTemplate>(configuration);
-
-							mTemplates[info.mIdentifier] = pluginTemplate;
-						} else {
-							dlclose(libHandle);
-						}
-					} else {
-						dlclose(libHandle);
-					}
-				} else {
-					dlclose(libHandle);
-				}
-			}
-#endif
 		}
 
 		return false;
@@ -124,7 +91,15 @@ namespace lp {
 		}
 	}
 
+	void PluginManager::SetBus(std::shared_ptr<bus::Bus> bus) {
+		mConfiguration.mBus = bus;
+	}
+
 	std::shared_ptr<PluginInstance> PluginManager::InstantiateTemplate(std::string templateIdentifier, PluginConfiguration configuration) {
+		if(configuration.mBus == nullptr) {
+			configuration.mBus = mConfiguration.mBus;
+		}
+
 		if(mTemplates.find(templateIdentifier) != mTemplates.end()) {
 			return mTemplates[templateIdentifier]->Instantiate(configuration, mConfiguration.mBus);
 		}
