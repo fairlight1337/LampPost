@@ -5,7 +5,7 @@ namespace lp {
 	namespace bus {
 		Bus::Bus(std::string name) : mName(name) {
 			if(name.empty()) {
-				throw new exceptions::ArgumentNullException("name", "Bus name may not be empty.");
+				throw exceptions::ArgumentNullException("name", "Bus name may not be empty.");
 			}
 
 			mPublishMessageFunction = [this](std::shared_ptr<messages::Message> message) {
@@ -18,11 +18,11 @@ namespace lp {
 
 		Bus::Bus(std::string name, std::function<void(std::shared_ptr<messages::Message>)> publishMessageFunction) : mName(name), mPublishMessageFunction(publishMessageFunction) {
 			if(name.empty()) {
-				throw new exceptions::ArgumentNullException("name", "Bus name may not be empty.");
+				throw exceptions::ArgumentNullException("name", "Bus name may not be empty.");
 			}
 
 			if(publishMessageFunction == nullptr) {
-				throw new exceptions::ArgumentNullException("name", "Bus publishing function may not be null.");
+				throw exceptions::ArgumentNullException("name", "Bus publishing function may not be null.");
 			}
 		}
 
