@@ -101,13 +101,15 @@ include(GoogleTest)
 
 macro(add_lp_test testname)
     add_executable(${testname} test/lamppost/${testname}.cpp)
-    target_link_libraries(${testname} gtest gtest_main ${PROJECT_NAME})
-    add_test(${testname} ${CMAKE_BINARY_DIR}/bin/${testname})
 
     if(COVERAGE AND UNIX AND NOT APPLE)
         target_compile_options(${testname} PRIVATE --coverage)
         target_link_libraries(${testname} PRIVATE --coverage)
+    else()
+        target_link_libraries(${testname} gtest gtest_main ${PROJECT_NAME})
     endif()
+
+    add_test(${testname} ${CMAKE_BINARY_DIR}/bin/${testname})
 endmacro()
 
 add_lp_test(LampPostConfigurationTest)
