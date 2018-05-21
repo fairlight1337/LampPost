@@ -6,7 +6,7 @@ SET(COVERAGE OFF CACHE BOOL "Activate code coverage")
 set(CMAKE_CXX_STANDARD 14)
 
 if(UNIX OR APPLE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -g -O0 --coverage")
 endif(UNIX OR APPLE)
 
 if(WIN32 OR WIN64)
