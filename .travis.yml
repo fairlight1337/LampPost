@@ -1,11 +1,11 @@
 language: cpp
 
 os:
-  - linux
-  - osx
+ - linux
+ - osx
 
 sudo:
-  - false
+ - false
 
 addons:
   apt:
@@ -19,9 +19,15 @@ addons:
       # https://github.com/travis-ci-tester/travis-test-gcc-cxx-11
       - g++-4.8
 
+before_install:
+ - pip install --user cpp-coveralls
+
 script:
-  - mkdir build
-  - cd build
-  - cmake ..
-  - make
-  - make test
+ - mkdir build
+ - cd build
+ - cmake .. -DCOVERAGE=1
+ - make
+ - make test
+
+after_success:
+ - coveralls --root . -E ".*gtest.*" -E ".*CMakeFiles.*"

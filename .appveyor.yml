@@ -1,13 +1,8 @@
-#environment:
-# P: "c:/projects/lamppost"
-
 branches:
  only:
   - master
 
 os: Visual Studio 2015
-
-#clone_folder: '%P%'
 
 platform: x64
 
@@ -16,16 +11,10 @@ configuration: Release
 install:
  - ps: choco install make
 
-build:
-# project: '%P%\build\lamppost.sln'
- project: 'lamppost.sln'
-
 before_build:
-# - cd %P%
  - git submodule update --init --recursive
 
 build_script:
-# - cd %P%
  - mkdir build
  - cd build
  - cmake -G "Visual Studio 14 2015 Win64" ..

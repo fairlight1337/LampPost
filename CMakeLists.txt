@@ -105,3 +105,12 @@ endmacro()
 
 add_lp_test(LampPostConfigurationTest)
 add_lp_test(PluginManagerConfigurationTest)
+
+
+### Coverage
+SET(COVERAGE OFF CACHE BOOL "Coverage")
+
+if(COVERAGE)
+    target_compile_options(tests PRIVATE --coverage)
+    target_link_libraries(tests PRIVATE --coverage)
+endif()
