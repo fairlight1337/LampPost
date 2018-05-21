@@ -59,7 +59,8 @@ endif(WIN32 OR WIN64)
 
 if(UNIX OR APPLE)
     target_link_libraries(${PROJECT_NAME}
-        dl)
+        dl
+        pthread)
 endif(UNIX OR APPLE)
 
 set(SRC_BIN
@@ -99,8 +100,8 @@ add_lp_plugin(sysinfo
 enable_testing()
 include(GoogleTest)
 
-macro(add_lp_test testname)
-    add_executable(${testname} test/lamppost/${testname}.cpp)
+macro(add_lp_test directory testname)
+    add_executable(${testname} test/${directory}/${testname}.cpp)
 
     if(COVERAGE AND UNIX AND NOT APPLE)
         target_compile_options(${testname} PRIVATE --coverage)
@@ -112,5 +113,6 @@ macro(add_lp_test testname)
     add_test(${testname} ${CMAKE_BINARY_DIR}/bin/${testname})
 endmacro()
 
-add_lp_test(LampPostConfigurationTest)
-add_lp_test(PluginManagerConfigurationTest)
+add_lp_test(lamppost LampPostConfigurationTest)
+add_lp_test(lamppost PluginManagerConfigurationTest)
+add_lp_test(lamppost/bus BusTest)
