@@ -16,11 +16,11 @@ namespace lp {
 			mPluginManagerConfiguration = pluginManagerConfiguration;
 		}
 
-		bool operator==(const LampPostConfiguration& other) {
+		bool operator==(const LampPostConfiguration& other) const {
 			return mPluginManagerConfiguration == other.mPluginManagerConfiguration;
 		}
 
-		bool operator!=(const LampPostConfiguration& other) {
+		bool operator!=(const LampPostConfiguration& other) const {
 			return !(*this == other);
 		}
 	};

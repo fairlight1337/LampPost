@@ -3,7 +3,7 @@
 
 #include <gtest/gtest.h>
 
-#include <lamppost/LampPostConfiguration.h>
+#include <lamppost/PluginManagerConfiguration.h>
 #include <lamppost/bus/Bus.h>
 
 
@@ -26,13 +26,13 @@ const std::list<std::string> cSampleTemplateSearchPaths {
 
 
 // When the constructor is called, then the properties are set correctly.
-TEST(LampPostConfiguration, WhenConstructorIsCalled_ThenThePropertiesAreSetCorrectly) {
-	// Arrange.
+TEST(PluginManagerConfiguration, WhenConstructorIsCalled_ThenThePropertiesAreSetCorrectly) {
+	// Arrange, Act.
 	lp::PluginManagerConfiguration pluginManagerConfiguration(cSampleTemplateSearchPaths, cSampleBus);
 
-	// Act.
-	lp::LampPostConfiguration lampPostConfiguration(pluginManagerConfiguration);
-
 	// Assert.
-	EXPECT_EQ(pluginManagerConfiguration, lampPostConfiguration.mPluginManagerConfiguration);
+	EXPECT_TRUE(std::equal(cSampleTemplateSearchPaths.begin(),
+												 cSampleTemplateSearchPaths.end(),
+												 pluginManagerConfiguration.mTemplateSearchPaths.begin()));
+	EXPECT_EQ(cSampleBus, pluginManagerConfiguration.mBus);
 }

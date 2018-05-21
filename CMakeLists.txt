@@ -104,3 +104,4 @@ macro(add_lp_test testname)
 endmacro()
 
 add_lp_test(LampPostConfigurationTest)
+add_lp_test(PluginManagerConfigurationTest)
