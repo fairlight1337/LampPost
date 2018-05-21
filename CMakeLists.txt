@@ -22,8 +22,6 @@ set(gtest_force_shared_crt ON CACHE BOOL "Force generation of shared libraries f
 add_subdirectory(
     3rdparty/googletest)
 
-enable_testing()
-
 include_directories(
     include
     ${gtest_SOURCE_DIR}/include)
@@ -89,6 +87,9 @@ add_library(plugin_sysinfo SHARED
 target_link_libraries(plugin_sysinfo
     ${PROJECT_NAME})
 
+enable_testing()
+include(GoogleTest)
+
 add_executable(LampPostConfigurationTest
     test/lamppost/LampPostConfigurationTest.cpp)
 
@@ -97,12 +98,5 @@ target_link_libraries(LampPostConfigurationTest
     gtest_main
     ${PROJECT_NAME})
 
-include(GoogleTest)
-
-#gtest_add_tests(TARGET LampPostConfigurationTest)
-
-add_test(LampPostConfigurationTest LampPostConfigurationTest)
-
-#add_test(LampPostConfigurationTest LampPostConfigurationTest)
-#gtest_add_tests(TARGET LampPostConfigurationTest "" AUTO)
-#gtest_discover_tests(LampPostConfigurationTest)
+add_test(LampPostConfigurationTest
+         ${CMAKE_BINARY_DIR}/bin/LampPostConfigurationTest)
