@@ -1,6 +1,5 @@
-#branches:
-# only:
-#  - master
+environment:
+  APPVEYOR_YML_DISABLE_PS_LINUX: true
 
 image:
  - Visual Studio 2015
