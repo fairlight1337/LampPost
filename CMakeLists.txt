@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.9.2)
 project(LampPost)
 
+SET(COVERAGE OFF CACHE BOOL "Activate code coverage")
+
 set(CMAKE_CXX_STANDARD 14)
 
 if(UNIX OR APPLE)
@@ -101,16 +103,12 @@ macro(add_lp_test testname)
     add_executable(${testname} test/lamppost/${testname}.cpp)
     target_link_libraries(${testname} gtest gtest_main ${PROJECT_NAME})
     add_test(${testname} ${CMAKE_BINARY_DIR}/bin/${testname})
+
+    if(COVERAGE AND UNIX AND NOT APPLE)
+        target_compile_options(${testname} PRIVATE --coverage)
+        target_link_libraries(${testname} PRIVATE --coverage)
+    endif()
 endmacro()
 
 add_lp_test(LampPostConfigurationTest)
 add_lp_test(PluginManagerConfigurationTest)
-
-
-### Coverage
-SET(COVERAGE OFF CACHE BOOL "Coverage")
-
-if(COVERAGE)
-    target_compile_options(tests PRIVATE --coverage)
-    target_link_libraries(tests PRIVATE --coverage)
-endif()

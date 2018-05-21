@@ -20,7 +20,7 @@ addons:
       - g++-4.8
 
 before_install:
- - pip install --user cpp-coveralls
+ - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then pip install --user cpp-coveralls ; fi
 
 script:
  - mkdir build
@@ -30,4 +30,4 @@ script:
  - make test
 
 after_success:
- - coveralls --root . -E ".*gtest.*" -E ".*CMakeFiles.*"
+ - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then coveralls --root . -E ".*gtest.*" -E ".*CMakeFiles.*" ; fi
