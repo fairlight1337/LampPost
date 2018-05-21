@@ -64,7 +64,7 @@ namespace lp {
 
 	public:
 		PluginInstance(PluginConfiguration configuration);
-		~PluginInstance();
+		virtual ~PluginInstance();
 
 		std::shared_ptr<bus::Publisher> GetPublisher(std::string topic);
 		std::shared_ptr<bus::Subscriber> GetSubscriber(std::string topic, std::function<void(std::shared_ptr<messages::Datagram>)> callback);

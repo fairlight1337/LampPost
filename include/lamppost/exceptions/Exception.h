@@ -11,7 +11,7 @@ namespace lp {
 		class Exception : public std::runtime_error {
 		public:
 			Exception(std::string message);
-			~Exception();
+			virtual ~Exception();
 		};
 	}
 }

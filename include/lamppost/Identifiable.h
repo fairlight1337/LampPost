@@ -12,7 +12,7 @@ namespace lp {
 
 	public:
 		Identifiable(std::string identifier);
-		~Identifiable();
+		virtual ~Identifiable();
 
 		std::string GetIdentifier();
 	};
