@@ -7,12 +7,26 @@ if(UNIX OR APPLE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif(UNIX OR APPLE)
 
+if(WIN32 OR WIN64)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+endif(WIN32 OR WIN64)
+
+add_definitions(-D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING)
+
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+set(gtest_force_shared_crt ON CACHE BOOL "Force generation of shared libraries for GTest.")
+add_subdirectory(
+    3rdparty/googletest)
+
+enable_testing()
+
 include_directories(
-    include)
+    include
+    ${gtest_SOURCE_DIR}/include)
 
 set(SRC
     src/lamppost/LampPost.cpp
@@ -35,18 +49,6 @@ set(SRC
     src/lamppost/bus/Publisher.cpp
     src/lamppost/bus/Subscriber.cpp)
 
-if(WIN32 OR WIN64)
-    set(SRC "${SRC};src/lamppost/lowlevel/Windows.cpp")
-endif(WIN32 OR WIN64)
-
-if(UNIX AND NOT APPLE)
-    set(SRC "${SRC};src/lamppost/lowlevel/Unix.cpp")
-endif(UNIX AND NOT APPLE)
-
-if(APPLE)
-    set(SRC "${SRC};src/lamppost/lowlevel/Osx.cpp")
-endif(APPLE)
-
 add_library(${PROJECT_NAME}
     ${SRC})
 
@@ -60,8 +62,23 @@ if(UNIX OR APPLE)
         dl)
 endif(UNIX OR APPLE)
 
-add_executable(${PROJECT_NAME}-bin
+set(SRC_BIN
     src/main.cpp)
+
+if(WIN32 OR WIN64)
+    set(SRC_BIN "${SRC_BIN};src/lamppost/lowlevel/Windows.cpp")
+endif(WIN32 OR WIN64)
+
+if(UNIX AND NOT APPLE)
+    set(SRC_BIN "${SRC_BIN};src/lamppost/lowlevel/Unix.cpp")
+endif(UNIX AND NOT APPLE)
+
+if(APPLE)
+    set(SRC_BIN "${SRC_BIN};src/lamppost/lowlevel/Osx.cpp")
+endif(APPLE)
+
+add_executable(${PROJECT_NAME}-bin
+    ${SRC_BIN})
 
 target_link_libraries(${PROJECT_NAME}-bin
     ${PROJECT_NAME})
@@ -71,3 +88,21 @@ add_library(plugin_sysinfo SHARED
 
 target_link_libraries(plugin_sysinfo
     ${PROJECT_NAME})
+
+add_executable(LampPostConfigurationTest
+    test/lamppost/LampPostConfigurationTest.cpp)
+
+target_link_libraries(LampPostConfigurationTest
+    gtest
+    gtest_main
+    ${PROJECT_NAME})
+
+include(GoogleTest)
+
+#gtest_add_tests(TARGET LampPostConfigurationTest)
+
+add_test(LampPostConfigurationTest LampPostConfigurationTest)
+
+#add_test(LampPostConfigurationTest LampPostConfigurationTest)
+#gtest_add_tests(TARGET LampPostConfigurationTest "" AUTO)
+#gtest_discover_tests(LampPostConfigurationTest)

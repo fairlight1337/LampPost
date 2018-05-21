@@ -4,7 +4,7 @@
 namespace lp {
     LampPost::LampPost(LampPostConfiguration configuration)
       : mConfiguration(configuration),
-        mPluginManager(configuration.mPuginManagerConfiguration),
+        mPluginManager(configuration.mPluginManagerConfiguration),
         mRootBus(std::make_shared<bus::Bus>("root")) {
     }
 
