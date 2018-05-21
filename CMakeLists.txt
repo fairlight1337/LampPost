@@ -104,7 +104,7 @@ macro(add_lp_test testname)
 
     if(COVERAGE AND UNIX AND NOT APPLE)
         target_compile_options(${testname} PRIVATE --coverage)
-        target_link_libraries(${testname} PRIVATE --coverage)
+        target_link_libraries(${testname} gtest gtest_main ${PROJECT_NAME} PRIVATE --coverage)
     else()
         target_link_libraries(${testname} gtest gtest_main ${PROJECT_NAME})
     endif()
