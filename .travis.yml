@@ -9,6 +9,7 @@ sudo:
 
 addons:
   apt:
+    update: true
     packages:
       - cmake
 

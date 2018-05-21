@@ -81,22 +81,26 @@ add_executable(${PROJECT_NAME}-bin
 target_link_libraries(${PROJECT_NAME}-bin
     ${PROJECT_NAME})
 
-add_library(plugin_sysinfo SHARED
+
+### Plugins
+macro(add_lp_plugin pluginname)
+    set(sourcefiles ${ARGN})
+    add_library(plugin_${pluginname} SHARED ${sourcefiles})
+    target_link_libraries(plugin_${pluginname} ${PROJECT_NAME})
+endmacro()
+
+add_lp_plugin(sysinfo
     src/plugins/sysinfo/SysInfo.cpp)
 
-target_link_libraries(plugin_sysinfo
-    ${PROJECT_NAME})
 
+### Tests
 enable_testing()
 include(GoogleTest)
 
-add_executable(LampPostConfigurationTest
-    test/lamppost/LampPostConfigurationTest.cpp)
+macro(add_lp_test testname)
+    add_executable(${testname} test/lamppost/${testname}.cpp)
+    target_link_libraries(${testname} gtest gtest_main ${PROJECT_NAME})
+    add_test(${testname} ${CMAKE_BINARY_DIR}/bin/${testname})
+endmacro()
 
-target_link_libraries(LampPostConfigurationTest
-    gtest
-    gtest_main
-    ${PROJECT_NAME})
-
-add_test(LampPostConfigurationTest
-         ${CMAKE_BINARY_DIR}/bin/LampPostConfigurationTest)
+add_lp_test(LampPostConfigurationTest)
