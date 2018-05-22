@@ -15,22 +15,22 @@
 
 
 namespace lp {
-	class PluginTemplate : public Identifiable {
-	private:
-		PluginTemplateConfiguration mConfiguration;
-		std::map<std::string, std::shared_ptr<PluginInstance>> mInstances;
+  class PluginTemplate : public Identifiable {
+  private:
+    PluginTemplateConfiguration mConfiguration;
+    std::map<std::string, std::shared_ptr<PluginInstance>> mInstances;
 
-		bool IndexedInstanceExists(int i);
+    bool IndexedInstanceExists(int i);
 
-	public:
-		PluginTemplate(PluginTemplateConfiguration configuration);
-		~PluginTemplate();
+  public:
+    PluginTemplate(PluginTemplateConfiguration configuration);
+    ~PluginTemplate();
 
-		std::shared_ptr<PluginInstance> Instantiate(PluginConfiguration configuration, std::shared_ptr<bus::Bus> parentBus);
+    std::shared_ptr<PluginInstance> Instantiate(PluginConfiguration configuration, std::shared_ptr<bus::Bus> parentBus);
 
-		bool IsValid();
-		std::string GetType();
-	};
+    bool IsValid();
+    std::string GetType();
+  };
 }
 
 #endif //LAMPPOST_PLUGINTEMPLATE_H

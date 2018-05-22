@@ -6,16 +6,16 @@
 
 
 namespace lp {
-	class Identifiable {
-	private:
-		std::string mIdentifier;
+  class Identifiable {
+  private:
+    std::string mIdentifier;
 
-	public:
-		Identifiable(std::string identifier);
-		virtual ~Identifiable();
+  public:
+    Identifiable(std::string identifier);
+    virtual ~Identifiable();
 
-		std::string GetIdentifier();
-	};
+    std::string GetIdentifier();
+  };
 }
 
 #endif //LAMPPOST_IDENTIFIABLE_H

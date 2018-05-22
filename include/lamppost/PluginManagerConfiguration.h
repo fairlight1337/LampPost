@@ -9,29 +9,29 @@
 
 
 namespace lp {
-	struct PluginManagerConfiguration {
-		std::list<std::string> mTemplateSearchPaths;
-		std::shared_ptr<bus::Bus> mBus;
+  struct PluginManagerConfiguration {
+    std::list<std::string> mTemplateSearchPaths;
+    std::shared_ptr<bus::Bus> mBus;
 
-		PluginManagerConfiguration() {
-			mBus = nullptr;
-		}
+    PluginManagerConfiguration() {
+      mBus = nullptr;
+    }
 
-		PluginManagerConfiguration(std::list<std::string> templateSearchPaths, std::shared_ptr<bus::Bus> bus) {
-			mTemplateSearchPaths = templateSearchPaths;
-			mBus = bus;
-		}
+    PluginManagerConfiguration(std::list<std::string> templateSearchPaths, std::shared_ptr<bus::Bus> bus) {
+      mTemplateSearchPaths = templateSearchPaths;
+      mBus = bus;
+    }
 
-		bool operator==(const lp::PluginManagerConfiguration& rhs) const {
-			return
-				mBus == rhs.mBus &&
-				std::equal(mTemplateSearchPaths.begin(), mTemplateSearchPaths.end(), rhs.mTemplateSearchPaths.begin());
-		}
+    bool operator==(const lp::PluginManagerConfiguration& rhs) const {
+      return
+        mBus == rhs.mBus &&
+        std::equal(mTemplateSearchPaths.begin(), mTemplateSearchPaths.end(), rhs.mTemplateSearchPaths.begin());
+    }
 
-		bool operator!=(const lp::PluginManagerConfiguration& rhs) const {
-			return !(*this == rhs);
-		}
-	};
+    bool operator!=(const lp::PluginManagerConfiguration& rhs) const {
+      return !(*this == rhs);
+    }
+  };
 }
 
 

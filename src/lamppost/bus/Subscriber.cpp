@@ -2,19 +2,19 @@
 
 
 namespace lp {
-	namespace bus {
-		Subscriber::Subscriber(std::string topic, std::function<void(std::shared_ptr<lp::messages::Datagram>)> callback) : mTopic(topic), mCallback(callback) {
-		}
+  namespace bus {
+    Subscriber::Subscriber(std::string topic, std::function<void(std::shared_ptr<lp::messages::Datagram>)> callback) : mTopic(topic), mCallback(callback) {
+    }
 
-		Subscriber::~Subscriber() {
-		}
+    Subscriber::~Subscriber() {
+    }
 
-		void Subscriber::Receive(std::shared_ptr<lp::messages::Datagram> datagram) {
-			mCallback(datagram);
-		}
+    void Subscriber::Receive(std::shared_ptr<lp::messages::Datagram> datagram) {
+      mCallback(datagram);
+    }
 
-		std::string Subscriber::GetTopic() {
-			return mTopic;
-		}
-	}
+    std::string Subscriber::GetTopic() {
+      return mTopic;
+    }
+  }
 }

@@ -2,24 +2,24 @@
 
 
 void signalHandler(int signal) {
-	switch(signal) {
-		case SIGINT:
-		case SIGTERM:
-			HandleShutdownSignal();
-			break;
+  switch(signal) {
+    case SIGINT:
+    case SIGTERM:
+      HandleShutdownSignal();
+      break;
 
-		default:
-			break;
-	}
+    default:
+      break;
+  }
 }
 
 
 void HookSystemSignals() {
-	struct sigaction action;
-	memset(&action, 0, sizeof(struct sigaction));
-	action.sa_handler = signalHandler;
-	action.sa_flags = SA_RESTART;
-	sigfillset(&action.sa_mask);
-	sigaction(SIGTERM, &action, NULL);
-	sigaction(SIGINT, &action, NULL);
+  struct sigaction action;
+  memset(&action, 0, sizeof(struct sigaction));
+  action.sa_handler = signalHandler;
+  action.sa_flags = SA_RESTART;
+  sigfillset(&action.sa_mask);
+  sigaction(SIGTERM, &action, NULL);
+  sigaction(SIGINT, &action, NULL);
 }

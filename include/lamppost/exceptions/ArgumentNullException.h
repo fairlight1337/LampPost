@@ -6,18 +6,18 @@
 
 
 namespace lp {
-	namespace exceptions {
-		class ArgumentNullException : public Exception {
-		private:
-			std::string mParameterName;
+  namespace exceptions {
+    class ArgumentNullException : public Exception {
+    private:
+      std::string mParameterName;
 
-		public:
-			ArgumentNullException(std::string parameterName, std::string message);
-			~ArgumentNullException();
+    public:
+      ArgumentNullException(std::string parameterName, std::string message);
+      ~ArgumentNullException();
 
-			std::string GetParameterName();
-		};
-	}
+      std::string GetParameterName();
+    };
+  }
 }
 
 

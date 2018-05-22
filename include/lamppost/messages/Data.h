@@ -6,22 +6,22 @@
 
 
 namespace lp {
-	namespace messages {
-		template<typename T>
-		class Data : public DataBase {
-		private:
-			T mValue;
+  namespace messages {
+    template<typename T>
+    class Data : public DataBase {
+    private:
+      T mValue;
 
-		public:
-			Data() : mValue(T()) {}
-			Data(T value) : mValue(value) {}
-			~Data() {}
+    public:
+      Data() : mValue(T()) {}
+      Data(T value) : mValue(value) {}
+      ~Data() {}
 
-			T Get() {
-				return mValue;
-			}
-		};
-	}
+      T Get() {
+        return mValue;
+      }
+    };
+  }
 }
 
 

@@ -6,18 +6,18 @@
 
 
 namespace lp {
-	namespace exceptions {
-		class IndexOutOfBoundsException : public Exception {
-		private:
-			int mIndex;
+  namespace exceptions {
+    class IndexOutOfBoundsException : public Exception {
+    private:
+      int mIndex;
 
-		public:
-			IndexOutOfBoundsException(int index, std::string message);
-			~IndexOutOfBoundsException();
+    public:
+      IndexOutOfBoundsException(int index, std::string message);
+      ~IndexOutOfBoundsException();
 
-			int GetIndex();
-		};
-	}
+      int GetIndex();
+    };
+  }
 }
 
 

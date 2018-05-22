@@ -8,22 +8,22 @@
 
 
 namespace lp {
-	namespace messages {
-		class Message {
-		private:
-			std::string mSender;
-			std::string mTopic;
-			std::shared_ptr<Datagram> mDatagram;
+  namespace messages {
+    class Message {
+    private:
+      std::string mSender;
+      std::string mTopic;
+      std::shared_ptr<Datagram> mDatagram;
 
-		public:
-			Message(std::string sender, std::string topic, std::shared_ptr<Datagram> datagram);
-			~Message();
+    public:
+      Message(std::string sender, std::string topic, std::shared_ptr<Datagram> datagram);
+      ~Message();
 
-			std::string GetSender();
-			std::string GetTopic();
-			std::shared_ptr<Datagram> GetDatagram();
-		};
-	}
+      std::string GetSender();
+      std::string GetTopic();
+      std::shared_ptr<Datagram> GetDatagram();
+    };
+  }
 }
 
 

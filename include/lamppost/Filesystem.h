@@ -20,32 +20,32 @@
 
 
 namespace lp {
-	enum class FilesystemObjectType : int {
-		File = 1,
-		Directory = 2,
-		Any = 3
-	};
+  enum class FilesystemObjectType : int {
+    File = 1,
+    Directory = 2,
+    Any = 3
+  };
 
-	class Filesystem {
-	public:
-		Filesystem();
-		~Filesystem();
+  class Filesystem {
+  public:
+    Filesystem();
+    ~Filesystem();
 
-		static bool PathExists(std::string path);
-		static bool IsFile(std::string path);
-		static bool IsDirectory(std::string path);
+    static bool PathExists(std::string path);
+    static bool IsFile(std::string path);
+    static bool IsDirectory(std::string path);
 
-		static std::list<std::string> GetDirectoryContents(std::string path, FilesystemObjectType filter);
+    static std::list<std::string> GetDirectoryContents(std::string path, FilesystemObjectType filter);
 
-		static std::string GetPathOfRunningExecutable();
-		static std::string GetWorkingDirectory();
+    static std::string GetPathOfRunningExecutable();
+    static std::string GetWorkingDirectory();
 
-		static std::string CombinePaths(std::string root, std::string relative);
+    static std::string CombinePaths(std::string root, std::string relative);
 
-		static std::string GetFilename(std::string path);
-		static std::string GetBaseDirectory(std::string path);
-		static std::string GetFileExtension(std::string path);
-	};
+    static std::string GetFilename(std::string path);
+    static std::string GetBaseDirectory(std::string path);
+    static std::string GetFileExtension(std::string path);
+  };
 }
 
 

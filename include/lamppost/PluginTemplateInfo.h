@@ -6,10 +6,10 @@
 
 
 namespace lp {
-	struct PluginTemplateInfo {
-		std::string mIdentifier;
-		Version mVersion;
-	};
+  struct PluginTemplateInfo {
+    std::string mIdentifier;
+    Version mVersion;
+  };
 }
 
 

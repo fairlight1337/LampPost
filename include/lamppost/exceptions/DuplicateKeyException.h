@@ -8,18 +8,18 @@
 
 
 namespace lp {
-	namespace exceptions {
-		class DuplicateKeyException : public Exception {
-		private:
-			std::string mKey;
+  namespace exceptions {
+    class DuplicateKeyException : public Exception {
+    private:
+      std::string mKey;
 
-		public:
-			DuplicateKeyException(std::string key, std::string message);
-			~DuplicateKeyException();
+    public:
+      DuplicateKeyException(std::string key, std::string message);
+      ~DuplicateKeyException();
 
-			std::string GetKey();
-		};
-	}
+      std::string GetKey();
+    };
+  }
 }
 
 

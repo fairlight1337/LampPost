@@ -2,32 +2,32 @@
 
 
 namespace lp {
-    LampPost::LampPost(LampPostConfiguration configuration)
-      : mConfiguration(configuration),
-        mPluginManager(configuration.mPluginManagerConfiguration),
-        mRootBus(std::make_shared<bus::Bus>("root")) {
-    }
+  LampPost::LampPost(LampPostConfiguration configuration)
+    : mConfiguration(configuration),
+      mPluginManager(configuration.mPluginManagerConfiguration),
+      mRootBus(std::make_shared<bus::Bus>("root")) {
+  }
 
-    LampPost::~LampPost() {
-    }
+  LampPost::~LampPost() {
+  }
 
-    void LampPost::Start() {
-    	mPluginManager.SetBus(mRootBus);
-			PluginConfiguration pluginConfiguration;
+  void LampPost::Start() {
+    mPluginManager.SetBus(mRootBus);
+    PluginConfiguration pluginConfiguration;
 
-			mPluginManager.LoadTemplates();
-			std::shared_ptr<PluginInstance> instance = mPluginManager.InstantiateTemplate("SysInfo", pluginConfiguration);
+    mPluginManager.LoadTemplates();
+    std::shared_ptr<PluginInstance> instance = mPluginManager.InstantiateTemplate("SysInfo", pluginConfiguration);
 
-			instance->Initialize();
-			instance->Start();
+    instance->Initialize();
+    instance->Start();
 
-			mRootBus->Start();
+    mRootBus->Start();
 
-			instance->Stop();
-			instance->Deinitialize();
-    }
+    instance->Stop();
+    instance->Deinitialize();
+  }
 
-    void LampPost::Stop() {
-        mRootBus->Stop();
-    }
+  void LampPost::Stop() {
+      mRootBus->Stop();
+  }
 }

@@ -2,16 +2,16 @@
 
 
 namespace lp {
-	namespace exceptions {
-		ArgumentNullException::ArgumentNullException(std::string parameterName, std::string message) : Exception(message), mParameterName(parameterName) {
+  namespace exceptions {
+    ArgumentNullException::ArgumentNullException(std::string parameterName, std::string message) : Exception(message), mParameterName(parameterName) {
 
-		}
+    }
 
-		ArgumentNullException::~ArgumentNullException() {
-		}
+    ArgumentNullException::~ArgumentNullException() {
+    }
 
-		std::string ArgumentNullException::GetParameterName() {
-			return mParameterName;
-		}
-	}
+    std::string ArgumentNullException::GetParameterName() {
+      return mParameterName;
+    }
+  }
 }

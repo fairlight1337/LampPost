@@ -6,18 +6,18 @@
 
 
 namespace lp {
-	namespace exceptions {
-		class KeyNotFoundException : public Exception {
-		private:
-			std::string mKey;
+  namespace exceptions {
+    class KeyNotFoundException : public Exception {
+    private:
+      std::string mKey;
 
-		public:
-			KeyNotFoundException(std::string key, std::string message);
-			~KeyNotFoundException();
+    public:
+      KeyNotFoundException(std::string key, std::string message);
+      ~KeyNotFoundException();
 
-			std::string GetKey();
-		};
-	}
+      std::string GetKey();
+    };
+  }
 }
 
 

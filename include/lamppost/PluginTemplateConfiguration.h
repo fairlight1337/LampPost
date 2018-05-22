@@ -10,24 +10,24 @@
 
 
 namespace lp {
-	struct PluginTemplateConfiguration {
-		std::string mIdentifier;
-		Version mVersion;
+  struct PluginTemplateConfiguration {
+    std::string mIdentifier;
+    Version mVersion;
 
-		std::function<std::shared_ptr<PluginInstance>(PluginConfiguration)> mInstantiateFunction;
-		std::function<void()> mUnloadPluginFunction;
+    std::function<std::shared_ptr<PluginInstance>(PluginConfiguration)> mInstantiateFunction;
+    std::function<void()> mUnloadPluginFunction;
 
-		PluginTemplateConfiguration(
-			std::string identifier,
-			Version version,
-			std::function<std::shared_ptr<PluginInstance>(PluginConfiguration)> instantiateFunction,
-		  std::function<void()> unloadPluginFunction) {
-			mIdentifier = identifier;
-			mVersion = version;
-			mInstantiateFunction = instantiateFunction;
-			mUnloadPluginFunction = unloadPluginFunction;
-		}
-	};
+    PluginTemplateConfiguration(
+      std::string identifier,
+      Version version,
+      std::function<std::shared_ptr<PluginInstance>(PluginConfiguration)> instantiateFunction,
+      std::function<void()> unloadPluginFunction) {
+      mIdentifier = identifier;
+      mVersion = version;
+      mInstantiateFunction = instantiateFunction;
+      mUnloadPluginFunction = unloadPluginFunction;
+    }
+  };
 }
 
 

@@ -6,24 +6,24 @@
 
 
 namespace lp {
-	struct LampPostConfiguration {
-		PluginManagerConfiguration mPluginManagerConfiguration;
+  struct LampPostConfiguration {
+    PluginManagerConfiguration mPluginManagerConfiguration;
 
-		LampPostConfiguration() {
-		}
+    LampPostConfiguration() {
+    }
 
-		LampPostConfiguration(PluginManagerConfiguration pluginManagerConfiguration) {
-			mPluginManagerConfiguration = pluginManagerConfiguration;
-		}
+    LampPostConfiguration(PluginManagerConfiguration pluginManagerConfiguration) {
+      mPluginManagerConfiguration = pluginManagerConfiguration;
+    }
 
-		bool operator==(const LampPostConfiguration& other) const {
-			return mPluginManagerConfiguration == other.mPluginManagerConfiguration;
-		}
+    bool operator==(const LampPostConfiguration& other) const {
+      return mPluginManagerConfiguration == other.mPluginManagerConfiguration;
+    }
 
-		bool operator!=(const LampPostConfiguration& other) const {
-			return !(*this == other);
-		}
-	};
+    bool operator!=(const LampPostConfiguration& other) const {
+      return !(*this == other);
+    }
+  };
 }
 
 

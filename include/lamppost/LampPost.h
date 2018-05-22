@@ -12,19 +12,19 @@
 
 
 namespace lp {
-    class LampPost {
+  class LampPost {
     private:
-        std::shared_ptr<bus::Bus> mRootBus;
-        LampPostConfiguration mConfiguration;
-        PluginManager mPluginManager;
+      std::shared_ptr<bus::Bus> mRootBus;
+      LampPostConfiguration mConfiguration;
+      PluginManager mPluginManager;
 
     public:
-        LampPost(LampPostConfiguration configuration);
-        ~LampPost();
+      LampPost(LampPostConfiguration configuration);
+      ~LampPost();
 
-        void Start();
-        void Stop();
-    };
+      void Start();
+      void Stop();
+  };
 }
 
 #endif //LAMPPOST_LAMPPOST_H

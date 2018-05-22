@@ -8,10 +8,10 @@
 
 
 namespace lp {
-	struct PluginConfiguration {
-		std::string mIdentifier;
-		std::shared_ptr<bus::Bus> mBus;
-	};
+  struct PluginConfiguration {
+    std::string mIdentifier;
+    std::shared_ptr<bus::Bus> mBus;
+  };
 }
 
 

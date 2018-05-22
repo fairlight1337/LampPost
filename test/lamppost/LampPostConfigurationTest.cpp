@@ -17,9 +17,9 @@ const std::shared_ptr<lp::bus::Bus> cSampleBus = std::make_shared<lp::bus::Bus>(
 
 // The sample template search paths list.
 const std::list<std::string> cSampleTemplateSearchPaths {
-	"Path/1",
-	"Path/2",
-	"Path/3"
+  "Path/1",
+  "Path/2",
+  "Path/3"
 };
 
 #pragma endregion
@@ -27,12 +27,12 @@ const std::list<std::string> cSampleTemplateSearchPaths {
 
 // When the constructor is called, then the properties are set correctly.
 TEST(LampPostConfiguration, WhenConstructorIsCalled_ThenThePropertiesAreSetCorrectly) {
-	// Arrange.
-	lp::PluginManagerConfiguration pluginManagerConfiguration(cSampleTemplateSearchPaths, cSampleBus);
+  // Arrange.
+  lp::PluginManagerConfiguration pluginManagerConfiguration(cSampleTemplateSearchPaths, cSampleBus);
 
-	// Act.
-	lp::LampPostConfiguration lampPostConfiguration(pluginManagerConfiguration);
+  // Act.
+  lp::LampPostConfiguration lampPostConfiguration(pluginManagerConfiguration);
 
-	// Assert.
-	EXPECT_EQ(pluginManagerConfiguration, lampPostConfiguration.mPluginManagerConfiguration);
+  // Assert.
+  EXPECT_EQ(pluginManagerConfiguration, lampPostConfiguration.mPluginManagerConfiguration);
 }

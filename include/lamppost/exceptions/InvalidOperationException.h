@@ -6,13 +6,13 @@
 
 
 namespace lp {
-	namespace exceptions {
-		class InvalidOperationException : public Exception {
-		public:
-			InvalidOperationException(std::string message);
-			~InvalidOperationException();
-		};
-	}
+  namespace exceptions {
+    class InvalidOperationException : public Exception {
+    public:
+      InvalidOperationException(std::string message);
+      ~InvalidOperationException();
+    };
+  }
 }
 
 

@@ -3,13 +3,13 @@
 
 
 namespace lp {
-	namespace messages {
-		class DataBase {
-		public:
-			DataBase();
-			virtual ~DataBase();
-		};
-	}
+  namespace messages {
+    class DataBase {
+    public:
+      DataBase();
+      virtual ~DataBase();
+    };
+  }
 }
 
 

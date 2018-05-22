@@ -2,11 +2,11 @@
 
 
 namespace lp {
-	namespace exceptions {
-		Exception::Exception(std::string message) : std::runtime_error(message.c_str()) {
-		}
+  namespace exceptions {
+    Exception::Exception(std::string message) : std::runtime_error(message.c_str()) {
+    }
 
-		Exception::~Exception() {
-		}
-	}
+    Exception::~Exception() {
+    }
+  }
 }

@@ -10,21 +10,21 @@
 
 
 namespace lp {
-	namespace bus {
-		class Subscriber {
-		private:
-			std::string mTopic;
-			std::function<void(std::shared_ptr<messages::Datagram>)> mCallback;
+  namespace bus {
+    class Subscriber {
+    private:
+      std::string mTopic;
+      std::function<void(std::shared_ptr<messages::Datagram>)> mCallback;
 
-		public:
-			Subscriber(std::string topic, std::function<void(std::shared_ptr<messages::Datagram>)> callback);
-			~Subscriber();
+    public:
+      Subscriber(std::string topic, std::function<void(std::shared_ptr<messages::Datagram>)> callback);
+      ~Subscriber();
 
-			void Receive(std::shared_ptr<messages::Datagram> datagram);
+      void Receive(std::shared_ptr<messages::Datagram> datagram);
 
-			std::string GetTopic();
-		};
-	}
+      std::string GetTopic();
+    };
+  }
 }
 
 
