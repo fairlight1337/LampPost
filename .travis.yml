@@ -21,6 +21,7 @@ matrix:
           - gcc-6
           - g++-6
     script:
+      - cd ${TRAVIS_BUILD_DIR}
       - cmake -DENABLE_CLANG_TIDY=ON -DCMAKE_CXX_COMPILER="g++-6" ..
       - make
       - make tidy > output.txt
@@ -35,13 +36,33 @@ matrix:
         fi
   - os: linux
     compiler:
-      - clang
-  - os: osx
+      - gcc
+    env:
+      - TEST="Coveralls"
+    install:
+      - cd ${TRAVIS_BUILD_DIR}
+      - wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz
+      - tar xf lcov_1.11.orig.tar.gz
+      - sudo make -C lcov-1.11/ install
+      - gem install coveralls-lcov
+    before_script:
+      - cd ${TRAVIS_BUILD_DIR}
+      - lcov --directory . --zerocounters
+    after_success:
+      - cd ${TRAVIS_BUILD_DIR}
+      - lcov --directory . --capture --output-file coverage.info
+      - lcov --remove coverage.info 'test/*' '/usr/*' --output-file coverage.info
+      - lcov --list coverage.info
+      - coveralls-lcov --repo-token ${COVERALLS_TOKEN} coverage.info
+  - os: linux
     compiler:
       - clang
   - os: osx
     compiler:
       - gcc
+  - os: osx
+    compiler:
+      - clang
 
 sudo:
  - false
@@ -58,17 +79,6 @@ addons:
       # https://github.com/travis-ci-tester/travis-test-gcc-cxx-11
       - g++-4.8
 
-install:
- - cd ${TRAVIS_BUILD_DIR}
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.11.orig.tar.gz ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar xf lcov_1.11.orig.tar.gz ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make -C lcov-1.11/ install ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then gem install coveralls-lcov ; fi
-
-before_script:
-- cd ${TRAVIS_BUILD_DIR}
-- if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then lcov --directory . --zerocounters ; fi
-
 script:
  - cd ${TRAVIS_BUILD_DIR}
  - mkdir build
@@ -76,10 +86,3 @@ script:
  - cmake -DCOVERAGE=1 ..
  - make
  - make test
-
-after_success:
- - cd ${TRAVIS_BUILD_DIR}
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then lcov --directory . --capture --output-file coverage.info ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then lcov --remove coverage.info 'test/*' '/usr/*' --output-file coverage.info ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then lcov --list coverage.info ; fi
- - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then coveralls-lcov --repo-token ${COVERALLS_TOKEN} coverage.info ; fi
