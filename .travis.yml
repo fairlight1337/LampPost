@@ -6,8 +6,6 @@ matrix:
   # Clang Tidy
   #
   - os: linux
-    compiler:
-      - gcc
     env:
       - TEST="Clang Tidy"
     addons:
@@ -22,6 +20,8 @@ matrix:
           - g++-6
     script:
       - cd ${TRAVIS_BUILD_DIR}
+      - mkdir build
+      - cd build
       - cmake -DENABLE_CLANG_TIDY=ON -DCMAKE_CXX_COMPILER="g++-6" ..
       - make
       - make tidy > output.txt
