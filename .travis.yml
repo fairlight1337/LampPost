@@ -6,6 +6,8 @@ matrix:
   # Clang Tidy
   #
   - os: linux
+    compiler:
+      - gcc
     env:
       - TEST="Clang Tidy"
     addons:
@@ -36,8 +38,10 @@ matrix:
       - clang
   - os: osx
     compiler:
-      - gcc
       - clang
+  - os: osx
+    compiler:
+      - gcc
 
 sudo:
  - false
