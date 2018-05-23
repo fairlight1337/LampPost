@@ -18,24 +18,25 @@ matrix:
           - clang-tidy-4.0
           - gcc-6
           - g++-6
+    before_script:
+      - cd ${TRAVIS_BUILD_DIR}
+      - find ./ -iname *.h -o -iname *.cpp | xargs clang-tidy -i > tidy_output.txt
+      - cat tidy_output.txt
+      - |
+        if [[ -n $(grep "warning: " tidy_output.txt) ]] || [[ -n $(grep "error: " tidy_output.txt) ]]; then
+            echo "You must pass the clang tidy checks."
+            echo ""
+            grep --color -E '^|warning: |error: ' tidy_output.txt
+            exit -1;
+        else
+            echo -e "\033[1;32m\xE2\x9C\x93 passed\033[0m";
+        fi
     script:
       - cd ${TRAVIS_BUILD_DIR}
       - mkdir build
       - cd build
-      - cmake -DENABLE_CLANG_TIDY=ON -DCMAKE_CXX_COMPILER="g++-6" ..
+      - cmake -DCMAKE_CXX_COMPILER="g++-6" ..
       - make
-      - make tidy > output.txt
-      - cat output.txt
-      - |
-        if [[ -n $(grep "warning: " output.txt) ]] || [[ -n $(grep "error: " output.txt) ]]; then
-            echo "You must pass the clang tidy checks before submitting a pull request"
-            echo ""
-            grep --color -E '^|warning: |error: ' output.txt
-            exit -1;
-        else
-            echo -e "\033[1;32m\xE2\x9C\x93 passed:\033[0m $1";
-            exit 0;
-        fi
   - os: linux
     compiler:
       - gcc
