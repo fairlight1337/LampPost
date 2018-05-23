@@ -10,7 +10,8 @@ matrix:
       - TEST="Clang Tidy"
     script:
       - cd ${TRAVIS_BUILD_DIR}
-      - find ./ -name *.h -o -name *.cpp | xargs clang-tidy -i > tidy_output.txt
+      - find ./ -name '*.h' -o -name '*.cpp'
+      - find ./ -name '*.h' -o -name '*.cpp' | xargs clang-tidy -i > tidy_output.txt
       - cat tidy_output.txt
       - |
         if [[ -n $(grep "warning: " tidy_output.txt) ]] || [[ -n $(grep "error: " tidy_output.txt) ]]; then
