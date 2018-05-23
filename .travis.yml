@@ -13,8 +13,7 @@ matrix:
       - mkdir build
       - cd build
       - cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
-      - find ../include -name "*.h" -o -name "*.cpp" -print | xargs -I{} clang-tidy -checks=* -p=./ {} > tidy_output.txt
-      - find ../src -name "*.h" -o -name "*.cpp" -print | xargs -I{} clang-tidy -checks=* -p=./ {} >> tidy_output.txt
+      - find ../src -name "*.h" -o -name "*.cpp" -print | xargs -I{} clang-tidy -checks=* -p=./ {} > tidy_output.txt
       - find ../test -name "*.h" -o -name "*.cpp" -print | xargs -I{} clang-tidy -checks=* -p=./ {} >> tidy_output.txt
       - cat tidy_output.txt
       - |
