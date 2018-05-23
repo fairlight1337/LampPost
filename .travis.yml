@@ -13,8 +13,7 @@ matrix:
       - mkdir build
       - cd build
       - cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
-      - find ../ -name "*.h" -o -name "*.cpp" -path ./3rdparty -prune -o -print
-      - find ../ -name "*.h" -o -name "*.cpp" -path ./3rdparty -prune -o -print | xargs -I{} clang-tidy -p=./ {} > tidy_output.txt
+      - find ../ \( ! -name 3rdparty -prune \) -o \( ! -name build -prune \) -o \( ! -name bin -prune \) -o \( ! -name lib -prune \) -name "*.h" -o -name "*.cpp" -print | xargs -I{} clang-tidy -checks=bugprone-* -p=./ {} > tidy_output.txt
       - cat tidy_output.txt
       - |
         if [[ -n $(grep "warning: " tidy_output.txt) ]] || [[ -n $(grep "error: " tidy_output.txt) ]]; then
