@@ -10,9 +10,6 @@ matrix:
       - TEST="Clang Tidy"
     addons:
       apt:
-        sources:
-          - ubuntu-toolchain-r-test
-          - llvm-toolchain-trusty-4.0
         packages:
           - clang-4.0
           - clang-tidy-4.0
@@ -20,7 +17,7 @@ matrix:
           - g++-6
     before_script:
       - cd ${TRAVIS_BUILD_DIR}
-      - find ./ -iname *.h -o -iname *.cpp | xargs clang-tidy -i > tidy_output.txt
+      - find ./ -name *.h -o -name *.cpp | xargs clang-tidy -i > tidy_output.txt
       - cat tidy_output.txt
       - |
         if [[ -n $(grep "warning: " tidy_output.txt) ]] || [[ -n $(grep "error: " tidy_output.txt) ]]; then
