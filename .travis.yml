@@ -10,6 +10,7 @@ matrix:
       - TEST="Clang Tidy"
     addons:
       apt:
+        update: true
         packages:
           - clang-4.0
           - clang-tidy-4.0
