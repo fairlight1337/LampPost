@@ -12,11 +12,8 @@ matrix:
       apt:
         update: true
         packages:
-          - clang-4.0
-          - clang-tidy-4.0
-          - gcc-6
-          - g++-6
-    before_script:
+          - clang-tidy
+    script:
       - cd ${TRAVIS_BUILD_DIR}
       - find ./ -name *.h -o -name *.cpp | xargs clang-tidy -i > tidy_output.txt
       - cat tidy_output.txt
@@ -29,12 +26,6 @@ matrix:
         else
             echo -e "\033[1;32m\xE2\x9C\x93 passed\033[0m";
         fi
-    script:
-      - cd ${TRAVIS_BUILD_DIR}
-      - mkdir build
-      - cd build
-      - cmake -DCMAKE_CXX_COMPILER="g++-6" ..
-      - make
   - os: linux
     compiler:
       - gcc
