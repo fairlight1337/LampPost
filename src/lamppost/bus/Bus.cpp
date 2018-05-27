@@ -91,7 +91,7 @@ namespace lp {
       std::unique_lock<std::mutex> notifierLock(mNotifierMutex);
 
       while(mShouldRun) {
-        mNotifier.wait(notifierLock, [this] {
+        mNotifier.wait_for(notifierLock, 100ms, [this] {
           std::lock_guard<std::mutex> lock(mQueueMutex);
 
           return mQueuedMessages.size() > 0;
