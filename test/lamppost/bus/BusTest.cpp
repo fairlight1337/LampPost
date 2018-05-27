@@ -177,8 +177,6 @@ TEST(Bus, WhenSubscribedToTopicAndMessageIsPublishedOnThatTopic_ThenTheMessageIs
 
   // Act.
   publisher->Publish(publishDatagram);
-
-  using namespace std::chrono_literals;
   std::this_thread::sleep_for(std::chrono::milliseconds(cBusRuntimeDurationMs));
 
   // Assert.
