@@ -22,13 +22,12 @@
 #include <lamppost/exceptions/KeyNotFoundException.h>
 
 
-using namespace std::chrono_literals;
-
-
 namespace lp {
   namespace bus {
     class Bus {
     private:
+      const int BUS_NOTIFIER_CHECK_TIMEOUT_MS = 100;
+
       std::string mName;
       std::map<std::string, std::shared_ptr<Bus>> mChildBusses;
       std::mutex mChildBussesMutex;
