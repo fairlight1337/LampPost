@@ -2,6 +2,8 @@
 #define LAMPPOST_ARGUMENTNULLEXCEPTION_H
 
 
+#include <utility>
+
 #include <lamppost/exceptions/Exception.h>
 
 

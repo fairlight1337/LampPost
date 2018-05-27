@@ -3,6 +3,7 @@
 
 
 #include <string>
+#include <utility>
 
 #include <lamppost/exceptions/Exception.h>
 

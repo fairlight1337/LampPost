@@ -2,7 +2,7 @@
 
 
 namespace lp {
-  Identifiable::Identifiable(const std::string& identifier) : mIdentifier(identifier) {
+  Identifiable::Identifiable(const std::string& identifier) : mIdentifier(std::move(identifier)) {
   }
 
   std::string Identifiable::GetIdentifier() {

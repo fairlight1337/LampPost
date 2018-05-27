@@ -17,21 +17,21 @@ namespace lp {
     }
 
     std::shared_ptr<Datagram>& Datagram::operator[](std::string key) {
-      return Get(key);
+      return Get(std::move(key));
     }
 
-    std::shared_ptr<Datagram>& Datagram::Get(std::string key) {
+    std::shared_ptr<Datagram>& Datagram::Get(const std::string& key) {
       if(mType != DatagramType::Dictionary) {
         mType = DatagramType::Dictionary;
         mList.clear();
         mValue = nullptr;
       }
 
-      if(mDictionary.find(key) != mDictionary.end()) {
-        return mDictionary[key];
-      } else {
+      if(mDictionary.find(key) == mDictionary.end()) {
         throw exceptions::KeyNotFoundException(key, "Key not found in dictionary.");
       }
+
+      return mDictionary[key];
     }
 
     void Datagram::Remove(std::string key) {
@@ -40,11 +40,11 @@ namespace lp {
       }
 
       std::map<std::string, std::shared_ptr<Datagram>>::iterator it = mDictionary.find(key);
-      if(it != mDictionary.end()) {
-        mDictionary.erase(it);
-      } else {
+      if(it == mDictionary.end()) {
         throw exceptions::KeyNotFoundException(key, "Key not found in dictionary.");
       }
+
+      mDictionary.erase(it);
     }
 
     std::shared_ptr<Datagram>& Datagram::operator[](unsigned int index) {
@@ -58,14 +58,14 @@ namespace lp {
         mValue = nullptr;
       }
 
-      if(index < mList.size()) {
-        std::list<std::shared_ptr<Datagram>>::iterator it = mList.begin();
-        std::advance(it, index);
-
-        return *it;
-      } else {
+      if(index >= mList.size()) {
         throw exceptions::IndexOutOfBoundsException(index, "Index out of bounds.");
       }
+
+      std::list<std::shared_ptr<Datagram>>::iterator it = mList.begin();
+      std::advance(it, index);
+
+      return *it;
     }
 
     void Datagram::Add(std::shared_ptr<Datagram> datagram) {
@@ -81,33 +81,49 @@ namespace lp {
         throw exceptions::InvalidOperationException("Datagram must be a list.");
       }
 
-      if(index < mList.size()) {
-        std::list<std::shared_ptr<Datagram>>::iterator it = mList.begin();
-        std::advance(it, index);
-
-        mList.erase(it);
-      } else {
+      if(index >= mList.size()) {
         throw exceptions::IndexOutOfBoundsException(index, "Index out of bounds.");
       }
+
+      std::list<std::shared_ptr<Datagram>>::iterator it = mList.begin();
+      std::advance(it, index);
+
+      mList.erase(it);
     }
 
     unsigned int Datagram::GetCount() {
-      if(mType == DatagramType::List) {
-        return mList.size();
-      } else if(mType == DatagramType::Dictionary) {
-        return mDictionary.size();
-      } else {
-        throw exceptions::InvalidOperationException("Datagram must be a list or a dictionary.");
+      int count;
+
+      switch(mType) {
+        case DatagramType::List:
+          count = mList.size();
+          break;
+
+        case DatagramType::Dictionary:
+          count = mDictionary.size();
+          break;
+
+        default:
+          throw exceptions::InvalidOperationException("Datagram must be a list or a dictionary.");
+          break;
       }
+
+      return count;
     }
 
     void Datagram::Clear() {
-      if(mType == DatagramType::List) {
-        return mList.clear();
-      } else if(mType == DatagramType::Dictionary) {
-        return mDictionary.clear();
-      } else {
-        throw exceptions::InvalidOperationException("Datagram must be a list or a dictionary.");
+      switch(mType) {
+        case DatagramType::List:
+          mList.clear();
+          break;
+
+        case DatagramType::Dictionary:
+          mDictionary.clear();
+          break;
+
+        default:
+          throw exceptions::InvalidOperationException("Datagram must be a list or a dictionary.");
+          break;
       }
     }
 

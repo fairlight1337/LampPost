@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include <utility>
 
 #include <lamppost/bus/Bus.h>
 #include <lamppost/Identifiable.h>

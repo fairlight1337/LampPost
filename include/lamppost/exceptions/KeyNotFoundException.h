@@ -2,6 +2,8 @@
 #define LAMPPOST_KEYNOTFOUNDEXCEPTION_H
 
 
+#include <utility>
+
 #include <lamppost/exceptions/Exception.h>
 
 

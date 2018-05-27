@@ -7,6 +7,7 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <utility>
 
 #include <lamppost/messages/DataBase.h>
 #include <lamppost/messages/Data.h>
@@ -51,7 +52,7 @@ namespace lp {
 
       // Dictionary
       std::shared_ptr<Datagram>& operator[](std::string key);
-      std::shared_ptr<Datagram>& Get(std::string key);
+      std::shared_ptr<Datagram>& Get(const std::string& key);
       void Remove(std::string key);
 
       // List
