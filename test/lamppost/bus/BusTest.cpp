@@ -20,6 +20,9 @@ const std::string cSampleTopic("/thesampletopic");
 // The sample data message.
 const std::string cSampleDataMessage("The sample data message.");
 
+// The bus runtime duration (in milliseconds).
+const int cBusRuntimeDurationMs = 100;
+
 #pragma endregion
 
 
@@ -176,7 +179,7 @@ TEST(Bus, WhenSubscribedToTopicAndMessageIsPublishedOnThatTopic_ThenTheMessageIs
   publisher->Publish(publishDatagram);
 
   using namespace std::chrono_literals;
-  std::this_thread::sleep_for(100ms);
+  std::this_thread::sleep_for(std::chrono::milliseconds(cBusRuntimeDurationMs));
 
   // Assert.
   EXPECT_TRUE(messageWasReceivedProperly);
