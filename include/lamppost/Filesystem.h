@@ -7,6 +7,9 @@
 #include <algorithm>
 #include <iostream>
 
+#include <string.h>
+
+
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
 #include "Shlwapi.h"
