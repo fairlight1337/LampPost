@@ -7,8 +7,8 @@
 #include <memory>
 #include <string>
 
-#include <lamppost/PluginManager.h>
 #include <lamppost/LampPostConfiguration.h>
+#include <lamppost/PluginManager.h>
 
 
 namespace lp {

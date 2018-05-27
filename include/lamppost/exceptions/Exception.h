@@ -2,8 +2,8 @@
 #define LAMPPOST_EXCEPTION_H
 
 
-#include <string>
 #include <stdexcept>
+#include <string>
 
 
 namespace lp {

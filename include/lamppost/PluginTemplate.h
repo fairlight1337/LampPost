@@ -2,16 +2,16 @@
 #define LAMPPOST_PLUGINTEMPLATE_H
 
 
+#include <iostream>
+#include <map>
 #include <memory>
 #include <string>
-#include <map>
-#include <iostream>
 
-#include <lamppost/PluginManagerConfiguration.h>
-#include <lamppost/PluginInstance.h>
 #include <lamppost/Identifiable.h>
-#include <lamppost/PluginTemplateInfo.h>
+#include <lamppost/PluginInstance.h>
+#include <lamppost/PluginManagerConfiguration.h>
 #include <lamppost/PluginTemplateConfiguration.h>
+#include <lamppost/PluginTemplateInfo.h>
 
 
 namespace lp {

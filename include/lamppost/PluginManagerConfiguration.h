@@ -2,8 +2,8 @@
 #define LAMPPOST_PLUGINMANAGERCONFIGURATION_H
 
 
-#include <string>
 #include <list>
+#include <string>
 
 #include <lamppost/bus/Bus.h>
 

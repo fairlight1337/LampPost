@@ -2,11 +2,11 @@
 #define LAMPPOST_DATAGRAM_H
 
 
-#include <string>
+#include <algorithm>
+#include <list>
 #include <map>
 #include <memory>
-#include <list>
-#include <algorithm>
+#include <string>
 
 #include <lamppost/messages/DataBase.h>
 #include <lamppost/messages/Data.h>

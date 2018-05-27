@@ -2,9 +2,9 @@
 #define LAMPPOST_SUBSCRIBER_H
 
 
-#include <string>
-#include <memory>
 #include <functional>
+#include <memory>
+#include <string>
 
 #include <lamppost/messages/Datagram.h>
 

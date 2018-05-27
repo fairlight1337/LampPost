@@ -1,8 +1,10 @@
-#include <iostream>
+// System includes
 #include <cstdlib>
+#include <iostream>
 
-#include <lamppost/LowLevel.h>
+// Private includes
 #include <lamppost/LampPost.h>
+#include <lamppost/LowLevel.h>
 
 
 // Globals

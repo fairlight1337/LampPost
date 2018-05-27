@@ -2,15 +2,15 @@
 #define LAMPPOST_PLUGININSTANCE_H
 
 
-#include <string>
 #include <atomic>
-#include <thread>
 #include <chrono>
 #include <iostream>
+#include <string>
+#include <thread>
 
+#include <lamppost/bus/Bus.h>
 #include <lamppost/Identifiable.h>
 #include <lamppost/PluginConfiguration.h>
-#include <lamppost/bus/Bus.h>
 
 
 namespace lp {

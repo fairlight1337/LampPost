@@ -2,24 +2,26 @@
 #define LAMPPOST_BUS_H
 
 
-#include <string>
-#include <memory>
-#include <map>
-#include <functional>
-#include <mutex>
-#include <deque>
-#include <condition_variable>
-#include <thread>
-#include <list>
+// System includes
 #include <atomic>
 #include <chrono>
+#include <condition_variable>
+#include <deque>
+#include <functional>
+#include <list>
+#include <memory>
+#include <map>
+#include <mutex>
+#include <string>
+#include <thread>
 
-#include <lamppost/messages/Message.h>
-#include <lamppost/messages/Datagram.h>
+// Private includes
 #include <lamppost/bus/Publisher.h>
 #include <lamppost/bus/Subscriber.h>
 #include <lamppost/exceptions/DuplicateKeyException.h>
 #include <lamppost/exceptions/KeyNotFoundException.h>
+#include <lamppost/messages/Datagram.h>
+#include <lamppost/messages/Message.h>
 
 
 namespace lp {

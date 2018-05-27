@@ -2,11 +2,11 @@
 #define LAMPPOST_PUBLISHER_H
 
 
-#include <string>
 #include <functional>
+#include <string>
 
-#include <lamppost/messages/Datagram.h>
 #include <lamppost/exceptions/ArgumentNullException.h>
+#include <lamppost/messages/Datagram.h>
 
 
 namespace lp {
