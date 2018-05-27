@@ -12,6 +12,7 @@
 #include <thread>
 #include <list>
 #include <atomic>
+#include <chrono>
 
 #include <lamppost/messages/Message.h>
 #include <lamppost/messages/Datagram.h>
@@ -19,6 +20,9 @@
 #include <lamppost/bus/Subscriber.h>
 #include <lamppost/exceptions/DuplicateKeyException.h>
 #include <lamppost/exceptions/KeyNotFoundException.h>
+
+
+using namespace std::chrono_literals;
 
 
 namespace lp {
