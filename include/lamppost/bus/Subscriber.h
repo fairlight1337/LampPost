@@ -5,6 +5,7 @@
 #include <functional>
 #include <memory>
 #include <string>
+#include <utility>
 
 #include <lamppost/messages/Datagram.h>
 

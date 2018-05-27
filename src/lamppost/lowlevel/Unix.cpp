@@ -20,6 +20,6 @@ void HookSystemSignals() {
   action.sa_handler = signalHandler;
   action.sa_flags = SA_RESTART;
   sigfillset(&action.sa_mask);
-  sigaction(SIGTERM, &action, NULL);
-  sigaction(SIGINT, &action, NULL);
+  sigaction(SIGTERM, &action, nullptr);
+  sigaction(SIGINT, &action, nullptr);
 }

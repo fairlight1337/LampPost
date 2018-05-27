@@ -6,7 +6,7 @@ namespace lp {
     Publisher::Publisher(
       std::string topic,
       std::function<void(std::shared_ptr<lp::messages::Datagram>)> publishingFunction)
-      : mTopic(topic), mPublishingFunction(publishingFunction) {
+      : mTopic(std::move(topic)), mPublishingFunction(publishingFunction) {
       if(publishingFunction == nullptr) {
         throw exceptions::ArgumentNullException("publishingFunction", "Publishing function may not be null.");
       }

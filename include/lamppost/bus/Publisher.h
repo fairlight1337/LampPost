@@ -4,6 +4,7 @@
 
 #include <functional>
 #include <string>
+#include <utility>
 
 #include <lamppost/exceptions/ArgumentNullException.h>
 #include <lamppost/messages/Datagram.h>
