@@ -23,7 +23,7 @@ namespace lp {
       mRevision = revision;
     }
   };
-}
+} // namespace lp
 
 
 #endif //LAMPPOST_VERSION_H

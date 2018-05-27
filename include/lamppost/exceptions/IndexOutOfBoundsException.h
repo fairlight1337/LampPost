@@ -17,8 +17,8 @@ namespace lp {
 
       int GetIndex();
     };
-  }
-}
+  } // namespace exceptions
+} // namespace lp
 
 
 #endif //LAMPPOST_INDEXOUTOFBOUNDSEXCEPTION_H

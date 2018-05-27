@@ -60,8 +60,8 @@ namespace lp {
       void Run();
       void Stop();
     };
-  }
-}
+  } // namespace bus
+} // namespace lp
 
 
 #endif //LAMPPOST_BUS_H

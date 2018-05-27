@@ -21,8 +21,8 @@ namespace lp {
         return mValue;
       }
     };
-  }
-}
+  } // namespace messages
+} // namespace lp
 
 
 #endif //LAMPPOST_DATA_H

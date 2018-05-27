@@ -81,8 +81,8 @@ namespace lp {
         }
       }
     };
-  }
-}
+  } // namespace messages
+} // namespace lp
 
 
 #endif //LAMPPOST_DATAGRAM_H

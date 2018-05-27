@@ -13,5 +13,5 @@ namespace lp {
     std::string Subscriber::GetTopic() {
       return mTopic;
     }
-  }
-}
+  } // namespace bus
+} // namespace lp

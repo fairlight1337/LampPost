@@ -9,5 +9,5 @@ namespace lp {
     std::string KeyNotFoundException::GetKey() {
       return mKey;
     }
-  }
-}
+  } // namespace exceptions
+} // namespace lp

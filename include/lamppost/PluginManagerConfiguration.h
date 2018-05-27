@@ -32,7 +32,7 @@ namespace lp {
       return !(*this == rhs);
     }
   };
-}
+} // namespace lp
 
 
 #endif //LAMPPOST_PLUGINMANAGERCONFIGURATION_H

@@ -27,4 +27,4 @@ namespace lp {
   void LampPost::Stop() {
       mRootBus->Stop();
   }
-}
+} // namespace lp

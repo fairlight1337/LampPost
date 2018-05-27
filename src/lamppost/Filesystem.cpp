@@ -13,6 +13,7 @@ namespace lp {
     }
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
     struct stat path_stat;
+    memset(&path_stat, 0, sizeof(path_stat));
 
     if(stat(path.c_str(), &path_stat) == 0) {
       isDirectory = S_ISDIR(path_stat.st_mode);
@@ -33,6 +34,7 @@ namespace lp {
     }
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
     struct stat path_stat;
+    memset(&path_stat, 0, sizeof(path_stat));
 
     if(stat(path.c_str(), &path_stat) == 0) {
       isFile = S_ISREG(path_stat.st_mode);
@@ -85,16 +87,17 @@ namespace lp {
 
     d = opendir(path.c_str());
     if(d) {
-      while((dir = readdir(d)) != nullptr
-        ) {
-        std::string name = dir->d_name;
+      while((dir = readdir(d)) != nullptr) {
+        std::string name = std::string(dir->d_name);
         std::string fullPath = CombinePaths(path, name);
 
-        if(static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::File) && IsFile(fullPath)) {
+        bool filterIncludesFiles = (static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::File)) != 0;
+        if(filterIncludesFiles && IsFile(fullPath)) {
           contents.push_back(name);
         }
 
-        if(static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::Directory) && IsDirectory(fullPath)) {
+        bool filterIncludesDirectories = (static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::File)) != 0;
+        if(filterIncludesDirectories && IsDirectory(fullPath)) {
           contents.push_back(name);
         }
       }
@@ -115,12 +118,11 @@ namespace lp {
     DWORD bytes = GetModuleFileName(nullptr, buffer, (DWORD)bufferLength);
 
     if(bytes > 0) {
-      path = buffer;
+      path = std::string(buffer, bufferLength);
     }
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
-    char tmp[32];
-    sprintf(tmp, "/proc/%d/exe", getpid());
-    int bytes = std::min((int)readlink(tmp, buffer, bufferLength), bufferLength - 1);
+    std::string procExePath = "/proc/" + std::to_string(getpid()) + "/exe";
+    int bytes = std::min((int)readlink(procExePath.c_str(), buffer, bufferLength), bufferLength - 1);
     if(bytes >= 0) {
       buffer[bytes] = '\0';
     }
@@ -212,4 +214,4 @@ namespace lp {
 
     return extension;
   }
-}
+} // namespace lp

@@ -9,8 +9,8 @@ namespace lp {
       DataBase() = default;
       virtual ~DataBase() = default;
     };
-  }
-}
+  } // namespace messages
+} // namespace lp
 
 
 #endif //LAMPPOST_DATABASE_H

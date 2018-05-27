@@ -19,8 +19,8 @@ namespace lp {
 
       std::string GetKey();
     };
-  }
-}
+  } // namespace exceptions
+} // namespace lp
 
 
 #endif //LAMPPOST_DUPLICATEKEYEXCEPTION_H

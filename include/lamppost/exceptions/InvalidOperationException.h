@@ -12,8 +12,8 @@ namespace lp {
       InvalidOperationException(std::string message);
       virtual ~InvalidOperationException() = default;
     };
-  }
-}
+  } // namespace exceptions
+} // namespace lp
 
 
 #endif //LAMPPOST_INVALIDOPERATIONEXCEPTION_H

@@ -23,8 +23,8 @@ namespace lp {
       std::string GetTopic();
       std::shared_ptr<Datagram> GetDatagram();
     };
-  }
-}
+  } // namespace messages
+} // namespace lp
 
 
 #endif //LAMPPOST_MESSAGE_H

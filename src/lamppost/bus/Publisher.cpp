@@ -19,5 +19,5 @@ namespace lp {
 
       mPublishingFunction(datagram);
     }
-  }
-}
+  } // namespace bus
+} // namespace lp

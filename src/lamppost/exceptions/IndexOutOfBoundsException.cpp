@@ -9,5 +9,5 @@ namespace lp {
     int IndexOutOfBoundsException::GetIndex() {
       return mIndex;
     }
-  }
-}
+  } // namespace exceptions
+} // namespace lp

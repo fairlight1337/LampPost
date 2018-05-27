@@ -17,5 +17,5 @@ namespace lp {
     std::shared_ptr<Datagram> Message::GetDatagram() {
       return mDatagram;
     }
-  }
-}
+  } // namespace messages
+} // namespace lp

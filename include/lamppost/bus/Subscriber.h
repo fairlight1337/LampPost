@@ -24,8 +24,8 @@ namespace lp {
 
       std::string GetTopic();
     };
-  }
-}
+  } // namespace bus
+} // namespace lp
 
 
 #endif //LAMPPOST_SUBSCRIBER_H

@@ -31,4 +31,4 @@ namespace lp {
 
     return mInstances[configuration.mIdentifier];
   }
-}
+} // namespace lp

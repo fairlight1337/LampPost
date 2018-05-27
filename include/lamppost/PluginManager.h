@@ -73,7 +73,7 @@ namespace lp {
 
     std::shared_ptr<PluginInstance> InstantiateTemplate(std::string templateIdentifier, PluginConfiguration configuration);
   };
-}
+} // namespace lp
 
 
 #endif //LAMPPOST_PLUGINMANAGER_H

@@ -8,4 +8,4 @@ namespace lp {
   std::string Identifiable::GetIdentifier() {
     return mIdentifier;
   }
-}
+} // namespace lp

@@ -106,4 +106,4 @@ namespace lp {
 
     return nullptr;
   }
-}
+} // namespace lp

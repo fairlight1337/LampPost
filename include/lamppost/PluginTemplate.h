@@ -31,6 +31,6 @@ namespace lp {
     bool IsValid();
     std::string GetType();
   };
-}
+} // namespace lp
 
 #endif //LAMPPOST_PLUGINTEMPLATE_H

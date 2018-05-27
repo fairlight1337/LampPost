@@ -17,8 +17,8 @@ namespace lp {
 
       std::string GetParameterName();
     };
-  }
-}
+  } // namespace exceptions
+} // namespace lp
 
 
 #endif //LAMPPOST_ARGUMENTNULLEXCEPTION_H

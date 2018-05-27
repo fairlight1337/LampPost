@@ -46,7 +46,7 @@ namespace lp {
     static std::string GetBaseDirectory(const std::string& path);
     static std::string GetFileExtension(const std::string& path);
   };
-}
+} // namespace lp
 
 
 #endif //LAMPPOST_FILESYSTEM_H

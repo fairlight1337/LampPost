@@ -127,5 +127,5 @@ namespace lp {
         }
       }
     }
-  }
-}
+  } // namespace bus
+} // namespace lp

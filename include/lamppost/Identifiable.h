@@ -16,6 +16,6 @@ namespace lp {
 
     std::string GetIdentifier();
   };
-}
+} // namespace lp
 
 #endif //LAMPPOST_IDENTIFIABLE_H

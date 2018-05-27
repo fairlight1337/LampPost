@@ -9,5 +9,5 @@ namespace lp {
     std::string ArgumentNullException::GetParameterName() {
       return mParameterName;
     }
-  }
-}
+  } // namespace exceptions
+} // namespace lp

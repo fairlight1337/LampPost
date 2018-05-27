@@ -76,7 +76,7 @@ namespace lp {
     void Start();
     void Stop();
   };
-}
+} // namespace lp
 
 
 #endif //LAMPPOST_PLUGININSTANCE_H

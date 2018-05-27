@@ -24,8 +24,8 @@ namespace lp {
       virtual void Run() override;
       virtual void Deinitialize() override;
     };
-  }
-}
+  } // namespace plugins
+} // namespace lp
 
 extern "C" {
   GENERATE_INSTANCE_CREATOR(lp::plugins::SysInfo);

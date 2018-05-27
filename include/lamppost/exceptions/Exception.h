@@ -13,8 +13,8 @@ namespace lp {
       Exception(std::string message);
       virtual ~Exception() = default;
     };
-  }
-}
+  } // namespace exceptions
+} // namespace lp
 
 
 #endif //LAMPPOST_EXCEPTION_H

@@ -9,5 +9,5 @@ namespace lp {
     std::string DuplicateKeyException::GetKey() {
       return mKey;
     }
-  }
-}
+  } // namespace exceptions
+} // namespace lp

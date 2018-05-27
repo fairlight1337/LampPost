@@ -12,7 +12,7 @@ namespace lp {
     std::string mIdentifier;
     std::shared_ptr<bus::Bus> mBus;
   };
-}
+} // namespace lp
 
 
 #endif //LAMPPOST_PLUGINCONFIGURATION_H

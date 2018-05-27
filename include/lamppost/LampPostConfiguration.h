@@ -23,7 +23,7 @@ namespace lp {
       return !(*this == other);
     }
   };
-}
+} // namespace lp
 
 
 #endif //LAMPPOST_LAMPPOSTCONFIGURATION_H

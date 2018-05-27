@@ -3,5 +3,5 @@
 
 namespace lp {
   namespace messages {
-  }
-}
+  } // namespace messages
+} // namespace lp

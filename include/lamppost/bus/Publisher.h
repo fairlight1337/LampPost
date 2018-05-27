@@ -22,8 +22,8 @@ namespace lp {
 
       void Publish(std::shared_ptr<messages::Datagram> message);
     };
-  }
-}
+  } // namespace bus
+} // namespace lp
 
 
 #endif //LAMPPOST_PUBLISHER_H

@@ -28,7 +28,7 @@ namespace lp {
       mUnloadPluginFunction = unloadPluginFunction;
     }
   };
-}
+} // namespace lp
 
 
 #endif //LAMPPOST_PLUGINTEMPLATECONFIGURATION_H

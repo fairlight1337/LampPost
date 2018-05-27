@@ -134,5 +134,5 @@ namespace lp {
 
       return *this;
     }
-  }
-}
+  } // namespace messages
+} // namespace lp

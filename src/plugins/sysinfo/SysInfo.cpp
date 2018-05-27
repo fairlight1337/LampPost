@@ -27,5 +27,5 @@ namespace lp {
 
     void SysInfo::Deinitialize() {
     }
-  }
-}
+  } // namespace plugins
+} // namespace lp

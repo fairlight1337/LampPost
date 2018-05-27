@@ -10,7 +10,7 @@ namespace lp {
     std::string mIdentifier;
     Version mVersion;
   };
-}
+} // namespace lp
 
 
 #endif //LAMPPOST_PLUGINTEMPLATEINFO_H
