@@ -65,7 +65,7 @@ TEST(Bus, WhenExtendedConstructorIsCalledWithInvalidArguments_ThenAnExceptionIsT
   ASSERT_THROW(lp::bus::Bus bus(cSampleBusName, nullptr), lp::exceptions::ArgumentNullException);
 }
 
-#pragma endregion
+#pragma endregion // Constructor
 
 #pragma region CreateChildBus
 
@@ -88,7 +88,7 @@ TEST(Bus, WhenChildBusIsCreatedWithEmptyName_ThenAnExceptionIsThrown) {
   ASSERT_THROW(bus.CreateChildBus(""), lp::exceptions::ArgumentNullException);
 }
 
-#pragma endregion
+#pragma endregion // CreateChildBus
 
 #pragma region GetChildBus
 
@@ -114,7 +114,7 @@ TEST(Bus, WhenNamedChildBusIsReferredToThatDoesNotExist_ThenAnExceptionIsThrown)
   ASSERT_THROW(bus.GetChildBus(cSampleChildBusName), lp::exceptions::KeyNotFoundException);
 }
 
-#pragma endregion
+#pragma endregion // GetChildBus
 
 #pragma region Publish
 
@@ -147,4 +147,43 @@ TEST(Bus, WhenMessageIsPublished_ThenThePublishingFunctionIsCalledWithTheCorrect
   EXPECT_TRUE(publishingFunctionWasCalledCorrectly);
 }
 
-#pragma endregion
+#pragma endregion // Publish
+
+#pragma region Subscribe
+
+TEST(Bus, WhenSubscribedToTopicAndMessageIsPublishedOnThatTopic_ThenTheMessageIsReceivedProperly) {
+  // Arrange.
+  bool messageWasReceivedProperly = false;
+
+  lp::bus::Bus bus(cSampleBusName);
+  std::shared_ptr<lp::bus::Publisher> publisher = bus.CreatePublisher(cSampleTopic);
+  std::shared_ptr<lp::messages::Datagram> publishDatagram = std::make_shared<lp::messages::Datagram>();
+  *publishDatagram = cSampleDataMessage;
+
+  std::shared_ptr<lp::bus::Subscriber> subscriber = bus.CreateSubscriber(
+    cSampleTopic,
+    [&](std::shared_ptr<lp::messages::Datagram> datagram) {
+      if(datagram) {
+        if(datagram->Get<std::string>() == cSampleDataMessage) {
+          messageWasReceivedProperly = true;
+        }
+      }
+    });
+
+  std::thread busRunner(&lp::bus::Bus::Start, &bus);
+
+  // Act.
+  publisher->Publish(publishDatagram);
+
+  using namespace std::chrono_literals;
+  std::this_thread::sleep_for(100ms);
+
+  // Assert.
+  EXPECT_TRUE(messageWasReceivedProperly);
+
+  // Cleanup.
+  bus.Stop();
+  busRunner.join();
+}
+
+#pragma endregion // Subscribe
