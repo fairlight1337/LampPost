@@ -18,7 +18,7 @@ namespace lp {
 
     public:
       SysInfo(PluginConfiguration configuration);
-      ~SysInfo();
+      virtual ~SysInfo() = default;
 
       virtual void Initialize() override;
       virtual void Run() override;

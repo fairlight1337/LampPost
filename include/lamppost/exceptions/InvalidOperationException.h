@@ -10,7 +10,7 @@ namespace lp {
     class InvalidOperationException : public Exception {
     public:
       InvalidOperationException(std::string message);
-      ~InvalidOperationException();
+      virtual ~InvalidOperationException() = default;
     };
   }
 }

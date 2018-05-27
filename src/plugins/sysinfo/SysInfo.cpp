@@ -6,9 +6,6 @@ namespace lp {
     SysInfo::SysInfo(PluginConfiguration configuration) : PluginInstance(configuration) {
     }
 
-    SysInfo::~SysInfo() {
-    }
-
     void SysInfo::Initialize() {
       mSysInfoPublisher = GetPublisher("/sysinfo");
       mSysInfoSubscriber = GetSubscriber("/sysinfo", [](std::shared_ptr<messages::Datagram> datagram) {

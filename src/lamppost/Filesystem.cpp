@@ -2,13 +2,7 @@
 
 
 namespace lp {
-  Filesystem::Filesystem() {
-  }
-
-  Filesystem::~Filesystem() {
-  }
-
-  bool Filesystem::IsDirectory(std::string path) {
+  bool Filesystem::IsDirectory(const std::string& path) {
     bool isDirectory = false;
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -28,7 +22,7 @@ namespace lp {
     return isDirectory;
   }
 
-  bool Filesystem::IsFile(std::string path) {
+  bool Filesystem::IsFile(const std::string& path) {
     bool isFile = false;
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -48,7 +42,7 @@ namespace lp {
     return isFile;
   }
 
-  bool Filesystem::PathExists(std::string path) {
+  bool Filesystem::PathExists(const std::string& path) {
     bool exists = false;
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -60,7 +54,7 @@ namespace lp {
     return exists;
   }
 
-  std::list<std::string> Filesystem::GetDirectoryContents(std::string path, lp::FilesystemObjectType filter) {
+  std::list<std::string> Filesystem::GetDirectoryContents(const std::string& path, lp::FilesystemObjectType filter) {
     std::list<std::string> contents;
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -158,7 +152,7 @@ namespace lp {
     return path;
   }
 
-  std::string Filesystem::CombinePaths(std::string root, std::string relative) {
+  std::string Filesystem::CombinePaths(const std::string& root, const std::string& relative) {
     std::string combined = root;
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -172,7 +166,7 @@ namespace lp {
     return combined;
   }
 
-  std::string Filesystem::GetFilename(std::string path) {
+  std::string Filesystem::GetFilename(const std::string& path) {
     std::string filename;
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -188,7 +182,7 @@ namespace lp {
     return filename;
   }
 
-  std::string Filesystem::GetBaseDirectory(std::string path) {
+  std::string Filesystem::GetBaseDirectory(const std::string& path) {
     std::string directory;
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -204,7 +198,7 @@ namespace lp {
     return directory;
   }
 
-  std::string Filesystem::GetFileExtension(std::string path) {
+  std::string Filesystem::GetFileExtension(const std::string& path) {
     std::string extension;
 
     std::string filename = GetFilename(path);

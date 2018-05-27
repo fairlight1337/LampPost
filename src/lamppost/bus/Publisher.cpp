@@ -12,9 +12,6 @@ namespace lp {
       }
     }
 
-    Publisher::~Publisher() {
-    }
-
     void Publisher::Publish(std::shared_ptr<lp::messages::Datagram> datagram) {
       if(datagram == nullptr) {
         throw exceptions::ArgumentNullException("message", "Datagram may not be null.");

@@ -28,23 +28,23 @@ namespace lp {
 
   class Filesystem {
   public:
-    Filesystem();
-    ~Filesystem();
+    Filesystem() = default;
+    virtual ~Filesystem() = default;
 
-    static bool PathExists(std::string path);
-    static bool IsFile(std::string path);
-    static bool IsDirectory(std::string path);
+    static bool PathExists(const std::string& path);
+    static bool IsFile(const std::string& path);
+    static bool IsDirectory(const std::string& path);
 
-    static std::list<std::string> GetDirectoryContents(std::string path, FilesystemObjectType filter);
+    static std::list<std::string> GetDirectoryContents(const std::string& path, FilesystemObjectType filter);
 
     static std::string GetPathOfRunningExecutable();
     static std::string GetWorkingDirectory();
 
-    static std::string CombinePaths(std::string root, std::string relative);
+    static std::string CombinePaths(const std::string& root, const std::string& relative);
 
-    static std::string GetFilename(std::string path);
-    static std::string GetBaseDirectory(std::string path);
-    static std::string GetFileExtension(std::string path);
+    static std::string GetFilename(const std::string& path);
+    static std::string GetBaseDirectory(const std::string& path);
+    static std::string GetFileExtension(const std::string& path);
   };
 }
 

@@ -6,9 +6,6 @@ namespace lp {
     Message::Message(std::string sender, std::string topic, std::shared_ptr<lp::messages::Datagram> datagram) : mSender(sender), mTopic(topic), mDatagram(datagram) {
     }
 
-    Message::~Message() {
-    }
-
     std::string Message::GetSender() {
       return mSender;
     }

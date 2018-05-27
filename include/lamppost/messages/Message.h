@@ -17,7 +17,7 @@ namespace lp {
 
     public:
       Message(std::string sender, std::string topic, std::shared_ptr<Datagram> datagram);
-      ~Message();
+      ~Message() = default;
 
       std::string GetSender();
       std::string GetTopic();

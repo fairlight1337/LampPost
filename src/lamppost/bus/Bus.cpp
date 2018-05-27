@@ -26,9 +26,6 @@ namespace lp {
       }
     }
 
-    Bus::~Bus() {
-    }
-
     std::shared_ptr<Bus> Bus::CreateChildBus(std::string name) {
       if(name.empty()) {
         throw exceptions::ArgumentNullException("name", "Child bus name may not be empty.");

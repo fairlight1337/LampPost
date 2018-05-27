@@ -13,7 +13,7 @@ namespace lp {
 
     public:
       KeyNotFoundException(std::string key, std::string message);
-      ~KeyNotFoundException();
+      virtual ~KeyNotFoundException() = default;
 
       std::string GetKey();
     };

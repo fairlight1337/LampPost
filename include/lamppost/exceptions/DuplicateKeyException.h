@@ -15,7 +15,7 @@ namespace lp {
 
     public:
       DuplicateKeyException(std::string key, std::string message);
-      ~DuplicateKeyException();
+      virtual ~DuplicateKeyException() = default;
 
       std::string GetKey();
     };

@@ -3,10 +3,5 @@
 
 namespace lp {
   namespace messages {
-    DataBase::DataBase() {
-    }
-
-    DataBase::~DataBase() {
-    }
   }
 }

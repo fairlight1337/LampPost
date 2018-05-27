@@ -20,7 +20,7 @@ namespace lp {
 
     public:
       LampPost(LampPostConfiguration configuration);
-      ~LampPost();
+      virtual ~LampPost() = default;
 
       void Start();
       void Stop();

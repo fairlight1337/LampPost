@@ -18,7 +18,7 @@ namespace lp {
 
     public:
       Subscriber(std::string topic, std::function<void(std::shared_ptr<messages::Datagram>)> callback);
-      ~Subscriber();
+      ~Subscriber() = default;
 
       void Receive(std::shared_ptr<messages::Datagram> datagram);
 

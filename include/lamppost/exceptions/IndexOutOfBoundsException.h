@@ -13,7 +13,7 @@ namespace lp {
 
     public:
       IndexOutOfBoundsException(int index, std::string message);
-      ~IndexOutOfBoundsException();
+      virtual ~IndexOutOfBoundsException() = default;
 
       int GetIndex();
     };

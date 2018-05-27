@@ -15,7 +15,7 @@ namespace lp {
     public:
       Data() : mValue(T()) {}
       Data(T value) : mValue(value) {}
-      ~Data() {}
+      ~Data() = default;
 
       T Get() {
         return mValue;

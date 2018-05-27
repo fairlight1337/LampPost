@@ -8,9 +8,6 @@ namespace lp {
       mRootBus(std::make_shared<bus::Bus>("root")) {
   }
 
-  LampPost::~LampPost() {
-  }
-
   void LampPost::Start() {
     mPluginManager.SetBus(mRootBus);
     PluginConfiguration pluginConfiguration;

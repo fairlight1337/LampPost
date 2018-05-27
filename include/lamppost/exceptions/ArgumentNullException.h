@@ -13,7 +13,7 @@ namespace lp {
 
     public:
       ArgumentNullException(std::string parameterName, std::string message);
-      ~ArgumentNullException();
+      virtual ~ArgumentNullException() = default;
 
       std::string GetParameterName();
     };

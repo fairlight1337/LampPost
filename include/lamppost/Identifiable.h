@@ -11,8 +11,8 @@ namespace lp {
     std::string mIdentifier;
 
   public:
-    Identifiable(std::string identifier);
-    virtual ~Identifiable();
+    Identifiable(const std::string& identifier);
+    virtual ~Identifiable() = default;
 
     std::string GetIdentifier();
   };

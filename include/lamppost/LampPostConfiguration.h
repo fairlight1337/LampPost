@@ -9,8 +9,7 @@ namespace lp {
   struct LampPostConfiguration {
     PluginManagerConfiguration mPluginManagerConfiguration;
 
-    LampPostConfiguration() {
-    }
+    LampPostConfiguration() = default;
 
     LampPostConfiguration(PluginManagerConfiguration pluginManagerConfiguration) {
       mPluginManagerConfiguration = pluginManagerConfiguration;

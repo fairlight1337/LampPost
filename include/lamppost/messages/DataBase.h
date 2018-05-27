@@ -6,8 +6,8 @@ namespace lp {
   namespace messages {
     class DataBase {
     public:
-      DataBase();
-      virtual ~DataBase();
+      DataBase() = default;
+      virtual ~DataBase() = default;
     };
   }
 }
