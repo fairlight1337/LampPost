@@ -86,7 +86,7 @@ namespace lp {
     d = opendir(path.c_str());
     if(d != nullptr) {
       while((dir = readdir(d)) != nullptr) {
-        std::string name = static_cast<char[]>(dir->d_name);
+        std::string name = static_cast<char*>(dir->d_name);
         std::string fullPath = CombinePaths(path, name);
 
         bool filterIncludesFiles = (static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::File)) != 0;
@@ -146,7 +146,7 @@ namespace lp {
     }
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
     if(getcwd(buffer, bufferLength) != nullptr) {
-      path = static_cast<char[]>(buffer);
+      path = static_cast<char*>(buffer);
     }
 #endif
 
