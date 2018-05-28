@@ -120,13 +120,13 @@ namespace lp {
     }
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
     std::string procExePath = "/proc/" + std::to_string(getpid()) + "/exe";
-    int bytes = std::min(static_cast<int>(readlink(procExePath.c_str(), buffer, bufferLength)), bufferLength - 1);
+    int bytes = std::min(static_cast<int>(readlink(procExePath.c_str(), static_cast<char*>(buffer), bufferLength)), bufferLength - 1);
 
     if(bytes >= 0) {
       buffer[bytes] = '\0';
     }
 
-    path = buffer;
+    path = static_cast<char*>(buffer);
 #endif
 
     return path;
@@ -142,10 +142,10 @@ namespace lp {
     DWORD result = GetCurrentDirectory((DWORD)bufferLength, buffer);
 
     if(result > 0) {
-      path = buffer;
+      path = static_cast<char*>(buffer);
     }
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
-    if(getcwd(buffer, bufferLength) != nullptr) {
+    if(getcwd(static_cast<char*>(buffer), bufferLength) != nullptr) {
       path = static_cast<char*>(buffer);
     }
 #endif
@@ -203,7 +203,7 @@ namespace lp {
     std::string extension;
 
     std::string filename = GetFilename(path);
-    if(filename != "") {
+    if(!filename.empty) {
       size_t pos = filename.find_last_of('.');
 
       if(pos != std::string::npos) {
