@@ -15,7 +15,7 @@ void signalHandler(int signal) {
 
 
 void HookSystemSignals() {
-  struct sigaction action;
+  struct sigaction action = {};
   memset(&action, 0, sizeof(struct sigaction));
   action.sa_handler = signalHandler;
   action.sa_flags = SA_RESTART;

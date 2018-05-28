@@ -21,7 +21,7 @@ namespace lp {
       Publisher(std::string topic, std::function<void(std::shared_ptr<messages::Datagram>)> publishingFunction);
       ~Publisher() = default;
 
-      void Publish(std::shared_ptr<messages::Datagram> message);
+      void Publish(std::shared_ptr<messages::Datagram> datagram);
     };
   } // namespace bus
 } // namespace lp

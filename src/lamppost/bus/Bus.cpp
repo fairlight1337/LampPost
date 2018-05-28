@@ -99,7 +99,7 @@ namespace lp {
         });
 
         std::lock_guard<std::mutex> lock(mQueueMutex);
-        for(std::shared_ptr<messages::Message> message : mQueuedMessages) {
+        for(const std::shared_ptr<messages::Message>& message : mQueuedMessages) {
           Distribute(message);
         }
 
@@ -114,7 +114,7 @@ namespace lp {
     void Bus::Distribute(std::shared_ptr<lp::messages::Message> message) {
       {
         std::lock_guard<std::mutex> lock(mSubscribersMutex);
-        for(std::shared_ptr<Subscriber> subscriber : mSubscribers) {
+        for(const std::shared_ptr<Subscriber>& subscriber : mSubscribers) {
           if(subscriber->GetTopic() == message->GetTopic()) {
             subscriber->Receive(message->GetDatagram());
           }
