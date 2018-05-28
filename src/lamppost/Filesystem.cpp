@@ -203,7 +203,7 @@ namespace lp {
     std::string extension;
 
     std::string filename = GetFilename(path);
-    if(!filename.empty) {
+    if(!filename.empty()) {
       size_t pos = filename.find_last_of('.');
 
       if(pos != std::string::npos) {
