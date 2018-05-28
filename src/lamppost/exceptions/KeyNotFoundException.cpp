@@ -4,7 +4,7 @@
 namespace lp {
   namespace exceptions {
     KeyNotFoundException::KeyNotFoundException(std::string key, std::string message)
-      : Exception(std::move(message)), mKey(std::move(key)) {
+      : Exception(message), mKey(key) {
     }
 
     std::string KeyNotFoundException::GetKey() {

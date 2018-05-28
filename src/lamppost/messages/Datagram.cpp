@@ -17,7 +17,7 @@ namespace lp {
     }
 
     std::shared_ptr<Datagram>& Datagram::operator[](std::string key) {
-      return Get(std::move(key));
+      return Get(key);
     }
 
     std::shared_ptr<Datagram>& Datagram::Get(const std::string& key) {

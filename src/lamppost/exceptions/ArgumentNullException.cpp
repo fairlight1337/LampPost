@@ -4,7 +4,7 @@
 namespace lp {
   namespace exceptions {
     ArgumentNullException::ArgumentNullException(std::string parameterName, std::string message)
-      : Exception(std::move(message)), mParameterName(std::move(parameterName)) {
+      : Exception(message), mParameterName(parameterName) {
     }
 
     std::string ArgumentNullException::GetParameterName() {

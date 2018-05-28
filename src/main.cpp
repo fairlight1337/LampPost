@@ -28,7 +28,7 @@ int main() {
 
   try {
     lamppost->Start();
-  } catch(std::runtime_error exception) {
+  } catch(std::runtime_error& exception) {
     std::cout << exception.what() << std::flush << std::endl;
 
     throw;
