@@ -3,7 +3,7 @@
 
 namespace lp {
   namespace bus {
-    Bus::Bus(std::string name) : mName(name) {
+    Bus::Bus(std::string name) : mName(name), mShouldRun(false) {
       if(name.empty()) {
         throw exceptions::ArgumentNullException("name", "Bus name may not be empty.");
       }
@@ -16,7 +16,8 @@ namespace lp {
       };
     }
 
-    Bus::Bus(std::string name, std::function<void(std::shared_ptr<messages::Message>)> publishMessageFunction) : mName(name), mPublishMessageFunction(publishMessageFunction) {
+    Bus::Bus(std::string name, std::function<void(std::shared_ptr<messages::Message>)> publishMessageFunction)
+      : mName(name), mPublishMessageFunction(publishMessageFunction), mShouldRun(false) {
       if(name.empty()) {
         throw exceptions::ArgumentNullException("name", "Bus name may not be empty.");
       }
@@ -94,7 +95,7 @@ namespace lp {
         mNotifier.wait_for(notifierLock, std::chrono::milliseconds(BUS_NOTIFIER_CHECK_TIMEOUT_MS), [this] {
           std::lock_guard<std::mutex> lock(mQueueMutex);
 
-          return mQueuedMessages.size() > 0;
+          return !mQueuedMessages.empty();
         });
 
         std::lock_guard<std::mutex> lock(mQueueMutex);

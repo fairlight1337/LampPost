@@ -20,6 +20,7 @@ namespace lp {
   }
 
   PluginManager::~PluginManager() {
+    mTemplates.clear();
   }
 
   PluginLibraryHandle PluginManager::OpenPluginLibrary(std::string path) {
@@ -82,10 +83,10 @@ namespace lp {
   }
 
   void PluginManager::LoadTemplates() {
-    for(std::string searchPath : mConfiguration.mTemplateSearchPaths) {
+    for(const std::string& searchPath : mConfiguration.mTemplateSearchPaths) {
       std::list<std::string> filesInPath = Filesystem::GetDirectoryContents(searchPath, FilesystemObjectType::File);
 
-      for(std::string file : filesInPath) {
+      for(const std::string& file : filesInPath) {
         LoadTemplate(Filesystem::CombinePaths(searchPath, file));
       }
     }

@@ -13,8 +13,8 @@ matrix:
       - mkdir build
       - cd build
       - cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
-      - find ../src -name "*.h" -o -name "*.cpp" -print | xargs -I{} clang-tidy -checks=*,-performance-unnecessary-value-param,-cppcoreguidelines-pro-bounds-constant-array-index,-modernize-pass-by-value -p=./ {} > tidy_output.txt
-#      - find ../test -name "*.h" -o -name "*.cpp" -print | xargs -I{} clang-tidy -checks=*,-performance-unnecessary-value-param,-cppcoreguidelines-pro-bounds-constant-array-index,-modernize-pass-by-value -p=./ {} >> tidy_output.txt
+      - find ../src -name "*.h" -o -name "*.cpp" -print | xargs -I{} clang-tidy -checks=*,-performance-unnecessary-value-param,-cppcoreguidelines-pro-bounds-constant-array-index,-modernize-pass-by-value,-cert-err58-cpp,-modernize-use-auto -p=./ {} > tidy_output.txt
+#      - find ../test -name "*.h" -o -name "*.cpp" -print | xargs -I{} clang-tidy -checks=*,-performance-unnecessary-value-param,-cppcoreguidelines-pro-bounds-constant-array-index,-modernize-pass-by-value,-cert-err58-cpp,-modernize-use-auto -p=./ {} >> tidy_output.txt
       - cat tidy_output.txt
       - |
         if [[ -n $(grep "warning: " tidy_output.txt) ]] || [[ -n $(grep "error: " tidy_output.txt) ]]; then
