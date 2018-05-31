@@ -12,6 +12,7 @@
 #endif
 
 #include <lamppost/Filesystem.h>
+#include <lamppost/log/Log.h>
 #include <lamppost/PluginInstance.h>
 #include <lamppost/PluginTemplate.h>
 
@@ -60,6 +61,8 @@ namespace lp {
 
       return object;
     };
+
+    log::Log mLog;
 
   public:
     PluginManager(PluginManagerConfiguration configuration);

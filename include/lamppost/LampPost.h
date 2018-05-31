@@ -9,6 +9,7 @@
 
 #include <lamppost/LampPostConfiguration.h>
 #include <lamppost/PluginManager.h>
+#include <lamppost/log/Log.h>
 
 
 namespace lp {
@@ -17,6 +18,7 @@ namespace lp {
       std::shared_ptr<bus::Bus> mRootBus;
       LampPostConfiguration mConfiguration;
       PluginManager mPluginManager;
+      log::Log mLog;
 
     public:
       LampPost(LampPostConfiguration configuration);

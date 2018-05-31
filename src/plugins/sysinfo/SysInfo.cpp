@@ -4,7 +4,6 @@
 namespace lp {
   namespace plugins {
     SysInfo::SysInfo(PluginConfiguration configuration) : PluginInstance(configuration) {
-      std::cout << "Instantiate SysInfo" << std::endl;
     }
 
     void SysInfo::Initialize() {

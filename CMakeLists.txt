@@ -43,7 +43,8 @@ set(SRC
     src/lamppost/bus/Bus.cpp
     src/lamppost/exceptions/DuplicateKeyException.cpp
     src/lamppost/bus/Publisher.cpp
-    src/lamppost/bus/Subscriber.cpp)
+    src/lamppost/bus/Subscriber.cpp
+    src/lamppost/log/Log.cpp)
 
 add_library(${PROJECT_NAME}
     ${SRC})

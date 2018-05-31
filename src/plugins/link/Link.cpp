@@ -4,7 +4,6 @@
 namespace lp {
   namespace plugins {
     Link::Link(PluginConfiguration configuration) : PluginInstance(configuration) {
-      std::cout << "Instantiate Link" << std::endl;
     }
 
     void Link::Initialize() {
