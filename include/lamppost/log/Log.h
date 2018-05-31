@@ -12,9 +12,12 @@
 #define LOG_COLOR_ERROR 0
 
 
-namespace lp {
-  namespace log {
-    class Log {
+namespace lp
+{
+  namespace log
+  {
+    class Log
+    {
     private:
       static std::mutex sSynchronizationMutex;
 

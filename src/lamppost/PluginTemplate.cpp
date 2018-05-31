@@ -38,7 +38,5 @@ namespace lp {
     }
 
     mInstances.clear();
-
-    mConfiguration.mUnloadPluginFunction();
   }
 } // namespace lp

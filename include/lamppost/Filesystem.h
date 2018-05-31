@@ -22,14 +22,17 @@
 #endif
 
 
-namespace lp {
-  enum class FilesystemObjectType : int {
+namespace lp
+{
+  enum class FilesystemObjectType : int
+  {
     File = 1,
     Directory = 2,
     Any = 3
   };
 
-  class Filesystem {
+  class Filesystem
+  {
   public:
     Filesystem() = default;
     virtual ~Filesystem() = default;

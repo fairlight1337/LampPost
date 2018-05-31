@@ -17,7 +17,8 @@
 #include <lamppost/PluginTemplate.h>
 
 
-namespace lp {
+namespace lp
+{
 #if defined(_WIN32) || defined(_WIN64)
   typedef PluginTemplateInfo* (CALLBACK* PluginCreateInfoFunctionType)();
   typedef void (CALLBACK* PluginDestroyInfoFunctionType)(PluginTemplateInfo*);
@@ -33,12 +34,19 @@ namespace lp {
 #endif
 
 
-  class PluginManager {
+  class PluginManager
+  {
   private:
+    struct PluginTemplateDescription
+    {
+      PluginLibraryHandle mLibraryHandle;
+      std::shared_ptr<PluginTemplate> mTemplate;
+    };
+
     static std::string sTemplateFileExtension;
 
     PluginManagerConfiguration mConfiguration;
-    std::map<std::string, std::shared_ptr<PluginTemplate>> mTemplates;
+    std::map<std::string, PluginTemplateDescription> mTemplates;
 
     bool LoadTemplate(std::string filePath);
 
@@ -46,7 +54,8 @@ namespace lp {
     static void ClosePluginLibrary(PluginLibraryHandle handle);
 
     template<typename T>
-    static T GetPluginLibaryFunction(PluginLibraryHandle handle, std::string functionName) {
+    static T GetPluginLibaryFunction(PluginLibraryHandle handle, std::string functionName)
+    {
 #if defined(_WIN32) || defined(_WIN64)
       return (T)GetProcAddress(handle, functionName.c_str());
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
@@ -55,7 +64,8 @@ namespace lp {
     }
 
     template<typename TTargetType, typename TCreateFunctionType, typename TDestroyFunctionType, class ... Args>
-    static std::shared_ptr<TTargetType> CreateSharedObject(TCreateFunctionType createFunction, TDestroyFunctionType destroyFunction, Args ... args) {
+    static std::shared_ptr<TTargetType> CreateSharedObject(TCreateFunctionType createFunction, TDestroyFunctionType destroyFunction, Args ... args)
+    {
       TTargetType* pi = createFunction(std::forward<Args>(args)...);
       std::shared_ptr<TTargetType> object(pi, destroyFunction);
 
@@ -66,7 +76,7 @@ namespace lp {
 
   public:
     PluginManager(PluginManagerConfiguration configuration);
-    ~PluginManager();
+    virtual ~PluginManager() = default;
 
     void SetBus(std::shared_ptr<bus::Bus> bus);
     void LoadTemplates();

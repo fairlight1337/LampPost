@@ -16,15 +16,19 @@
 #include <lamppost/exceptions/IndexOutOfBoundsException.h>
 
 
-namespace lp {
-  namespace messages {
-    enum class DatagramType {
+namespace lp
+{
+  namespace messages
+  {
+    enum class DatagramType
+    {
       List = 0,
       Dictionary = 1,
       Value = 2
     };
 
-    class Datagram {
+    class Datagram
+    {
     private:
       std::map<std::string, std::shared_ptr<Datagram>> mDictionary;
       std::list<std::shared_ptr<Datagram>> mList;
@@ -33,8 +37,10 @@ namespace lp {
       DatagramType mType;
 
       template<typename T>
-      void SetValue(T value) {
-        if(mType != DatagramType::Value) {
+      void SetValue(T value)
+      {
+        if(mType != DatagramType::Value)
+        {
           mDictionary.clear();
           mList.clear();
 
@@ -72,12 +78,16 @@ namespace lp {
       Datagram& operator=(bool value);
 
       template<typename T>
-      T Get() {
+      T Get()
+      {
         std::shared_ptr<Data<T>> data = std::dynamic_pointer_cast<Data<T>>(mValue);
 
-        if(data != nullptr) {
+        if(data != nullptr)
+        {
           return data->Get();
-        } else {
+        }
+        else
+        {
           throw exceptions::InvalidOperationException("Wrong data type.");
         }
       }

@@ -2,9 +2,12 @@
 #define LAMPPOST_DATABASE_H
 
 
-namespace lp {
-  namespace messages {
-    class DataBase {
+namespace lp
+{
+  namespace messages
+  {
+    class DataBase
+    {
     public:
       DataBase() = default;
       virtual ~DataBase() = default;

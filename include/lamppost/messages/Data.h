@@ -5,10 +5,13 @@
 #include <lamppost/messages/DataBase.h>
 
 
-namespace lp {
-  namespace messages {
+namespace lp
+{
+  namespace messages
+  {
     template<typename T>
-    class Data : public DataBase {
+    class Data : public DataBase
+    {
     private:
       T mValue;
 
@@ -17,7 +20,8 @@ namespace lp {
       Data(T value) : mValue(value) {}
       ~Data() = default;
 
-      T Get() {
+      T Get()
+      {
         return mValue;
       }
     };

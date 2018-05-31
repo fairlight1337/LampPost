@@ -14,8 +14,10 @@
 #include <lamppost/PluginTemplateInfo.h>
 
 
-namespace lp {
-  class PluginTemplate : public Identifiable {
+namespace lp
+{
+  class PluginTemplate : public Identifiable
+  {
   private:
     PluginTemplateConfiguration mConfiguration;
     std::map<std::string, std::shared_ptr<PluginInstance>> mInstances;

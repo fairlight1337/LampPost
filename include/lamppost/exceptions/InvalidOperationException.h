@@ -5,9 +5,12 @@
 #include <lamppost/exceptions/Exception.h>
 
 
-namespace lp {
-  namespace exceptions {
-    class InvalidOperationException : public Exception {
+namespace lp
+{
+  namespace exceptions
+  {
+    class InvalidOperationException : public Exception
+    {
     public:
       InvalidOperationException(std::string message);
       virtual ~InvalidOperationException() = default;

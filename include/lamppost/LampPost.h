@@ -12,8 +12,10 @@
 #include <lamppost/log/Log.h>
 
 
-namespace lp {
-  class LampPost {
+namespace lp
+{
+  class LampPost
+  {
     private:
       std::shared_ptr<bus::Bus> mRootBus;
       LampPostConfiguration mConfiguration;

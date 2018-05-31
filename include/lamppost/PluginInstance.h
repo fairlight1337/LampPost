@@ -14,7 +14,8 @@
 #include <lamppost/PluginConfiguration.h>
 
 
-namespace lp {
+namespace lp
+{
 #if defined(_WIN32) || defined(_WIN64)
 #define LIBEXPORT __declspec(dllexport)
 #else
@@ -28,16 +29,19 @@ namespace lp {
 #endif
 
 #define GENERATE_INSTANCE_CREATOR(cls) \
-  LIBEXPORT lp::PluginInstance* CALLINGCONVENTION CreateInstance(lp::PluginConfiguration configuration) { \
+  LIBEXPORT lp::PluginInstance* CALLINGCONVENTION CreateInstance(lp::PluginConfiguration configuration) \
+  { \
     return new cls(configuration); \
   } \
   \
-  LIBEXPORT void CALLINGCONVENTION DestroyInstance(lp::PluginInstance* instance) { \
+  LIBEXPORT void CALLINGCONVENTION DestroyInstance(lp::PluginInstance* instance) \
+  { \
     delete instance; \
   }
 
 #define GENERATE_INFO_CREATOR(variablename, body) \
-  LIBEXPORT lp::PluginTemplateInfo* CALLINGCONVENTION CreateInfo() { \
+  LIBEXPORT lp::PluginTemplateInfo* CALLINGCONVENTION CreateInfo() \
+  { \
     lp::PluginTemplateInfo* variablename = new lp::PluginTemplateInfo(); \
     \
     body \
@@ -45,12 +49,14 @@ namespace lp {
     return variablename; \
   } \
   \
-  LIBEXPORT void CALLINGCONVENTION DestroyInfo(lp::PluginTemplateInfo* info) { \
+  LIBEXPORT void CALLINGCONVENTION DestroyInfo(lp::PluginTemplateInfo* info) \
+  { \
     delete info; \
   }
 
 
-  class PluginInstance : public Identifiable {
+  class PluginInstance : public Identifiable
+  {
   private:
     PluginConfiguration mConfiguration;
     std::thread mWorkerThread;

@@ -5,8 +5,10 @@
 #include <lamppost/Version.h>
 
 
-namespace lp {
-  struct PluginTemplateInfo {
+namespace lp
+{
+  struct PluginTemplateInfo
+  {
     std::string mIdentifier;
     Version mVersion;
   };

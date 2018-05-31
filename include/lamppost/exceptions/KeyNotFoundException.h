@@ -7,9 +7,12 @@
 #include <lamppost/exceptions/Exception.h>
 
 
-namespace lp {
-  namespace exceptions {
-    class KeyNotFoundException : public Exception {
+namespace lp
+{
+  namespace exceptions
+  {
+    class KeyNotFoundException : public Exception
+    {
     private:
       std::string mKey;
 

@@ -8,9 +8,12 @@
 #include <lamppost/exceptions/Exception.h>
 
 
-namespace lp {
-  namespace exceptions {
-    class DuplicateKeyException : public Exception {
+namespace lp
+{
+  namespace exceptions
+  {
+    class DuplicateKeyException : public Exception
+    {
     private:
       std::string mKey;
 

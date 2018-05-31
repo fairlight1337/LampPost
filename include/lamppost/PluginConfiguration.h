@@ -7,8 +7,10 @@
 #include <lamppost/bus/Bus.h>
 
 
-namespace lp {
-  struct PluginConfiguration {
+namespace lp
+{
+  struct PluginConfiguration
+  {
     std::string mIdentifier;
     std::shared_ptr<bus::Bus> mBus;
   };

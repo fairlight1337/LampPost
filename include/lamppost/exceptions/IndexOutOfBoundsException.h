@@ -5,9 +5,12 @@
 #include <lamppost/exceptions/Exception.h>
 
 
-namespace lp {
-  namespace exceptions {
-    class IndexOutOfBoundsException : public Exception {
+namespace lp
+{
+  namespace exceptions
+  {
+    class IndexOutOfBoundsException : public Exception
+
     private:
       int mIndex;
 

@@ -7,9 +7,12 @@
 #include <lamppost/messages/Datagram.h>
 
 
-namespace lp {
-  namespace messages {
-    class Message {
+namespace lp
+{
+  namespace messages
+  {
+    class Message
+    {
     private:
       std::string mSender;
       std::string mTopic;

@@ -25,9 +25,12 @@
 #include <lamppost/messages/Message.h>
 
 
-namespace lp {
-  namespace bus {
-    class Bus {
+namespace lp
+{
+  namespace bus
+  {
+    class Bus
+    {
     private:
       const int BUS_NOTIFIER_CHECK_TIMEOUT_MS = 100;
 
@@ -62,7 +65,8 @@ namespace lp {
       std::shared_ptr<Publisher> CreatePublisher(std::string topic);
 
       template<class ... Args>
-      std::shared_ptr<Subscriber> CreateSubscriber(Args ... args) {
+      std::shared_ptr<Subscriber> CreateSubscriber(Args ... args)
+      {
         std::shared_ptr<Subscriber> subscriber = std::make_shared<Subscriber>(std::forward<Args>(args)...);
 
         std::lock_guard<std::mutex> lock(mSubscribersMutex);

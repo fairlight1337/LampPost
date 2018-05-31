@@ -10,9 +10,12 @@
 #include <lamppost/messages/Datagram.h>
 
 
-namespace lp {
-  namespace bus {
-    class Publisher {
+namespace lp
+{
+  namespace bus
+  {
+    class Publisher
+    {
     private:
       std::string mTopic;
       std::function<void(std::shared_ptr<messages::Datagram>)> mPublishingFunction;

@@ -9,23 +9,23 @@
 #include <lamppost/Version.h>
 
 
-namespace lp {
-  struct PluginTemplateConfiguration {
+namespace lp
+{
+  struct PluginTemplateConfiguration
+  {
     std::string mIdentifier;
     Version mVersion;
 
     std::function<std::shared_ptr<PluginInstance>(PluginConfiguration)> mInstantiateFunction;
-    std::function<void()> mUnloadPluginFunction;
 
     PluginTemplateConfiguration(
       std::string identifier,
       Version version,
-      std::function<std::shared_ptr<PluginInstance>(PluginConfiguration)> instantiateFunction,
-      std::function<void()> unloadPluginFunction) {
+      std::function<std::shared_ptr<PluginInstance>(PluginConfiguration)> instantiateFunction)
+    {
       mIdentifier = identifier;
       mVersion = version;
       mInstantiateFunction = instantiateFunction;
-      mUnloadPluginFunction = unloadPluginFunction;
     }
   };
 } // namespace lp

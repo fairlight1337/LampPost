@@ -7,9 +7,12 @@
 #include <lamppost/exceptions/Exception.h>
 
 
-namespace lp {
-  namespace exceptions {
-    class ArgumentNullException : public Exception {
+namespace lp
+{
+  namespace exceptions
+  {
+    class ArgumentNullException : public Exception
+    {
     private:
       std::string mParameterName;
 

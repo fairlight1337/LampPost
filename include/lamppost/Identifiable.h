@@ -7,8 +7,10 @@
 #include <utility>
 
 
-namespace lp {
-  class Identifiable {
+namespace lp
+{
+  class Identifiable
+  {
   private:
     std::string mIdentifier;
 

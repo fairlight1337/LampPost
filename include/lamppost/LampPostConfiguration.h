@@ -5,21 +5,26 @@
 #include <lamppost/PluginManagerConfiguration.h>
 
 
-namespace lp {
-  struct LampPostConfiguration {
+namespace lp
+{
+  struct LampPostConfiguration
+    {
     PluginManagerConfiguration mPluginManagerConfiguration;
 
     LampPostConfiguration() = default;
 
-    LampPostConfiguration(PluginManagerConfiguration pluginManagerConfiguration) {
+    LampPostConfiguration(PluginManagerConfiguration pluginManagerConfiguration)
+    {
       mPluginManagerConfiguration = pluginManagerConfiguration;
     }
 
-    bool operator==(const LampPostConfiguration& other) const {
+    bool operator==(const LampPostConfiguration& other) const
+    {
       return mPluginManagerConfiguration == other.mPluginManagerConfiguration;
     }
 
-    bool operator!=(const LampPostConfiguration& other) const {
+    bool operator!=(const LampPostConfiguration& other) const
+    {
       return !(*this == other);
     }
   };

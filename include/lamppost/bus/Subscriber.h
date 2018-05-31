@@ -10,9 +10,12 @@
 #include <lamppost/messages/Message.h>
 
 
-namespace lp {
-  namespace bus {
-    class Subscriber {
+namespace lp
+{
+  namespace bus
+  {
+    class Subscriber
+    {
     private:
       std::string mTopic;
       std::function<void(std::shared_ptr<messages::Message>)> mCallback;

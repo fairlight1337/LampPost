@@ -22,10 +22,6 @@ namespace lp {
     mConfiguration.mTemplateSearchPaths.push_back(libDirectory);
   }
 
-  PluginManager::~PluginManager() {
-    mTemplates.clear();
-  }
-
   PluginLibraryHandle PluginManager::OpenPluginLibrary(std::string path) {
 #if defined(_WIN32) || defined(_WIN64)
     return LoadLibrary(path.c_str());
@@ -89,13 +85,18 @@ namespace lp {
               PluginTemplateConfiguration configuration(
                 info->mIdentifier,
                 info->mVersion,
-                [CreateInstance, DestroyInstance](PluginConfiguration configuration) {
+                [CreateInstance, DestroyInstance](PluginConfiguration configuration)
+                {
                   return CreateSharedObject<PluginInstance>(CreateInstance, DestroyInstance, configuration);
-                },
-                [handle]() { ClosePluginLibrary(handle); });
+                });
 
               std::shared_ptr<PluginTemplate> pluginTemplate = std::make_shared<PluginTemplate>(configuration);
-              mTemplates[info->mIdentifier] = pluginTemplate;
+
+              PluginTemplateDescription pluginTemplateDescription;
+              pluginTemplateDescription.mLibraryHandle = handle;
+              pluginTemplateDescription.mTemplate = pluginTemplate;
+
+              mTemplates[info->mIdentifier] = pluginTemplateDescription;
 
               loadedSuccessfully = true;
 
@@ -142,10 +143,11 @@ namespace lp {
   void PluginManager::UnloadTemplates() {
     mLog.Info("Unloading plugin templates:");
 
-    for(std::pair<std::string, std::shared_ptr<PluginTemplate>> templatePair : mTemplates) {
+    for(std::pair<std::string, PluginTemplateDescription> templatePair : mTemplates) {
       mLog.Info(templatePair.first, 1);
 
-      templatePair.second->Unload();
+      templatePair.second.mTemplate->Unload();
+      ClosePluginLibrary(templatePair.second.mLibraryHandle);
     }
 
     mTemplates.clear();
@@ -169,7 +171,7 @@ namespace lp {
     if(mTemplates.find(templateIdentifier) != mTemplates.end()) {
       mLog.Info("Template found, instantiating", 1);
 
-      returnedInstance = mTemplates[templateIdentifier]->Instantiate(configuration, configuration.mBus);
+      returnedInstance = mTemplates[templateIdentifier].mTemplate->Instantiate(configuration, configuration.mBus);
     } else {
       mLog.Error("Template not found, failed to instantiate.", 1);
     }
