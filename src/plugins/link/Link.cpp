@@ -15,7 +15,7 @@ namespace lp {
 
     void Link::Run() {
       while(mShouldRun) {
-        // TODO: Implement this.
+        // TODO(fairlight1337): Implement this.
 
         Sleep(std::chrono::seconds(2));
       }

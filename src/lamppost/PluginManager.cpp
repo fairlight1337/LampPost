@@ -40,6 +40,8 @@ namespace lp {
   }
 
   bool PluginManager::LoadTemplate(std::string filePath) {
+    bool loadedSuccessfully = false;
+
     if(Filesystem::PathExists(filePath) && Filesystem::GetFileExtension(filePath) == sTemplateFileExtension) {
       std::cout << "Loading: " << filePath << std::endl;
 
@@ -67,7 +69,7 @@ namespace lp {
               std::shared_ptr<PluginTemplate> pluginTemplate = std::make_shared<PluginTemplate>(configuration);
               mTemplates[info->mIdentifier] = pluginTemplate;
 
-              return true;
+              loadedSuccessfully = true;
             } else {
               ClosePluginLibrary(handle);
             }
@@ -80,7 +82,7 @@ namespace lp {
       }
     }
 
-    return false;
+    return loadedSuccessfully;
   }
 
   void PluginManager::LoadTemplates() {

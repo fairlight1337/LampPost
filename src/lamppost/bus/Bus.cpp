@@ -157,7 +157,7 @@ namespace lp {
         {
           std::lock_guard<std::mutex> lock(mSubscribersMutex);
           for(const std::shared_ptr<Subscriber>& subscriber : mSubscribers) {
-            // TODO: Match ant-like and possibly regex expressions for topic names here.
+            // TODO(fairlight1337): Match ant-like and possibly regex expressions for topic names here.
             if(subscriber->GetTopic() == message->GetTopic()) {
               subscriber->Receive(message);
             }
