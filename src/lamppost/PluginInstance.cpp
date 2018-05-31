@@ -8,6 +8,7 @@ namespace lp {
 
   PluginInstance::~PluginInstance() {
     Stop();
+    mConfiguration.mBus = nullptr;
   }
 
   std::shared_ptr<bus::Publisher> PluginInstance::GetPublisher(std::string topic) {
