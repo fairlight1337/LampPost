@@ -5,7 +5,7 @@ namespace lp
 {
   namespace bus
   {
-    Bus::Bus(std::string name) : mName(name), mShouldRun(false), mIsRootBus(true)
+    Bus::Bus(std::string name) : Identifiable(name), mShouldRun(false), mIsRootBus(true)
     {
       if(name.empty())
       {
@@ -22,7 +22,7 @@ namespace lp
     }
 
     Bus::Bus(std::string name, std::function<void(std::shared_ptr<messages::Message>)> publishMessageFunction)
-      : mName(name), mPublishMessageFunction(publishMessageFunction), mShouldRun(false), mIsRootBus(false)
+      : Identifiable(name), mPublishMessageFunction(publishMessageFunction), mShouldRun(false), mIsRootBus(false)
     {
       if(name.empty())
       {
@@ -82,16 +82,11 @@ namespace lp
       return mChildBusses[name];
     }
 
-    std::string Bus::GetName()
-    {
-      return mName;
-    }
-
     void Bus::Publish(std::string topic, std::shared_ptr<messages::Datagram> datagram)
     {
       if(mPublishMessageFunction != nullptr)
       {
-        mPublishMessageFunction(std::make_shared<messages::Message>(mName, topic, datagram));
+        mPublishMessageFunction(std::make_shared<messages::Message>(GetIdentifier(), topic, datagram));
       }
     }
 

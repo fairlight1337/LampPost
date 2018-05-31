@@ -34,7 +34,7 @@ TEST(Bus, WhenSimpleConstructorIsCalled_ThenThePropertiesAreSetCorrectly) {
   lp::bus::Bus bus(cSampleBusName);
 
   // Assert.
-  EXPECT_EQ(cSampleBusName, bus.GetName());
+  EXPECT_EQ(cSampleBusName, bus.GetIdentifier());
 }
 
 // When the extended constructor is called, then the properties are set correctly.
@@ -48,7 +48,7 @@ TEST(Bus, WhenExtendedConstructorIsCalled_ThenThePropertiesAreSetCorrectly) {
   lp::bus::Bus bus(cSampleBusName, publishingFunction);
 
   // Assert.
-  EXPECT_EQ(cSampleBusName, bus.GetName());
+  EXPECT_EQ(cSampleBusName, bus.GetIdentifier());
 }
 
 // When the simple constructor is called with invalid arguments, then an exception is thrown.

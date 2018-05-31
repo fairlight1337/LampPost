@@ -147,7 +147,7 @@ namespace lp {
   }
 
   void PluginManager::UnloadTemplates() {
-    if(mTemplates.size() > 0)
+    if(!mTemplates.empty())
     {
       mLog.Info("Unloading plugin templates:");
 

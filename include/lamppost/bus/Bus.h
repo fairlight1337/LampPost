@@ -21,6 +21,7 @@
 #include <lamppost/bus/Subscriber.h>
 #include <lamppost/exceptions/DuplicateKeyException.h>
 #include <lamppost/exceptions/KeyNotFoundException.h>
+#include <lamppost/Identifiable.h>
 #include <lamppost/messages/Datagram.h>
 #include <lamppost/messages/Message.h>
 
@@ -29,13 +30,11 @@ namespace lp
 {
   namespace bus
   {
-    class Bus
+    class Bus : public Identifiable
     {
     private:
       const int BUS_NOTIFIER_CHECK_TIMEOUT_MS = 100;
 
-      // TODO(fairlight1337): Make Bus derive from Identifiable instead of using a dedicated name field here.
-      std::string mName;
       std::map<std::string, std::shared_ptr<Bus>> mChildBusses;
       std::mutex mChildBussesMutex;
       std::mutex mQueueMutex;
