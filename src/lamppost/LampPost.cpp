@@ -1,7 +1,8 @@
 #include <lamppost/LampPost.h>
 
 
-namespace lp {
+namespace lp
+{
   LampPost::LampPost(LampPostConfiguration configuration)
     : mConfiguration(configuration),
       mPluginManager(configuration.mPluginManagerConfiguration),

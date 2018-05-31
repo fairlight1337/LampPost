@@ -22,7 +22,7 @@ namespace lp
 
     public:
       Publisher(std::string topic, std::function<void(std::shared_ptr<messages::Datagram>)> publishingFunction);
-      ~Publisher() = default;
+      virtual ~Publisher() = default;
 
       void Publish(std::shared_ptr<messages::Datagram> datagram);
 

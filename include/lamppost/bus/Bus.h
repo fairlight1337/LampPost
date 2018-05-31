@@ -56,7 +56,7 @@ namespace lp
     public:
       Bus(std::string name);
       Bus(std::string name, std::function<void(std::shared_ptr<messages::Message>)> publishMessageFunction);
-      ~Bus();
+      virtual ~Bus();
 
       std::shared_ptr<Bus> CreateChildBus(std::string name);
       std::shared_ptr<Bus> GetChildBus(std::string name);

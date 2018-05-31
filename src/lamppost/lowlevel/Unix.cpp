@@ -1,8 +1,10 @@
 #include <lamppost/LowLevel.h>
 
 
-void signalHandler(int signal) {
-  switch(signal) {
+void signalHandler(int signal)
+{
+  switch(signal)
+  {
     case SIGINT:
     case SIGTERM:
       HandleShutdownSignal();
@@ -14,7 +16,8 @@ void signalHandler(int signal) {
 }
 
 
-void HookSystemSignals() {
+void HookSystemSignals()
+{
   struct sigaction action = {};
   memset(&action, 0, sizeof(struct sigaction));
   action.sa_handler = signalHandler;

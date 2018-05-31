@@ -9,25 +9,29 @@
 #include <lamppost/PluginTemplateInfo.h>
 
 
-namespace lp {
-  namespace plugins {
-    class SysInfo : public PluginInstance {
+namespace lp
+{
+  namespace plugins
+  {
+    class SysInfo : public PluginInstance
+      {
     private:
       std::shared_ptr<bus::Publisher> mSysInfoPublisher;
       std::shared_ptr<bus::Subscriber> mSysInfoSubscriber;
 
     public:
       SysInfo(PluginConfiguration configuration);
-      virtual ~SysInfo() = default;
+      ~SysInfo() override = default;
 
-      virtual void Initialize() override;
-      virtual void Run() override;
-      virtual void Deinitialize() override;
+      void Initialize() override;
+      void Run() override;
+      void Deinitialize() override;
     };
   } // namespace plugins
 } // namespace lp
 
-extern "C" {
+extern "C"
+{
   GENERATE_INSTANCE_CREATOR(lp::plugins::SysInfo);
   GENERATE_INFO_CREATOR(info,
     info->mIdentifier = "SysInfo";

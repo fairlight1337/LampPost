@@ -1,13 +1,18 @@
 #include <lamppost/exceptions/KeyNotFoundException.h>
 
 
-namespace lp {
-  namespace exceptions {
+namespace lp
+{
+  namespace exceptions
+  {
     KeyNotFoundException::KeyNotFoundException(std::string key, std::string message)
-      : Exception(message), mKey(key) {
+      : Exception(message),
+        mKey(key)
+    {
     }
 
-    std::string KeyNotFoundException::GetKey() {
+    std::string KeyNotFoundException::GetKey()
+    {
       return mKey;
     }
   } // namespace exceptions

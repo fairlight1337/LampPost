@@ -1,25 +1,32 @@
 #include <lamppost/PluginTemplate.h>
 
 
-namespace lp {
+namespace lp
+{
   PluginTemplate::PluginTemplate(PluginTemplateConfiguration configuration)
-    : Identifiable(configuration.mIdentifier), mConfiguration(configuration) {
+    : Identifiable(configuration.mIdentifier),
+      mConfiguration(configuration)
+  {
   }
 
-  PluginTemplate::~PluginTemplate() {
+  PluginTemplate::~PluginTemplate()
+  {
     Unload();
   }
 
-  bool PluginTemplate::IndexedInstanceExists(int index) {
+  bool PluginTemplate::IndexedInstanceExists(int index)
+  {
     std::string identifier = mConfiguration.mIdentifier + std::to_string(index);
 
     return mInstances.find(identifier) != mInstances.end();
   }
 
-  std::shared_ptr<PluginInstance> PluginTemplate::Instantiate(PluginConfiguration configuration, std::shared_ptr<bus::Bus> parentBus) {
+  std::shared_ptr<PluginInstance> PluginTemplate::Instantiate(PluginConfiguration configuration, std::shared_ptr<bus::Bus> parentBus)
+  {
     int index = 0;
 
-    while(IndexedInstanceExists(index)) {
+    while(IndexedInstanceExists(index))
+    {
       index++;
     }
 
@@ -31,21 +38,26 @@ namespace lp {
     return mInstances[configuration.mIdentifier];
   }
 
-  void PluginTemplate::Stop() {
-    for(std::pair<std::string, std::shared_ptr<PluginInstance>> instancePair : mInstances) {
+  void PluginTemplate::Stop()
+  {
+    for(std::pair<std::string, std::shared_ptr<PluginInstance>> instancePair : mInstances)
+    {
       instancePair.second->Stop();
     }
   }
 
-  void PluginTemplate::Deinitialize() {
-    for(std::pair<std::string, std::shared_ptr<PluginInstance>> instancePair : mInstances) {
+  void PluginTemplate::Deinitialize()
+  {
+    for(std::pair<std::string, std::shared_ptr<PluginInstance>> instancePair : mInstances)
+    {
       instancePair.second->Deinitialize();
     }
 
     mInstances.clear();
   }
 
-  void PluginTemplate::Unload() {
+  void PluginTemplate::Unload()
+  {
     mConfiguration.mInstantiateFunction = nullptr;
     
     Stop();

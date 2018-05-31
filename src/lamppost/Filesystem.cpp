@@ -1,14 +1,17 @@
 #include <lamppost/Filesystem.h>
 
 
-namespace lp {
-  bool Filesystem::IsDirectory(const std::string& path) {
+namespace lp
+{
+  bool Filesystem::IsDirectory(const std::string& path)
+  {
     bool isDirectory = false;
 
 #if defined(_WIN32) || defined(_WIN64)
     DWORD ftyp = GetFileAttributesA(path.c_str());
 
-    if (ftyp & FILE_ATTRIBUTE_DIRECTORY) {
+    if (ftyp & FILE_ATTRIBUTE_DIRECTORY)
+    {
       isDirectory = true;
     }
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
@@ -22,13 +25,15 @@ namespace lp {
     return isDirectory;
   }
 
-  bool Filesystem::IsFile(const std::string& path) {
+  bool Filesystem::IsFile(const std::string& path)
+  {
     bool isFile = false;
 
 #if defined(_WIN32) || defined(_WIN64)
     DWORD ftyp = GetFileAttributesA(path.c_str());
 
-    if (!(ftyp & FILE_ATTRIBUTE_DIRECTORY)) {
+    if (!(ftyp & FILE_ATTRIBUTE_DIRECTORY))
+    {
       isFile = true;
     }
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
@@ -42,7 +47,8 @@ namespace lp {
     return isFile;
   }
 
-  bool Filesystem::PathExists(const std::string& path) {
+  bool Filesystem::PathExists(const std::string& path)
+  {
     bool exists = false;
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -54,7 +60,8 @@ namespace lp {
     return exists;
   }
 
-  std::list<std::string> Filesystem::GetDirectoryContents(const std::string& path, lp::FilesystemObjectType filter) {
+  std::list<std::string> Filesystem::GetDirectoryContents(const std::string& path, lp::FilesystemObjectType filter)
+  {
     std::list<std::string> contents;
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -62,18 +69,23 @@ namespace lp {
     WIN32_FIND_DATA FindData;
 
     hFind = FindFirstFile(Filesystem::CombinePaths(path, "*").c_str(), &FindData);
-    if(FindData.cFileName != nullptr && FindData.cFileName[0] != 0) {
-      do {
+    if(FindData.cFileName != nullptr && FindData.cFileName[0] != 0)
+    {
+      do
+      {
         std::string name = FindData.cFileName;
 
-        if(name != "." && name != "..") {
+        if(name != "." && name != "..")
+        {
           std::string fullPath = CombinePaths(path, name);
 
-          if(static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::File) && IsFile(fullPath)) {
+          if(static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::File) && IsFile(fullPath))
+          {
             contents.push_back(name);
           }
 
-          if(static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::Directory) && IsDirectory(fullPath)) {
+          if(static_cast<int>(filter) & static_cast<int>(lp::FilesystemObjectType::Directory) && IsDirectory(fullPath))
+          {
             contents.push_back(name);
           }
         }
@@ -107,7 +119,8 @@ namespace lp {
     return contents;
   }
 
-  std::string Filesystem::GetPathOfRunningExecutable() {
+  std::string Filesystem::GetPathOfRunningExecutable()
+  {
     std::string path;
     char buffer[1024];
     int bufferLength = sizeof(buffer);
@@ -115,7 +128,8 @@ namespace lp {
 #if defined(_WIN32) || defined(_WIN64)
     DWORD bytes = GetModuleFileName(nullptr, buffer, (DWORD)bufferLength);
 
-    if(bytes > 0) {
+    if(bytes > 0)
+    {
       path = std::string(buffer, bufferLength);
     }
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
@@ -132,7 +146,8 @@ namespace lp {
     return path;
   }
 
-  std::string Filesystem::GetWorkingDirectory() {
+  std::string Filesystem::GetWorkingDirectory()
+  {
     std::string path;
 
     char buffer[1024];
@@ -141,7 +156,8 @@ namespace lp {
 #if defined(_WIN32) || defined(_WIN64)
     DWORD result = GetCurrentDirectory((DWORD)bufferLength, buffer);
 
-    if(result > 0) {
+    if(result > 0)
+    {
       path = static_cast<char*>(buffer);
     }
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
@@ -153,7 +169,8 @@ namespace lp {
     return path;
   }
 
-  std::string Filesystem::CombinePaths(const std::string& root, const std::string& relative) {
+  std::string Filesystem::CombinePaths(const std::string& root, const std::string& relative)
+  {
     std::string combined = root;
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -167,7 +184,8 @@ namespace lp {
     return combined;
   }
 
-  std::string Filesystem::GetFilename(const std::string& path) {
+  std::string Filesystem::GetFilename(const std::string& path)
+  {
     std::string filename;
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -176,14 +194,16 @@ namespace lp {
     size_t pos = path.find_last_of('/');
 #endif
 
-    if(pos != std::string::npos && path.size() > pos + 1) {
+    if(pos != std::string::npos && path.size() > pos + 1)
+    {
       filename = path.substr(pos + 1);
     }
 
     return filename;
   }
 
-  std::string Filesystem::GetBaseDirectory(const std::string& path) {
+  std::string Filesystem::GetBaseDirectory(const std::string& path)
+  {
     std::string directory;
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -192,21 +212,25 @@ namespace lp {
     size_t pos = path.find_last_of('/');
 #endif
 
-    if(pos != std::string::npos) {
+    if(pos != std::string::npos)
+    {
       directory = path.substr(0, pos);
     }
 
     return directory;
   }
 
-  std::string Filesystem::GetFileExtension(const std::string& path) {
+  std::string Filesystem::GetFileExtension(const std::string& path)
+  {
     std::string extension;
 
     std::string filename = GetFilename(path);
-    if(!filename.empty()) {
+    if(!filename.empty())
+    {
       size_t pos = filename.find_last_of('.');
 
-      if(pos != std::string::npos) {
+      if(pos != std::string::npos)
+      {
         extension = filename.substr(pos + 1);
       }
     }

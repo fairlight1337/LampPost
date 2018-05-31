@@ -1,13 +1,18 @@
 #include <lamppost/exceptions/ArgumentNullException.h>
 
 
-namespace lp {
-  namespace exceptions {
+namespace lp
+{
+  namespace exceptions
+  {
     ArgumentNullException::ArgumentNullException(std::string parameterName, std::string message)
-      : Exception(message), mParameterName(parameterName) {
+      : Exception(message),
+        mParameterName(parameterName)
+    {
     }
 
-    std::string ArgumentNullException::GetParameterName() {
+    std::string ArgumentNullException::GetParameterName()
+    {
       return mParameterName;
     }
   } // namespace exceptions

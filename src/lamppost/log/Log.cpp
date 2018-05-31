@@ -27,7 +27,8 @@ namespace lp
     }
 
 
-    Log::Log(std::string prefix) : mPrefix(prefix)
+    Log::Log(std::string prefix)
+      : mPrefix(prefix)
     {
     }
 

@@ -5,7 +5,10 @@ namespace lp
 {
   namespace bus
   {
-    Bus::Bus(std::string name) : Identifiable(name), mShouldRun(false), mIsRootBus(true)
+    Bus::Bus(std::string name)
+      : Identifiable(name),
+        mShouldRun(false),
+        mIsRootBus(true)
     {
       if(name.empty())
       {

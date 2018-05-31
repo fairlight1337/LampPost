@@ -9,9 +9,12 @@
 #include <lamppost/PluginTemplateInfo.h>
 
 
-namespace lp {
-  namespace plugins {
-    class Link : public PluginInstance {
+namespace lp
+{
+  namespace plugins
+  {
+    class Link : public PluginInstance
+    {
     private:
       std::shared_ptr<bus::Subscriber> mSysInfoSubscriber;
 
@@ -19,14 +22,15 @@ namespace lp {
       Link(PluginConfiguration configuration);
       virtual ~Link() = default;
 
-      virtual void Initialize() override;
-      virtual void Run() override;
-      virtual void Deinitialize() override;
+      void Initialize() override;
+      void Run() override;
+      void Deinitialize() override;
     };
   } // namespace plugins
 } // namespace lp
 
-extern "C" {
+extern "C"
+{
   GENERATE_INSTANCE_CREATOR(lp::plugins::Link);
   GENERATE_INFO_CREATOR(info,
     info->mIdentifier = "Link";

@@ -1,6 +1,7 @@
 #include <lamppost/LowLevel.h>
 
 
-void HookSystemSignals() {
+void HookSystemSignals()
+{
   // TODO: Implement this.
 }
