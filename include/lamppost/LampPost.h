@@ -19,7 +19,7 @@ namespace lp
     private:
       std::shared_ptr<bus::Bus> mRootBus;
       LampPostConfiguration mConfiguration;
-      std::unique_ptr<PluginManager> mPluginManager;
+      PluginManager mPluginManager;
       log::Log mLog;
 
     public:

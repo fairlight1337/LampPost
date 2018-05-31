@@ -1,36 +1,48 @@
 #include <lamppost/PluginInstance.h>
 
 
-namespace lp {
+namespace lp
+{
   PluginInstance::PluginInstance(PluginConfiguration configuration)
-    : Identifiable(configuration.mIdentifier), mConfiguration(configuration), mShouldRun(false) {
+    : Identifiable(configuration.mIdentifier),
+      mConfiguration(configuration),
+      mShouldRun(false),
+      mLog(configuration.mIdentifier)
+  {
   }
 
-  PluginInstance::~PluginInstance() {
+  PluginInstance::~PluginInstance()
+  {
     Stop();
     mConfiguration.mBus = nullptr;
   }
 
-  void PluginInstance::DeleteSubscriber(std::shared_ptr<bus::Subscriber> subscriber) {
+  void PluginInstance::DeleteSubscriber(std::shared_ptr<bus::Subscriber> subscriber)
+  {
     mConfiguration.mBus->DeleteSubscriber(subscriber);
   }
 
-  void PluginInstance::DeletePublisher(std::shared_ptr<bus::Publisher> publisher) {
+  void PluginInstance::DeletePublisher(std::shared_ptr<bus::Publisher> publisher)
+  {
     mConfiguration.mBus->DeletePublisher(publisher);
   }
 
-  void PluginInstance::Start() {
+  void PluginInstance::Start()
+  {
     mShouldRun = true;
 
     std::thread workerThread(&PluginInstance::Run, this);
     std::swap(mWorkerThread, workerThread);
   }
 
-  void PluginInstance::Stop() {
-    if(mShouldRun) {
+  void PluginInstance::Stop()
+  {
+    if(mShouldRun)
+    {
       mShouldRun = false;
 
-      if(mWorkerThread.joinable()) {
+      if(mWorkerThread.joinable())
+      {
         mWorkerThread.join();
       }
     }

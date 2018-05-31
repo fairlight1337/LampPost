@@ -147,16 +147,19 @@ namespace lp {
   }
 
   void PluginManager::UnloadTemplates() {
-    mLog.Info("Unloading plugin templates:");
+    if(mTemplates.size() > 0)
+    {
+      mLog.Info("Unloading plugin templates:");
 
-    for(std::pair<std::string, PluginTemplateDescription> templatePair : mTemplates) {
-      mLog.Info(templatePair.first, 1);
+      for(std::pair<std::string, PluginTemplateDescription> templatePair : mTemplates) {
+        mLog.Info(templatePair.first, 1);
 
-      templatePair.second.mTemplate->Unload();
-      ClosePluginLibrary(templatePair.second.mLibraryHandle);
+        templatePair.second.mTemplate->Unload();
+        ClosePluginLibrary(templatePair.second.mLibraryHandle);
+      }
+
+      mTemplates.clear();
     }
-
-    mTemplates.clear();
   }
 
   void PluginManager::SetBus(std::shared_ptr<bus::Bus> bus) {

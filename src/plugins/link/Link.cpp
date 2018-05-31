@@ -7,8 +7,8 @@ namespace lp {
     }
 
     void Link::Initialize() {
-      mSysInfoSubscriber = GetSubscriber("/sysinfo", [](std::shared_ptr<messages::Message> message) {
-        std::cout << "Got a message." << std::endl;
+      mSysInfoSubscriber = GetSubscriber("/sysinfo", [this](std::shared_ptr<messages::Message> message) {
+        mLog.Info("Got a message");
       });
     }
 

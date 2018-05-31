@@ -8,9 +8,9 @@ namespace lp {
 
     void SysInfo::Initialize() {
       mSysInfoPublisher = GetPublisher("/sysinfo");
-      mSysInfoSubscriber = GetSubscriber("/sysinfo", [](std::shared_ptr<messages::Datagram> datagram) {
+      mSysInfoSubscriber = GetSubscriber("/sysinfo", [this](std::shared_ptr<messages::Datagram> datagram) {
         std::string message = datagram->Get<std::string>();
-        std::cout << "Got it: " << message << std::endl;
+        mLog.Info("Got it: " + message);
       });
     }
 
@@ -20,7 +20,7 @@ namespace lp {
         *datagram = std::string("Hello Bus!");
 
         mSysInfoPublisher->Publish(datagram);
-	std::cout << "Sent" << std::endl;
+        mLog.Info("Sent datagram");
 
         Sleep(std::chrono::seconds(2));
       }

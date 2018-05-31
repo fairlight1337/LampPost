@@ -34,6 +34,7 @@ namespace lp
     private:
       const int BUS_NOTIFIER_CHECK_TIMEOUT_MS = 100;
 
+      // TODO(fairlight1337): Make Bus derive from Identifiable instead of using a dedicated name field here.
       std::string mName;
       std::map<std::string, std::shared_ptr<Bus>> mChildBusses;
       std::mutex mChildBussesMutex;

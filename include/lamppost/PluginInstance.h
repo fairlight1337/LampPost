@@ -11,6 +11,7 @@
 
 #include <lamppost/bus/Bus.h>
 #include <lamppost/Identifiable.h>
+#include <lamppost/log/Log.h>
 #include <lamppost/PluginConfiguration.h>
 
 
@@ -53,6 +54,7 @@ namespace lp
 
   protected:
     std::atomic<bool> mShouldRun;
+    log::Log mLog;
 
     template<class Rep, class Period>
     void Sleep(const std::chrono::duration<Rep, Period>& duration) {
