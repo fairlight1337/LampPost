@@ -156,6 +156,8 @@ namespace lp {
   }
 
   std::shared_ptr<PluginInstance> PluginManager::InstantiateTemplate(std::string templateIdentifier, PluginConfiguration configuration) {
+    std::shared_ptr<PluginInstance> returnedInstance = nullptr;
+    
     mLog.Info("Instantiating plugin template: " + templateIdentifier);
 
     if(configuration.mBus == nullptr) {
@@ -167,11 +169,11 @@ namespace lp {
     if(mTemplates.find(templateIdentifier) != mTemplates.end()) {
       mLog.Info("Template found, instantiating", 1);
 
-      return mTemplates[templateIdentifier]->Instantiate(configuration, configuration.mBus);
+      returnedInstance = mTemplates[templateIdentifier]->Instantiate(configuration, configuration.mBus);
     } else {
       mLog.Error("Template not found, failed to instantiate.", 1);
     }
 
-    return nullptr;
+    return returnedInstance;
   }
 } // namespace lp

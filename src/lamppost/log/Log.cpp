@@ -11,8 +11,8 @@ namespace lp {
       std::cout << line << std::endl;
     }
 
-    void Log::Write(std::string prefix, std::string message, int indentationLevel, int color) {
-      std::string indentation = "";
+    void Log::Write(std::string prefix, std::string message, int indentationLevel, int /*color*/) {
+      std::string indentation;
 
       for(int i = 0; i < indentationLevel; ++i) {
         indentation += "  ";
