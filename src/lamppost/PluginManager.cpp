@@ -22,6 +22,11 @@ namespace lp {
     mConfiguration.mTemplateSearchPaths.push_back(libDirectory);
   }
 
+  PluginManager::~PluginManager() {
+    UnloadTemplates();
+    mConfiguration.mBus = nullptr;
+  }
+
   PluginLibraryHandle PluginManager::OpenPluginLibrary(std::string path) {
 #if defined(_WIN32) || defined(_WIN64)
     return LoadLibrary(path.c_str());
@@ -34,7 +39,14 @@ namespace lp {
 #if defined(_WIN32) || defined(_WIN64)
     FreeLibrary(handle);
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
-    dlclose(handle);
+    int result = dlclose(handle);
+
+    if(result != 0) {
+      log::Log logger("PluginManager");
+      
+      logger.Error("Error while closing plugin library:");
+      logger.Error(dlerror(), 1);
+    }
 #endif
   }
 
@@ -51,43 +63,37 @@ namespace lp {
 
 #if defined(_WIN32) || defined(_WIN64)
 	std::string createInfoFunctionName = "_CreateInfo@0";
-	std::string destroyInfoFunctionName = "_DestroyInfo@" + std::to_string(sizeof(PluginTemplateInfo*));
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
 	std::string createInfoFunctionName = "CreateInfo";
-	std::string destroyInfoFunctionName = "DestroyInfo";
 #endif
 
         PluginCreateInfoFunctionType CreateInfo = GetPluginLibaryFunction<PluginCreateInfoFunctionType>(handle, createInfoFunctionName);
-        PluginDestroyInfoFunctionType DestroyInfo = GetPluginLibaryFunction<PluginDestroyInfoFunctionType>(handle, destroyInfoFunctionName);
 
-        if(CreateInfo != nullptr && DestroyInfo != nullptr) {
-          mLog.Info("Info methods present", 3);
+        if(CreateInfo != nullptr) {
+          mLog.Info("Info method present", 3);
 
-          std::shared_ptr<PluginTemplateInfo> info = CreateSharedObject<PluginTemplateInfo>(CreateInfo, DestroyInfo);
+          std::shared_ptr<PluginTemplateInfo> info = CreateSharedObject<PluginTemplateInfo>(CreateInfo);
 
           if(!info->mIdentifier.empty()) {
             mLog.Info("Identifier = " + info->mIdentifier, 3);
 
 #if defined(_WIN32) || defined(_WIN64)
 	std::string createInstanceFunctionName = "_CreateInstance@" + std::to_string(sizeof(PluginConfiguration));
-	std::string destroyInstanceFunctionName = "_DestroyInstance@" + std::to_string(sizeof(PluginInstance*));
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
 	std::string createInstanceFunctionName = "CreateInstance";
-	std::string destroyInstanceFunctionName = "DestroyInstance";
 #endif
 	
             PluginCreateInstanceFunctionType CreateInstance = GetPluginLibaryFunction<PluginCreateInstanceFunctionType>(handle, createInstanceFunctionName);
-            PluginDestroyInstanceFunctionType DestroyInstance = GetPluginLibaryFunction<PluginDestroyInstanceFunctionType>(handle, destroyInstanceFunctionName);
 
-            if(CreateInstance != nullptr && DestroyInstance != nullptr) {
-              mLog.Info("Creation methods present", 3);
+            if(CreateInstance != nullptr) {
+              mLog.Info("Creation method present", 3);
 
               PluginTemplateConfiguration configuration(
                 info->mIdentifier,
                 info->mVersion,
-                [CreateInstance, DestroyInstance](PluginConfiguration configuration)
+                [CreateInstance](PluginConfiguration configuration)
                 {
-                  return CreateSharedObject<PluginInstance>(CreateInstance, DestroyInstance, configuration);
+                  return CreateSharedObject<PluginInstance>(CreateInstance, configuration);
                 });
 
               std::shared_ptr<PluginTemplate> pluginTemplate = std::make_shared<PluginTemplate>(configuration);

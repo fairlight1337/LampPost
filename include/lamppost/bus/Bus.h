@@ -43,6 +43,7 @@ namespace lp
       std::mutex mNotifierMutex;
       std::function<void(std::shared_ptr<messages::Message>)> mPublishMessageFunction;
       std::atomic<bool> mShouldRun;
+      bool mIsRootBus;
 
       std::mutex mPublishersMutex;
       std::list<std::shared_ptr<Publisher>> mPublishers;

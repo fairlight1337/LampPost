@@ -10,7 +10,7 @@ namespace lp
   namespace exceptions
   {
     class IndexOutOfBoundsException : public Exception
-
+    {
     private:
       int mIndex;
 

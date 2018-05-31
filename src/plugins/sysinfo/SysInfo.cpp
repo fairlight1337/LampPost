@@ -20,6 +20,7 @@ namespace lp {
         *datagram = std::string("Hello Bus!");
 
         mSysInfoPublisher->Publish(datagram);
+	std::cout << "Sent" << std::endl;
 
         Sleep(std::chrono::seconds(2));
       }

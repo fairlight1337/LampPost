@@ -31,12 +31,24 @@ namespace lp {
     return mInstances[configuration.mIdentifier];
   }
 
-  void PluginTemplate::Unload() {
+  void PluginTemplate::Stop() {
     for(std::pair<std::string, std::shared_ptr<PluginInstance>> instancePair : mInstances) {
       instancePair.second->Stop();
+    }
+  }
+
+  void PluginTemplate::Deinitialize() {
+    for(std::pair<std::string, std::shared_ptr<PluginInstance>> instancePair : mInstances) {
       instancePair.second->Deinitialize();
     }
 
     mInstances.clear();
+  }
+
+  void PluginTemplate::Unload() {
+    mConfiguration.mInstantiateFunction = nullptr;
+    
+    Stop();
+    Deinitialize();
   }
 } // namespace lp

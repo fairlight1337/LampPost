@@ -3,7 +3,7 @@
 
 namespace lp {
   namespace bus {
-    Bus::Bus(std::string name) : mName(name), mShouldRun(false) {
+    Bus::Bus(std::string name) : mName(name), mShouldRun(false), mIsRootBus(true) {
       if(name.empty()) {
         throw exceptions::ArgumentNullException("name", "Bus name may not be empty.");
       }
@@ -17,7 +17,7 @@ namespace lp {
     }
 
     Bus::Bus(std::string name, std::function<void(std::shared_ptr<messages::Message>)> publishMessageFunction)
-      : mName(name), mPublishMessageFunction(publishMessageFunction), mShouldRun(false) {
+      : mName(name), mPublishMessageFunction(publishMessageFunction), mShouldRun(false), mIsRootBus(false) {
       if(name.empty()) {
         throw exceptions::ArgumentNullException("name", "Bus name may not be empty.");
       }
@@ -63,11 +63,12 @@ namespace lp {
 
       std::lock_guard<std::mutex> lock(mChildBussesMutex);
       if(mChildBusses.find(name) != mChildBusses.end()) {
-        throw exceptions::DuplicateKeyException(name, "Keys must be unique.");
+        throw exceptions::DuplicateKeyException(name, "Child bus names must be unique.");
       }
 
       std::shared_ptr<Bus> childBus = std::make_shared<Bus>(name, mPublishMessageFunction);
       mChildBusses[name] = childBus;
+      childBus->Start();
 
       return childBus;
     }
@@ -119,7 +120,10 @@ namespace lp {
     void Bus::Start() {
       mShouldRun = true;
 
-      Run();
+      if(mIsRootBus)
+      {
+        Run();
+      }
     }
 
     void Bus::Run() {
@@ -129,23 +133,21 @@ namespace lp {
         mNotifier.wait_for(notifierLock, std::chrono::milliseconds(BUS_NOTIFIER_CHECK_TIMEOUT_MS), [this] {
           std::lock_guard<std::mutex> lock(mQueueMutex);
 
-          return !mQueuedMessages.empty();
+          return !mQueuedMessages.empty() || !mShouldRun;
         });
 
+	if(!mShouldRun)
+	{
+	  break;
+	}
+	
         std::lock_guard<std::mutex> lock(mQueueMutex);
         for(const std::shared_ptr<messages::Message>& message : mQueuedMessages) {
           Distribute(message);
         }
 
         mQueuedMessages.clear();
-
-        if(mName == "root") {
-          mShouldRun = false;
-        }
       }
-
-      std::lock_guard<std::mutex> lock(mQueueMutex);
-      mQueuedMessages.clear();
     }
 
     void Bus::Stop() {
@@ -175,6 +177,12 @@ namespace lp {
 
     void Bus::Detach() {
       mPublishMessageFunction = nullptr;
+      
+      std::lock_guard<std::mutex> lock(mChildBussesMutex);
+      for(std::pair<std::string, std::shared_ptr<Bus>> busPair : mChildBusses) {
+	busPair.second->Stop();
+	busPair.second->Detach();
+      }
     }
   } // namespace bus
 } // namespace lp

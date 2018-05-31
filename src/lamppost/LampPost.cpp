@@ -4,7 +4,7 @@
 namespace lp {
   LampPost::LampPost(LampPostConfiguration configuration)
     : mConfiguration(configuration),
-      mPluginManager(configuration.mPluginManagerConfiguration),
+      mPluginManager(std::make_unique<PluginManager>(configuration.mPluginManagerConfiguration)),
       mRootBus(std::make_shared<bus::Bus>("root")),
       mLog("LampPost") {
   }
@@ -17,16 +17,16 @@ namespace lp {
     mLog.Info("Starting instance.");
 
     mLog.Info("Initializing plugin manager.", 1);
-    mPluginManager.SetBus(mRootBus);
+    mPluginManager->SetBus(mRootBus);
     PluginConfiguration pluginConfiguration;
 
     mLog.Info("Loading templates.", 1);
-    mPluginManager.LoadTemplates();
+    mPluginManager->LoadTemplates();
 
     mLog.Info("Instantiating plugins");
 
     mLog.Info("SysInfo", 1);
-    std::shared_ptr<PluginInstance> sysInfoInstance = mPluginManager.InstantiateTemplate("SysInfo", pluginConfiguration);
+    std::shared_ptr<PluginInstance> sysInfoInstance = mPluginManager->InstantiateTemplate("SysInfo", pluginConfiguration);
     mLog.Info("Initialize", 2);
     sysInfoInstance->Initialize();
     mLog.Info("Start", 2);
@@ -35,7 +35,7 @@ namespace lp {
     sysInfoInstance = nullptr;
 
     mLog.Info("Link", 1);
-    std::shared_ptr<PluginInstance> linkInstance = mPluginManager.InstantiateTemplate("Link", pluginConfiguration);
+    std::shared_ptr<PluginInstance> linkInstance = mPluginManager->InstantiateTemplate("Link", pluginConfiguration);
     mLog.Info("Initialize", 2);
     linkInstance->Initialize();
     mLog.Info("Start", 2);
@@ -50,7 +50,15 @@ namespace lp {
     mLog.Info("Shutting down");
 
     mLog.Info("Unloading templates", 1);
-    mPluginManager.UnloadTemplates();
+    mRootBus->Detach();
+    mPluginManager->UnloadTemplates();
+
+    mLog.Info("Disabling root bus", 1);
+    mRootBus = nullptr;
+    //mPluginManager->SetBus(nullptr);
+
+    mLog.Info("Disabling plugin manager", 1);
+    mPluginManager = nullptr;
 
     mLog.Info("Shutdown complete.");
   }

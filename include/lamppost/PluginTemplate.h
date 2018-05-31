@@ -24,6 +24,9 @@ namespace lp
 
     bool IndexedInstanceExists(int index);
 
+    void Stop();
+    void Deinitialize();
+
   public:
     PluginTemplate(PluginTemplateConfiguration configuration);
     ~PluginTemplate();

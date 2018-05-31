@@ -33,11 +33,6 @@ namespace lp
   { \
     return new cls(configuration); \
   } \
-  \
-  LIBEXPORT void CALLINGCONVENTION DestroyInstance(lp::PluginInstance* instance) \
-  { \
-    delete instance; \
-  }
 
 #define GENERATE_INFO_CREATOR(variablename, body) \
   LIBEXPORT lp::PluginTemplateInfo* CALLINGCONVENTION CreateInfo() \
@@ -48,11 +43,6 @@ namespace lp
     \
     return variablename; \
   } \
-  \
-  LIBEXPORT void CALLINGCONVENTION DestroyInfo(lp::PluginTemplateInfo* info) \
-  { \
-    delete info; \
-  }
 
 
   class PluginInstance : public Identifiable
@@ -73,9 +63,17 @@ namespace lp
     PluginInstance(PluginConfiguration configuration);
     virtual ~PluginInstance();
 
-    std::shared_ptr<bus::Publisher> GetPublisher(std::string topic);
-    std::shared_ptr<bus::Subscriber> GetSubscriber(std::string topic, std::function<void(std::shared_ptr<messages::Datagram>)> callback);
-    std::shared_ptr<bus::Subscriber> GetSubscriber(std::string topic, std::function<void(std::shared_ptr<messages::Message>)> callback);
+    template<class ... Args>
+    std::shared_ptr<bus::Publisher> GetPublisher(Args ... args)
+    {
+      return mConfiguration.mBus->CreatePublisher(std::forward<Args>(args)...);
+    }
+
+    template<class ... Args>
+    std::shared_ptr<bus::Subscriber> GetSubscriber(Args ... args)
+    {
+      return mConfiguration.mBus->CreateSubscriber(std::forward<Args>(args)...);
+    }
 
     void DeleteSubscriber(std::shared_ptr<bus::Subscriber> subscriber);
     void DeletePublisher(std::shared_ptr<bus::Publisher> publisher);

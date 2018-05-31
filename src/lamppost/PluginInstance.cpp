@@ -11,18 +11,6 @@ namespace lp {
     mConfiguration.mBus = nullptr;
   }
 
-  std::shared_ptr<bus::Publisher> PluginInstance::GetPublisher(std::string topic) {
-    return mConfiguration.mBus->CreatePublisher(topic);
-  }
-
-  std::shared_ptr<bus::Subscriber> PluginInstance::GetSubscriber(std::string topic, std::function<void(std::shared_ptr<messages::Datagram>)> callback) {
-    return mConfiguration.mBus->CreateSubscriber(topic, callback);
-  }
-
-  std::shared_ptr<bus::Subscriber> PluginInstance::GetSubscriber(std::string topic, std::function<void(std::shared_ptr<messages::Message>)> callback) {
-    return mConfiguration.mBus->CreateSubscriber(topic, callback);
-  }
-
   void PluginInstance::DeleteSubscriber(std::shared_ptr<bus::Subscriber> subscriber) {
     mConfiguration.mBus->DeleteSubscriber(subscriber);
   }

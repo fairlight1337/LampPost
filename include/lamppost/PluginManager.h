@@ -21,15 +21,11 @@ namespace lp
 {
 #if defined(_WIN32) || defined(_WIN64)
   typedef PluginTemplateInfo* (CALLBACK* PluginCreateInfoFunctionType)();
-  typedef void (CALLBACK* PluginDestroyInfoFunctionType)(PluginTemplateInfo*);
   typedef PluginInstance* (CALLBACK* PluginCreateInstanceFunctionType)(PluginConfiguration);
-  typedef void (CALLBACK* PluginDestroyInstanceFunctionType)(PluginInstance*);
   typedef HINSTANCE PluginLibraryHandle;
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
   typedef PluginTemplateInfo* (*PluginCreateInfoFunctionType)();
-  typedef void (*PluginDestroyInfoFunctionType)(PluginTemplateInfo*);
   typedef PluginInstance* (*PluginCreateInstanceFunctionType)(PluginConfiguration);
-  typedef void (*PluginDestroyInstanceFunctionType)(PluginInstance*);
   typedef void* PluginLibraryHandle;
 #endif
 
@@ -37,19 +33,20 @@ namespace lp
   class PluginManager
   {
   private:
+    #pragma region Types
+    
     struct PluginTemplateDescription
     {
       PluginLibraryHandle mLibraryHandle;
       std::shared_ptr<PluginTemplate> mTemplate;
     };
 
+    #pragma endregion
+
+    #pragma region Statics
+
     static std::string sTemplateFileExtension;
-
-    PluginManagerConfiguration mConfiguration;
-    std::map<std::string, PluginTemplateDescription> mTemplates;
-
-    bool LoadTemplate(std::string filePath);
-
+    
     static PluginLibraryHandle OpenPluginLibrary(std::string path);
     static void ClosePluginLibrary(PluginLibraryHandle handle);
 
@@ -63,20 +60,34 @@ namespace lp
 #endif
     }
 
-    template<typename TTargetType, typename TCreateFunctionType, typename TDestroyFunctionType, class ... Args>
-    static std::shared_ptr<TTargetType> CreateSharedObject(TCreateFunctionType createFunction, TDestroyFunctionType destroyFunction, Args ... args)
+    template<typename TTargetType, typename TCreateFunctionType, class ... Args>
+    static std::shared_ptr<TTargetType> CreateSharedObject(TCreateFunctionType createFunction, Args ... args)
     {
       TTargetType* pi = createFunction(std::forward<Args>(args)...);
-      std::shared_ptr<TTargetType> object(pi, destroyFunction);
+      std::shared_ptr<TTargetType> object(pi);
 
       return object;
     };
 
+    #pragma endregion
+
+    #pragma region Private Member Variables
+
+    PluginManagerConfiguration mConfiguration;
+    std::map<std::string, PluginTemplateDescription> mTemplates;
     log::Log mLog;
+
+    #pragma endregion
+
+    #pragma region Private Methods
+
+    bool LoadTemplate(std::string filePath);
+
+    #pragma endregion
 
   public:
     PluginManager(PluginManagerConfiguration configuration);
-    virtual ~PluginManager() = default;
+    virtual ~PluginManager();
 
     void SetBus(std::shared_ptr<bus::Bus> bus);
     void LoadTemplates();
