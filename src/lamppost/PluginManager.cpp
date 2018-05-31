@@ -61,12 +61,13 @@ namespace lp {
                 info->mVersion,
                 [CreateInstance, DestroyInstance](PluginConfiguration configuration) {
                   return CreateSharedObject<PluginInstance>(CreateInstance, DestroyInstance, configuration);
-                  },
+                },
                 [handle]() { ClosePluginLibrary(handle); });
 
               std::shared_ptr<PluginTemplate> pluginTemplate = std::make_shared<PluginTemplate>(configuration);
-
               mTemplates[info->mIdentifier] = pluginTemplate;
+
+              return true;
             } else {
               ClosePluginLibrary(handle);
             }
@@ -92,6 +93,14 @@ namespace lp {
     }
   }
 
+  void PluginManager::UnloadTemplates() {
+    for(std::pair<std::string, std::shared_ptr<PluginTemplate>> templatePair : mTemplates) {
+      templatePair.second->Unload();
+    }
+
+    mTemplates.clear();
+  }
+
   void PluginManager::SetBus(std::shared_ptr<bus::Bus> bus) {
     mConfiguration.mBus = bus;
   }
@@ -102,7 +111,7 @@ namespace lp {
     }
 
     if(mTemplates.find(templateIdentifier) != mTemplates.end()) {
-      return mTemplates[templateIdentifier]->Instantiate(configuration, mConfiguration.mBus);
+      return mTemplates[templateIdentifier]->Instantiate(configuration, configuration.mBus);
     }
 
     return nullptr;

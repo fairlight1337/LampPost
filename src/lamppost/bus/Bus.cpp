@@ -27,6 +27,35 @@ namespace lp {
       }
     }
 
+    Bus::~Bus() {
+      mPublishMessageFunction = nullptr;
+
+      {
+        std::lock_guard<std::mutex> lock(mChildBussesMutex);
+        for(std::pair<std::string, std::shared_ptr<Bus>> busPair : mChildBusses) {
+          busPair.second->Stop();
+          busPair.second->Detach();
+        }
+
+        mChildBusses.clear();
+      }
+
+      {
+        std::lock_guard<std::mutex> lock(mSubscribersMutex);
+        mSubscribers.clear();
+      }
+
+      {
+        std::lock_guard<std::mutex> lock(mPublishersMutex);
+        mPublishers.clear();
+      }
+
+      {
+        std::lock_guard<std::mutex> lock(mQueueMutex);
+        mQueuedMessages.clear();
+      }
+    }
+
     std::shared_ptr<Bus> Bus::CreateChildBus(std::string name) {
       if(name.empty()) {
         throw exceptions::ArgumentNullException("name", "Child bus name may not be empty.");
@@ -57,7 +86,9 @@ namespace lp {
     }
 
     void Bus::Publish(std::string topic, std::shared_ptr<messages::Datagram> datagram) {
-      mPublishMessageFunction(std::make_shared<messages::Message>(mName, topic, datagram));
+      if(mPublishMessageFunction != nullptr) {
+        mPublishMessageFunction(std::make_shared<messages::Message>(mName, topic, datagram));
+      }
     }
 
     std::shared_ptr<Publisher> Bus::CreatePublisher(std::string topic) {
@@ -73,13 +104,16 @@ namespace lp {
       return publisher;
     }
 
-    std::shared_ptr<Subscriber> Bus::CreateSubscriber(std::string topic, std::function<void(std::shared_ptr<messages::Datagram>)> callback) {
-      std::shared_ptr<Subscriber> subscriber = std::make_shared<Subscriber>(topic, callback);
-
+    void Bus::DeleteSubscriber(std::shared_ptr<Subscriber> subscriber) {
       std::lock_guard<std::mutex> lock(mSubscribersMutex);
-      mSubscribers.push_back(subscriber);
+      mSubscribers.remove(subscriber);
+      subscriber->Reset();
+    }
 
-      return subscriber;
+    void Bus::DeletePublisher(std::shared_ptr<Publisher> publisher) {
+      std::lock_guard<std::mutex> lock(mPublishersMutex);
+      mPublishers.remove(publisher);
+      publisher->Reset();
     }
 
     void Bus::Start() {
@@ -104,7 +138,14 @@ namespace lp {
         }
 
         mQueuedMessages.clear();
+
+        if(mName == "root") {
+          mShouldRun = false;
+        }
       }
+
+      std::lock_guard<std::mutex> lock(mQueueMutex);
+      mQueuedMessages.clear();
     }
 
     void Bus::Stop() {
@@ -112,21 +153,28 @@ namespace lp {
     }
 
     void Bus::Distribute(std::shared_ptr<lp::messages::Message> message) {
-      {
-        std::lock_guard<std::mutex> lock(mSubscribersMutex);
-        for(const std::shared_ptr<Subscriber>& subscriber : mSubscribers) {
-          if(subscriber->GetTopic() == message->GetTopic()) {
-            subscriber->Receive(message->GetDatagram());
+      if(mShouldRun) {
+        {
+          std::lock_guard<std::mutex> lock(mSubscribersMutex);
+          for(const std::shared_ptr<Subscriber>& subscriber : mSubscribers) {
+            // TODO: Match ant-like and possibly regex expressions for topic names here.
+            if(subscriber->GetTopic() == message->GetTopic()) {
+              subscriber->Receive(message);
+            }
+          }
+        }
+
+        {
+          std::lock_guard<std::mutex> lock(mChildBussesMutex);
+          for(std::pair<std::string, std::shared_ptr<Bus>> pair : mChildBusses) {
+            pair.second->Distribute(message);
           }
         }
       }
+    }
 
-      {
-        std::lock_guard<std::mutex> lock(mChildBussesMutex);
-        for(std::pair<std::string, std::shared_ptr<Bus>> pair : mChildBusses) {
-          pair.second->Distribute(message);
-        }
-      }
+    void Bus::Detach() {
+      mPublishMessageFunction = nullptr;
     }
   } // namespace bus
 } // namespace lp

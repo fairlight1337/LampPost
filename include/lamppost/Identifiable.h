@@ -2,6 +2,7 @@
 #define LAMPPOST_IDENTIFIABLE_H
 
 
+#include <iostream>
 #include <string>
 #include <utility>
 

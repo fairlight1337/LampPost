@@ -55,11 +55,8 @@ namespace lp {
 
     template<typename TTargetType, typename TCreateFunctionType, typename TDestroyFunctionType, class ... Args>
     static std::shared_ptr<TTargetType> CreateSharedObject(TCreateFunctionType createFunction, TDestroyFunctionType destroyFunction, Args ... args) {
-      std::shared_ptr<TTargetType> object(
-        createFunction(std::forward<Args>(args)...),
-        [destroyFunction](TTargetType* innerObject) {
-          destroyFunction(innerObject);
-        });
+      TTargetType* pi = createFunction(std::forward<Args>(args)...);
+      std::shared_ptr<TTargetType> object(pi, destroyFunction);
 
       return object;
     };
@@ -70,6 +67,7 @@ namespace lp {
 
     void SetBus(std::shared_ptr<bus::Bus> bus);
     void LoadTemplates();
+    void UnloadTemplates();
 
     std::shared_ptr<PluginInstance> InstantiateTemplate(std::string templateIdentifier, PluginConfiguration configuration);
   };

@@ -8,6 +8,7 @@
 #include <condition_variable>
 #include <deque>
 #include <functional>
+#include <iostream>
 #include <list>
 #include <memory>
 #include <map>
@@ -51,7 +52,7 @@ namespace lp {
     public:
       Bus(std::string name);
       Bus(std::string name, std::function<void(std::shared_ptr<messages::Message>)> publishMessageFunction);
-      ~Bus() = default;
+      ~Bus();
 
       std::shared_ptr<Bus> CreateChildBus(std::string name);
       std::shared_ptr<Bus> GetChildBus(std::string name);
@@ -59,11 +60,25 @@ namespace lp {
       std::string GetName();
 
       std::shared_ptr<Publisher> CreatePublisher(std::string topic);
-      std::shared_ptr<Subscriber> CreateSubscriber(std::string topic, std::function<void(std::shared_ptr<messages::Datagram>)> callback);
+
+      template<class ... Args>
+      std::shared_ptr<Subscriber> CreateSubscriber(Args ... args) {
+        std::shared_ptr<Subscriber> subscriber = std::make_shared<Subscriber>(std::forward<Args>(args)...);
+
+        std::lock_guard<std::mutex> lock(mSubscribersMutex);
+        mSubscribers.push_back(subscriber);
+
+        return subscriber;
+      }
+
+      void DeleteSubscriber(std::shared_ptr<bus::Subscriber> subscriber);
+      void DeletePublisher(std::shared_ptr<bus::Publisher> publisher);
 
       void Start();
       void Run();
       void Stop();
+
+      void Detach();
     };
   } // namespace bus
 } // namespace lp

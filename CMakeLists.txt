@@ -10,18 +10,13 @@ if(UNIX OR APPLE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -g -O0 --coverage")
 endif(UNIX OR APPLE)
 
-if(WIN32 OR WIN64)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
-endif(WIN32 OR WIN64)
-
 add_definitions(-D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-set(gtest_force_shared_crt ON CACHE BOOL "Force generation of shared libraries for GTest.")
+set(gtest_force_shared_crt ON CACHE BOOL "Force generation of shared libraries for GTest." FORCE)
 add_subdirectory(
     3rdparty/googletest)
 
@@ -96,6 +91,9 @@ endmacro()
 add_lp_plugin(sysinfo
     src/plugins/sysinfo/SysInfo.cpp)
 
+add_lp_plugin(link
+    src/plugins/link/Link.cpp)
+
 
 ### Tests
 enable_testing()
@@ -117,31 +115,3 @@ endmacro()
 add_lp_test(lamppost LampPostConfigurationTest)
 add_lp_test(lamppost PluginManagerConfigurationTest)
 add_lp_test(lamppost/bus BusTest)
-
-
-# ------------------------------------------------------------------------------
-# Clang Tidy
-# ------------------------------------------------------------------------------
-
-if(ENABLE_CLANG_TIDY)
-  find_program(CLANG_TIDY_BIN clang-tidy-4.0)
-  find_program(RUN_CLANG_TIDY_BIN run-clang-tidy-4.0.py)
-
-  if(CLANG_TIDY_BIN STREQUAL "CLANG_TIDY_BIN-NOTFOUND")
-    message(FATAL_ERROR "unable to locate clang-tidy-4.0")
-  endif()
-
-  if(RUN_CLANG_TIDY_BIN STREQUAL "RUN_CLANG_TIDY_BIN-NOTFOUND")
-    message(FATAL_ERROR "unable to locate run-clang-tidy-4.0.py")
-  endif()
-
-  list(APPEND RUN_CLANG_TIDY_BIN_ARGS
-    -clang-tidy-binary ${CLANG_TIDY_BIN}
-    -header-filter=.*
-    -checks=clan*,cert*,misc*,perf*,cppc*,read*,mode*,-cert-err58-cpp,-misc-noexcept-move-constructor)
-
-  add_custom_target(
-    tidy
-    COMMAND ${RUN_CLANG_TIDY_BIN} ${RUN_CLANG_TIDY_BIN_ARGS}
-    COMMENT "running clang tidy")
-endif()

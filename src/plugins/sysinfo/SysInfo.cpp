@@ -4,6 +4,7 @@
 namespace lp {
   namespace plugins {
     SysInfo::SysInfo(PluginConfiguration configuration) : PluginInstance(configuration) {
+      std::cout << "Instantiate SysInfo" << std::endl;
     }
 
     void SysInfo::Initialize() {
@@ -26,6 +27,11 @@ namespace lp {
     }
 
     void SysInfo::Deinitialize() {
+      DeleteSubscriber(mSysInfoSubscriber);
+      mSysInfoSubscriber = nullptr;
+
+      DeletePublisher(mSysInfoPublisher);
+      mSysInfoPublisher = nullptr;
     }
   } // namespace plugins
 } // namespace lp

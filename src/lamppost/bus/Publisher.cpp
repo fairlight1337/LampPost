@@ -17,7 +17,13 @@ namespace lp {
         throw exceptions::ArgumentNullException("message", "Datagram may not be null.");
       }
 
-      mPublishingFunction(datagram);
+      if(mPublishingFunction != nullptr) {
+        mPublishingFunction(datagram);
+      }
+    }
+
+    void Publisher::Reset() {
+      mPublishingFunction = nullptr;
     }
   } // namespace bus
 } // namespace lp

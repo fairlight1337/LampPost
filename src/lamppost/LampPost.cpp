@@ -8,20 +8,29 @@ namespace lp {
       mRootBus(std::make_shared<bus::Bus>("root")) {
   }
 
+  LampPost::~LampPost() {
+    mRootBus = nullptr;
+  }
+
   void LampPost::Start() {
     mPluginManager.SetBus(mRootBus);
     PluginConfiguration pluginConfiguration;
 
     mPluginManager.LoadTemplates();
-    std::shared_ptr<PluginInstance> instance = mPluginManager.InstantiateTemplate("SysInfo", pluginConfiguration);
 
-    instance->Initialize();
-    instance->Start();
+    std::shared_ptr<PluginInstance> sysInfoInstance = mPluginManager.InstantiateTemplate("SysInfo", pluginConfiguration);
+    sysInfoInstance->Initialize();
+    sysInfoInstance->Start();
+    sysInfoInstance = nullptr;
+
+    std::shared_ptr<PluginInstance> linkInstance = mPluginManager.InstantiateTemplate("Link", pluginConfiguration);
+    linkInstance->Initialize();
+    linkInstance->Start();
+    linkInstance = nullptr;
 
     mRootBus->Start();
 
-    instance->Stop();
-    instance->Deinitialize();
+    mPluginManager.UnloadTemplates();
   }
 
   void LampPost::Stop() {

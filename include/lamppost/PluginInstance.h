@@ -69,6 +69,10 @@ namespace lp {
 
     std::shared_ptr<bus::Publisher> GetPublisher(std::string topic);
     std::shared_ptr<bus::Subscriber> GetSubscriber(std::string topic, std::function<void(std::shared_ptr<messages::Datagram>)> callback);
+    std::shared_ptr<bus::Subscriber> GetSubscriber(std::string topic, std::function<void(std::shared_ptr<messages::Message>)> callback);
+
+    void DeleteSubscriber(std::shared_ptr<bus::Subscriber> subscriber);
+    void DeletePublisher(std::shared_ptr<bus::Publisher> publisher);
 
     virtual void Initialize() = 0;
     virtual void Run() = 0;

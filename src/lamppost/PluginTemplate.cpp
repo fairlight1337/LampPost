@@ -2,13 +2,12 @@
 
 
 namespace lp {
-  PluginTemplate::PluginTemplate(PluginTemplateConfiguration configuration) : Identifiable(configuration.mIdentifier), mConfiguration(configuration) {
+  PluginTemplate::PluginTemplate(PluginTemplateConfiguration configuration)
+    : Identifiable(configuration.mIdentifier), mConfiguration(configuration) {
   }
 
   PluginTemplate::~PluginTemplate() {
-    mInstances.clear();
-
-    mConfiguration.mUnloadPluginFunction();
+    Unload();
   }
 
   bool PluginTemplate::IndexedInstanceExists(int index) {
@@ -30,5 +29,16 @@ namespace lp {
     mInstances[configuration.mIdentifier] = mConfiguration.mInstantiateFunction(configuration);
 
     return mInstances[configuration.mIdentifier];
+  }
+
+  void PluginTemplate::Unload() {
+    for(std::pair<std::string, std::shared_ptr<PluginInstance>> instancePair : mInstances) {
+      instancePair.second->Stop();
+      instancePair.second->Deinitialize();
+    }
+
+    mInstances.clear();
+
+    mConfiguration.mUnloadPluginFunction();
   }
 } // namespace lp

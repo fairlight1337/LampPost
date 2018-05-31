@@ -30,6 +30,8 @@ namespace lp {
 
     bool IsValid();
     std::string GetType();
+
+    void Unload();
   };
 } // namespace lp
 

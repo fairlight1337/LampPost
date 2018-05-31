@@ -7,7 +7,7 @@
 #include <string>
 #include <utility>
 
-#include <lamppost/messages/Datagram.h>
+#include <lamppost/messages/Message.h>
 
 
 namespace lp {
@@ -15,15 +15,18 @@ namespace lp {
     class Subscriber {
     private:
       std::string mTopic;
-      std::function<void(std::shared_ptr<messages::Datagram>)> mCallback;
+      std::function<void(std::shared_ptr<messages::Message>)> mCallback;
 
     public:
-      Subscriber(std::string topic, std::function<void(std::shared_ptr<messages::Datagram>)> callback);
-      ~Subscriber() = default;
+      explicit Subscriber(std::string topic, std::function<void(std::shared_ptr<messages::Datagram>)> callback);
+      explicit Subscriber(std::string topic, std::function<void(std::shared_ptr<messages::Message>)> callback);
+      virtual ~Subscriber() = default;
 
-      void Receive(std::shared_ptr<messages::Datagram> datagram);
+      void Receive(std::shared_ptr<messages::Message> message);
 
       std::string GetTopic();
+
+      void Reset();
     };
   } // namespace bus
 } // namespace lp

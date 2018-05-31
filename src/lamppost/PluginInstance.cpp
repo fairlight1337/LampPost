@@ -18,6 +18,18 @@ namespace lp {
     return mConfiguration.mBus->CreateSubscriber(topic, callback);
   }
 
+  std::shared_ptr<bus::Subscriber> PluginInstance::GetSubscriber(std::string topic, std::function<void(std::shared_ptr<messages::Message>)> callback) {
+    return mConfiguration.mBus->CreateSubscriber(topic, callback);
+  }
+
+  void PluginInstance::DeleteSubscriber(std::shared_ptr<bus::Subscriber> subscriber) {
+    mConfiguration.mBus->DeleteSubscriber(subscriber);
+  }
+
+  void PluginInstance::DeletePublisher(std::shared_ptr<bus::Publisher> publisher) {
+    mConfiguration.mBus->DeletePublisher(publisher);
+  }
+
   void PluginInstance::Start() {
     mShouldRun = true;
 
