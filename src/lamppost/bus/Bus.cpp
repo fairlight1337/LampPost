@@ -93,21 +93,6 @@ namespace lp
       }
     }
 
-    std::shared_ptr<Publisher> Bus::CreatePublisher(std::string topic)
-    {
-      std::shared_ptr<Publisher> publisher = std::make_shared<Publisher>(
-        topic,
-        [this, topic](std::shared_ptr<messages::Datagram> datagram)
-        {
-          this->Publish(topic, datagram);
-        });
-
-      std::lock_guard<std::mutex> lock(mPublishersMutex);
-      mPublishers.push_back(publisher);
-
-      return publisher;
-    }
-
     void Bus::DeleteSubscriber(std::shared_ptr<Subscriber> subscriber)
     {
       std::lock_guard<std::mutex> lock(mSubscribersMutex);
@@ -120,6 +105,18 @@ namespace lp
       std::lock_guard<std::mutex> lock(mPublishersMutex);
       mPublishers.remove(publisher);
       publisher->Reset();
+    }
+
+    bool Bus::ContainsSubscriber(std::shared_ptr<bus::Subscriber> subscriber)
+    {
+      std::lock_guard<std::mutex> lock(mSubscribersMutex);
+      return std::find(mSubscribers.begin(), mSubscribers.end(), subscriber) != mSubscribers.end();
+    }
+
+    bool Bus::ContainsPublisher(std::shared_ptr<bus::Publisher> publisher)
+    {
+      std::lock_guard<std::mutex> lock(mPublishersMutex);
+      return std::find(mPublishers.begin(), mPublishers.end(), publisher) != mPublishers.end();
     }
 
     void Bus::Start()

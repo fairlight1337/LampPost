@@ -63,7 +63,22 @@ namespace lp
 
       std::string GetName();
 
-      std::shared_ptr<Publisher> CreatePublisher(std::string topic);
+      template<class ... Args>
+      std::shared_ptr<Publisher> CreatePublisher(std::string topic, Args ... args)
+      {
+        std::shared_ptr<Publisher> publisher = std::make_shared<Publisher>(
+          topic,
+          [this, topic](std::shared_ptr<messages::Datagram> datagram)
+          {
+            this->Publish(topic, datagram);
+          },
+          std::forward<Args>(args)...);
+
+        std::lock_guard<std::mutex> lock(mPublishersMutex);
+        mPublishers.push_back(publisher);
+
+        return publisher;
+      }
 
       template<class ... Args>
       std::shared_ptr<Subscriber> CreateSubscriber(Args ... args)
@@ -78,6 +93,9 @@ namespace lp
 
       void DeleteSubscriber(std::shared_ptr<bus::Subscriber> subscriber);
       void DeletePublisher(std::shared_ptr<bus::Publisher> publisher);
+
+      bool ContainsSubscriber(std::shared_ptr<bus::Subscriber> subscriber);
+      bool ContainsPublisher(std::shared_ptr<bus::Publisher> publisher);
 
       void Start();
       void Run();

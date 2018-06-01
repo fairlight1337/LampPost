@@ -188,3 +188,73 @@ TEST(Bus, WhenSubscribedToTopicAndMessageIsPublishedOnThatTopic_ThenTheMessageIs
 }
 
 #pragma endregion // Subscribe
+
+#pragma region ContainsSubscriber
+
+TEST(Bus, WhenSubscriberIsCreatedInBus_ThenTheBusContainsTheSubscriber)
+{
+  // Arrange.
+  lp::bus::Bus bus(cSampleBusName);
+
+  // Act.
+  std::shared_ptr<lp::bus::Subscriber> subscriber = bus.CreateSubscriber(
+    cSampleTopic,
+    [](std::shared_ptr<lp::messages::Datagram> datagram) {});
+
+  // Assert.
+  EXPECT_TRUE(bus.ContainsSubscriber(subscriber));
+}
+
+#pragma endregion // ContainsSubscriber
+
+#pragma region ContainsPublisher
+
+TEST(Bus, WhenPublisherIsCreatedInBus_ThenTheBusContainsThePublisher)
+{
+  // Arrange.
+  lp::bus::Bus bus(cSampleBusName);
+
+  // Act.
+  std::shared_ptr<lp::bus::Publisher> publisher = bus.CreatePublisher(cSampleTopic);
+
+  // Assert.
+  EXPECT_TRUE(bus.ContainsPublisher(publisher));
+}
+
+#pragma endregion // ContainsPublisher
+
+#pragma region DeleteSubscriber
+
+TEST(Bus, WhenExistingSubscriberIsDeletedFromBus_ThenTheBusDoesNotContainsTheSubscriber)
+{
+  // Arrange.
+  lp::bus::Bus bus(cSampleBusName);
+  std::shared_ptr<lp::bus::Subscriber> subscriber = bus.CreateSubscriber(
+    cSampleTopic,
+    [](std::shared_ptr<lp::messages::Datagram> datagram) {});
+
+  // Act.
+  bus.DeleteSubscriber(subscriber);
+
+  // Assert.
+  EXPECT_FALSE(bus.ContainsSubscriber(subscriber));
+}
+
+#pragma endregion // DeleteSubscriber
+
+#pragma region DeletePublisher
+
+TEST(Bus, WhenExistingPublisherIsDeletedFromBus_ThenTheBusDoesNotContainsThePublisher)
+{
+  // Arrange.
+  lp::bus::Bus bus(cSampleBusName);
+  std::shared_ptr<lp::bus::Publisher> publisher = bus.CreatePublisher(cSampleTopic);
+
+  // Act.
+  bus.DeletePublisher(publisher);
+
+  // Assert.
+  EXPECT_FALSE(bus.ContainsPublisher(publisher));
+}
+
+#pragma endregion // DeletePublisher
