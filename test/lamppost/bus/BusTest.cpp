@@ -29,7 +29,8 @@ const int cBusRuntimeDurationMs = 100;
 #pragma region Constructor
 
 // When the simple constructor is called, then the properties are set correctly.
-TEST(Bus, WhenSimpleConstructorIsCalled_ThenThePropertiesAreSetCorrectly) {
+TEST(Bus, WhenSimpleConstructorIsCalled_ThenThePropertiesAreSetCorrectly)
+{
   // Arrange, Act.
   lp::bus::Bus bus(cSampleBusName);
 
@@ -39,7 +40,8 @@ TEST(Bus, WhenSimpleConstructorIsCalled_ThenThePropertiesAreSetCorrectly) {
 
 // When the extended constructor is called, then the properties are set correctly.
 // REMARK: Does not cover the publishing function; see the respective tests below.
-TEST(Bus, WhenExtendedConstructorIsCalled_ThenThePropertiesAreSetCorrectly) {
+TEST(Bus, WhenExtendedConstructorIsCalled_ThenThePropertiesAreSetCorrectly)
+{
   // Arrange.
   std::function<void(std::shared_ptr<lp::messages::Message>)> publishingFunction =
     [](std::shared_ptr<lp::messages::Message> message) {};
@@ -52,13 +54,15 @@ TEST(Bus, WhenExtendedConstructorIsCalled_ThenThePropertiesAreSetCorrectly) {
 }
 
 // When the simple constructor is called with invalid arguments, then an exception is thrown.
-TEST(Bus, WhenSimpleConstructorIsCalledWithInvalidArguments_ThenAnExceptionIsThrown) {
+TEST(Bus, WhenSimpleConstructorIsCalledWithInvalidArguments_ThenAnExceptionIsThrown)
+{
   // Arrange, Act, Assert.
   ASSERT_THROW(lp::bus::Bus bus(""), lp::exceptions::ArgumentNullException);
 }
 
 // When the extended constructor is called with invalid arguments, then an exception is thrown.
-TEST(Bus, WhenExtendedConstructorIsCalledWithInvalidArguments_ThenAnExceptionIsThrown) {
+TEST(Bus, WhenExtendedConstructorIsCalledWithInvalidArguments_ThenAnExceptionIsThrown)
+{
   // Arrange.
   std::function<void(std::shared_ptr<lp::messages::Message>)> publishingFunction =
     [](std::shared_ptr<lp::messages::Message> message) {};
@@ -73,7 +77,8 @@ TEST(Bus, WhenExtendedConstructorIsCalledWithInvalidArguments_ThenAnExceptionIsT
 #pragma region CreateChildBus
 
 // When a second child bus with the same name is created, then an exception is thrown.
-TEST(Bus, WhenSecondChildBusWithSameNameIsCreated_ThenAnExceptionIsThrown) {
+TEST(Bus, WhenSecondChildBusWithSameNameIsCreated_ThenAnExceptionIsThrown)
+{
   // Arrange.
   lp::bus::Bus bus(cSampleBusName);
   bus.CreateChildBus(cSampleChildBusName);
@@ -83,7 +88,8 @@ TEST(Bus, WhenSecondChildBusWithSameNameIsCreated_ThenAnExceptionIsThrown) {
 }
 
 // When a child bus is created with an empty name, then an exception is thrown.
-TEST(Bus, WhenChildBusIsCreatedWithEmptyName_ThenAnExceptionIsThrown) {
+TEST(Bus, WhenChildBusIsCreatedWithEmptyName_ThenAnExceptionIsThrown)
+{
   // Arrange.
   lp::bus::Bus bus(cSampleBusName);
 
@@ -96,7 +102,8 @@ TEST(Bus, WhenChildBusIsCreatedWithEmptyName_ThenAnExceptionIsThrown) {
 #pragma region GetChildBus
 
 // When a named child bus is referred to again, then that child bus is returned.
-TEST(Bus, WhenNamedChildBusIsReferredToAgain_ThenThatChildBusIsReturned) {
+TEST(Bus, WhenNamedChildBusIsReferredToAgain_ThenThatChildBusIsReturned)
+{
   // Arrange.
   lp::bus::Bus bus(cSampleBusName);
 
@@ -109,7 +116,8 @@ TEST(Bus, WhenNamedChildBusIsReferredToAgain_ThenThatChildBusIsReturned) {
 }
 
 // When a named child bus is referred to that does not exist, then an exception is thrown.
-TEST(Bus, WhenNamedChildBusIsReferredToThatDoesNotExist_ThenAnExceptionIsThrown) {
+TEST(Bus, WhenNamedChildBusIsReferredToThatDoesNotExist_ThenAnExceptionIsThrown)
+{
   // Arrange.
   lp::bus::Bus bus(cSampleBusName);
 
@@ -122,16 +130,21 @@ TEST(Bus, WhenNamedChildBusIsReferredToThatDoesNotExist_ThenAnExceptionIsThrown)
 #pragma region Publish
 
 // When a message is published, then the publishing function is called with the correct arguments.
-TEST(Bus, WhenMessageIsPublished_ThenThePublishingFunctionIsCalledWithTheCorrectArguments) {
+TEST(Bus, WhenMessageIsPublished_ThenThePublishingFunctionIsCalledWithTheCorrectArguments)
+{
   // Arrange.
   bool publishingFunctionWasCalledCorrectly = false;
   std::function<void(std::shared_ptr<lp::messages::Message>)> publishingFunction =
-    [&](std::shared_ptr<lp::messages::Message> message) {
-    if(message) {
+    [&](std::shared_ptr<lp::messages::Message> message)
+    {
+    if(message)
+    {
       std::shared_ptr<lp::messages::Datagram> datagram = message->GetDatagram();
 
-      if(datagram) {
-        if(datagram->Get<std::string>() == cSampleDataMessage) {
+      if(datagram)
+      {
+        if(datagram->Get<std::string>() == cSampleDataMessage)
+        {
           publishingFunctionWasCalledCorrectly = true;
         }
       }
@@ -154,7 +167,8 @@ TEST(Bus, WhenMessageIsPublished_ThenThePublishingFunctionIsCalledWithTheCorrect
 
 #pragma region Subscribe
 
-TEST(Bus, WhenSubscribedToTopicAndMessageIsPublishedOnThatTopic_ThenTheMessageIsReceivedProperly) {
+TEST(Bus, WhenSubscribedToTopicAndMessageIsPublishedOnThatTopic_ThenTheMessageIsReceivedProperly)
+{
   // Arrange.
   bool messageWasReceivedProperly = false;
 
@@ -165,9 +179,12 @@ TEST(Bus, WhenSubscribedToTopicAndMessageIsPublishedOnThatTopic_ThenTheMessageIs
 
   std::shared_ptr<lp::bus::Subscriber> subscriber = bus.CreateSubscriber(
     cSampleTopic,
-    [&](std::shared_ptr<lp::messages::Datagram> datagram) {
-      if(datagram) {
-        if(datagram->Get<std::string>() == cSampleDataMessage) {
+    [&](std::shared_ptr<lp::messages::Datagram> datagram)
+    {
+      if(datagram)
+      {
+        if(datagram->Get<std::string>() == cSampleDataMessage)
+        {
           messageWasReceivedProperly = true;
         }
       }
