@@ -10,12 +10,12 @@ namespace lp
       mRootBus(std::make_shared<bus::Bus>("root")),
       mLog("LampPost")
   {
-    for(std::string configurationFile : mConfiguration.mConfigurationFiles)
+    for(const std::string& configurationFile : mConfiguration.mConfigurationFiles)
     {
       mConfigurationManager.ReadConfigurationFile(configurationFile);
     }
 
-    for(std::string pluginTemplateSearchPath : mConfigurationManager.GetPluginTemplateSearchPaths())
+    for(const std::string& pluginTemplateSearchPath : mConfigurationManager.GetPluginTemplateSearchPaths())
     {
       mPluginManager.AddTemplateSearchPath(pluginTemplateSearchPath);
     }
