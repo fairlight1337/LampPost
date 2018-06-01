@@ -8,7 +8,7 @@
 #include <string>
 
 #include <lamppost/LampPostConfiguration.h>
-#include <lamppost/PluginManager.h>
+#include <lamppost/plugin/PluginManager.h>
 #include <lamppost/log/Log.h>
 #include <lamppost/RunState.h>
 

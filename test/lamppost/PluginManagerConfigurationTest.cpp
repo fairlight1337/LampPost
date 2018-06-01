@@ -3,7 +3,7 @@
 
 #include <gtest/gtest.h>
 
-#include <lamppost/PluginManagerConfiguration.h>
+#include <lamppost/plugin/PluginManagerConfiguration.h>
 #include <lamppost/bus/Bus.h>
 
 

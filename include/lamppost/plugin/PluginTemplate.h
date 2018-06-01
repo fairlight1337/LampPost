@@ -8,10 +8,10 @@
 #include <string>
 
 #include <lamppost/Identifiable.h>
-#include <lamppost/PluginInstance.h>
-#include <lamppost/PluginManagerConfiguration.h>
-#include <lamppost/PluginTemplateConfiguration.h>
-#include <lamppost/PluginTemplateInfo.h>
+#include <lamppost/plugin/PluginInstance.h>
+#include <lamppost/plugin/PluginManagerConfiguration.h>
+#include <lamppost/plugin/PluginTemplateConfiguration.h>
+#include <lamppost/plugin/PluginTemplateInfo.h>
 
 
 namespace lp

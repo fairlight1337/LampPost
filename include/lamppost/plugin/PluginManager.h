@@ -13,8 +13,8 @@
 
 #include <lamppost/Filesystem.h>
 #include <lamppost/log/Log.h>
-#include <lamppost/PluginInstance.h>
-#include <lamppost/PluginTemplate.h>
+#include <lamppost/plugin/PluginInstance.h>
+#include <lamppost/plugin/PluginTemplate.h>
 
 
 namespace lp

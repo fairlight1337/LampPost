@@ -5,8 +5,8 @@
 #include <iostream>
 #include <memory>
 
-#include <lamppost/PluginInstance.h>
-#include <lamppost/PluginTemplateInfo.h>
+#include <lamppost/plugin/PluginInstance.h>
+#include <lamppost/plugin/PluginTemplateInfo.h>
 
 
 namespace lp

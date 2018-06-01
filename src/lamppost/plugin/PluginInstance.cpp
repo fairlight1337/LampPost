@@ -1,4 +1,4 @@
-#include <lamppost/PluginInstance.h>
+#include <lamppost/plugin/PluginInstance.h>
 
 
 namespace lp

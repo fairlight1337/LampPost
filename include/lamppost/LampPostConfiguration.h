@@ -2,7 +2,7 @@
 #define LAMPPOST_LAMPPOSTCONFIGURATION_H
 
 
-#include <lamppost/PluginManagerConfiguration.h>
+#include <lamppost/plugin/PluginManagerConfiguration.h>
 
 
 namespace lp

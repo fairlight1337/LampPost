@@ -12,7 +12,7 @@
 #include <lamppost/bus/Bus.h>
 #include <lamppost/Identifiable.h>
 #include <lamppost/log/Log.h>
-#include <lamppost/PluginConfiguration.h>
+#include <lamppost/plugin/PluginConfiguration.h>
 
 
 namespace lp

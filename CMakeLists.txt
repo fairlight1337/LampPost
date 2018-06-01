@@ -26,9 +26,9 @@ include_directories(
 
 set(SRC
     src/lamppost/LampPost.cpp
-    src/lamppost/PluginTemplate.cpp
-    src/lamppost/PluginInstance.cpp
-    src/lamppost/PluginManager.cpp
+    src/lamppost/plugin/PluginTemplate.cpp
+    src/lamppost/plugin/PluginInstance.cpp
+    src/lamppost/plugin/PluginManager.cpp
     src/lamppost/Identifiable.cpp
     src/lamppost/Filesystem.cpp
     src/lamppost/messages/Message.cpp

@@ -5,7 +5,7 @@
 #include <functional>
 #include <string>
 
-#include <lamppost/PluginInstance.h>
+#include <lamppost/plugin/PluginInstance.h>
 #include <lamppost/Version.h>
 
 
