@@ -16,21 +16,26 @@ namespace lp
     std::string executableDirectory = Filesystem::GetBaseDirectory(Filesystem::GetPathOfRunningExecutable());
     std::string currentWorkingDirectory = Filesystem::GetWorkingDirectory();
 
-    mConfiguration.mTemplateSearchPaths.push_back(executableDirectory);
+    AddTemplateSearchPath(executableDirectory);
 
     if(currentWorkingDirectory != executableDirectory)
     {
-      mConfiguration.mTemplateSearchPaths.push_back(currentWorkingDirectory);
+      AddTemplateSearchPath(currentWorkingDirectory);
     }
 
     std::string libDirectory = Filesystem::CombinePaths(currentWorkingDirectory, "lib");
-    mConfiguration.mTemplateSearchPaths.push_back(libDirectory);
+    AddTemplateSearchPath(libDirectory);
   }
 
   PluginManager::~PluginManager()
   {
     UnloadTemplates();
     mConfiguration.mBus = nullptr;
+  }
+
+  void PluginManager::AddTemplateSearchPath(std::string templateSearchPath)
+  {
+    mConfiguration.mTemplateSearchPaths.push_back(templateSearchPath);
   }
 
   PluginLibraryHandle PluginManager::OpenPluginLibrary(std::string path)

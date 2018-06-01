@@ -89,7 +89,9 @@ namespace lp
     PluginManager(PluginManagerConfiguration configuration);
     virtual ~PluginManager();
 
+    void AddTemplateSearchPath(std::string templateSearchPath);
     void SetBus(std::shared_ptr<bus::Bus> bus);
+
     void LoadTemplates();
     void UnloadTemplates();
 

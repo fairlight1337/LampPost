@@ -10,6 +10,15 @@ namespace lp
       mRootBus(std::make_shared<bus::Bus>("root")),
       mLog("LampPost")
   {
+    for(std::string configurationFile : mConfiguration.mConfigurationFiles)
+    {
+      mConfigurationManager.ReadConfigurationFile(configurationFile);
+    }
+
+    for(std::string pluginTemplateSearchPath : mConfigurationManager.GetPluginTemplateSearchPaths())
+    {
+      mPluginManager.AddTemplateSearchPath(pluginTemplateSearchPath);
+    }
   }
 
   LampPost::~LampPost()
@@ -17,51 +26,56 @@ namespace lp
     mRootBus = nullptr;
   }
 
-  void LampPost::Start()
+  void LampPost::Setup()
   {
-    mRunState = RunState::Running;
-
-    mLog.Info("Starting instance.");
-
     mLog.Info("Initializing plugin manager.", 1);
     mPluginManager.SetBus(mRootBus);
-    PluginConfiguration pluginConfiguration;
 
     mLog.Info("Loading templates.", 1);
     mPluginManager.LoadTemplates();
+  }
 
-    mLog.Info("Instantiating plugins");
-
-    mLog.Info("SysInfo", 1);
-    std::shared_ptr<PluginInstance> sysInfoInstance = mPluginManager.InstantiateTemplate("SysInfo", pluginConfiguration);
-    mLog.Info("Initialize", 2);
-    sysInfoInstance->Initialize();
-    mLog.Info("Start", 2);
-    sysInfoInstance->Start();
-    mLog.Info("Clean", 2);
-    sysInfoInstance = nullptr;
-
-    mLog.Info("Link", 1);
-    std::shared_ptr<PluginInstance> linkInstance = mPluginManager.InstantiateTemplate("Link", pluginConfiguration);
-    mLog.Info("Initialize", 2);
-    linkInstance->Initialize();
-    mLog.Info("Start", 2);
-    linkInstance->Start();
-    mLog.Info("Clean", 2);
-    linkInstance = nullptr;
-
-    mLog.Info("Starting root bus.");
-    mRootBus->Start();
-    mLog.Info("Returned from running root bus.");
-
-    mLog.Info("Shutting down");
-
+  void LampPost::Teardown()
+  {
     mLog.Info("Unloading templates", 1);
     mRootBus->Detach();
     mPluginManager.UnloadTemplates();
 
     mLog.Info("Disabling root bus", 1);
     mRootBus = nullptr;
+  }
+
+  void LampPost::InstantiatePlugin(std::string identifier, PluginConfiguration pluginConfiguration)
+  {
+    mLog.Info("Plugin: " + identifier, 1);
+    std::shared_ptr<PluginInstance> sysInfoInstance = mPluginManager.InstantiateTemplate(identifier, pluginConfiguration);
+
+    mLog.Info("Initialize", 2);
+    sysInfoInstance->Initialize();
+
+    mLog.Info("Start", 2);
+    sysInfoInstance->Start();
+  }
+
+  void LampPost::Start()
+  {
+    mRunState = RunState::Running;
+
+    mLog.Info("Starting instance.");
+    Setup();
+
+    mLog.Info("Instantiating plugins");
+    PluginConfiguration pluginConfiguration;
+
+    InstantiatePlugin("SysInfo", pluginConfiguration);
+    InstantiatePlugin("Link", pluginConfiguration);
+
+    mLog.Info("Starting root bus.");
+    mRootBus->Start();
+    mLog.Info("Returned from running root bus.");
+
+    mLog.Info("Shutting down");
+    Teardown();
 
     mLog.Info("Shutdown complete.");
 

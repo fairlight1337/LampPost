@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <memory>
 #include <string>
 
@@ -22,6 +23,14 @@ const std::list<std::string> cSampleTemplateSearchPaths {
   "Path/3"
 };
 
+// The sample configuration files list.
+const std::list<std::string> cSampleConfigurationFilesList {
+  "ConfigFilePath/1.cfg",
+  "ConfigFilePath/2.cfg",
+  "ConfigFilePath/3.cfg"
+};
+
+
 #pragma endregion
 
 
@@ -31,8 +40,9 @@ TEST(LampPostConfiguration, WhenConstructorIsCalled_ThenThePropertiesAreSetCorre
   lp::PluginManagerConfiguration pluginManagerConfiguration(cSampleTemplateSearchPaths, cSampleBus);
 
   // Act.
-  lp::LampPostConfiguration lampPostConfiguration(pluginManagerConfiguration);
+  lp::LampPostConfiguration lampPostConfiguration(pluginManagerConfiguration, cSampleConfigurationFilesList);
 
   // Assert.
   EXPECT_EQ(pluginManagerConfiguration, lampPostConfiguration.mPluginManagerConfiguration);
+  EXPECT_TRUE(std::equal(cSampleConfigurationFilesList.begin(), cSampleConfigurationFilesList.end(), lampPostConfiguration.mConfigurationFiles.begin()));
 }
