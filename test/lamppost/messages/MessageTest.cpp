@@ -21,7 +21,7 @@ const std::string cSampleTopic = "/sampletopic";
 TEST(Datagram, WhenConstructorIsCalled_ThenThePropertiesAreSetCorrectly)
 {
   // Arrange, Act.
-  lp::messages::Datagram datagram = std::make_shared<lp::datagram::Datagram>();
+  std::shared_ptr<lp::messages::Datagram> datagram = std::make_shared<lp::messages::Datagram>();
   lp::messages::Message message(cSampleSender, cSampleTopic, datagram);
 
   // Assert.
