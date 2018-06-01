@@ -10,6 +10,7 @@
 #include <lamppost/LampPostConfiguration.h>
 #include <lamppost/PluginManager.h>
 #include <lamppost/log/Log.h>
+#include <lamppost/RunState.h>
 
 
 namespace lp
@@ -21,6 +22,7 @@ namespace lp
       LampPostConfiguration mConfiguration;
       PluginManager mPluginManager;
       log::Log mLog;
+      std::atomic<RunState> mRunState;
 
     public:
       LampPost(LampPostConfiguration configuration);
@@ -28,6 +30,7 @@ namespace lp
 
       void Start();
       void Stop();
+      bool IsStopped();
   };
 } // namespace lp
 

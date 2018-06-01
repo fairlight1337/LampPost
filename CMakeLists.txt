@@ -64,15 +64,15 @@ set(SRC_BIN
     src/main.cpp)
 
 if(WIN32 OR WIN64)
-    set(SRC_BIN "${SRC_BIN};src/lamppost/lowlevel/Windows.cpp")
+    set(SRC_BIN "${SRC_BIN};src/lamppost/platformspecific/windows/Windows.cpp")
 endif(WIN32 OR WIN64)
 
 if(UNIX AND NOT APPLE)
-    set(SRC_BIN "${SRC_BIN};src/lamppost/lowlevel/Unix.cpp")
+    set(SRC_BIN "${SRC_BIN};src/lamppost/platformspecific/xnix/Xnix.cpp")
 endif(UNIX AND NOT APPLE)
 
 if(APPLE)
-    set(SRC_BIN "${SRC_BIN};src/lamppost/lowlevel/Osx.cpp")
+    set(SRC_BIN "${SRC_BIN};src/lamppost/platformspecific/osx/Osx.cpp")
 endif(APPLE)
 
 add_executable(${PROJECT_NAME}-bin
@@ -80,6 +80,19 @@ add_executable(${PROJECT_NAME}-bin
 
 target_link_libraries(${PROJECT_NAME}-bin
     ${PROJECT_NAME})
+
+
+### Windows Service
+if(WIN32 OR WIN64)
+    add_executable(${PROJECT_NAME}-service
+        src/lamppost/platformspecific/windows/service/Service.cpp
+        src/lamppost/platformspecific/windows/service/main.cpp)
+
+    target_link_libraries(${PROJECT_NAME}-service
+        ${PROJECT_NAME}
+        Kernel32.lib
+        Advapi32.lib)
+endif(WIN32 OR WIN64)
 
 
 ### Plugins

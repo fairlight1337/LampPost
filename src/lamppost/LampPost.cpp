@@ -4,7 +4,8 @@
 namespace lp
 {
   LampPost::LampPost(LampPostConfiguration configuration)
-    : mConfiguration(configuration),
+    : mRunState(RunState::Unknown),
+      mConfiguration(configuration),
       mPluginManager(configuration.mPluginManagerConfiguration),
       mRootBus(std::make_shared<bus::Bus>("root")),
       mLog("LampPost")
@@ -18,6 +19,8 @@ namespace lp
 
   void LampPost::Start()
   {
+    mRunState = RunState::Running;
+
     mLog.Info("Starting instance.");
 
     mLog.Info("Initializing plugin manager.", 1);
@@ -61,11 +64,18 @@ namespace lp
     mRootBus = nullptr;
 
     mLog.Info("Shutdown complete.");
+
+    mRunState = RunState::Running;
   }
 
   void LampPost::Stop()
   {
     mLog.Info("Received stop signal.");
     mRootBus->Stop();
+  }
+
+  bool LampPost::IsStopped()
+  {
+    return mRunState == RunState::Stopped;
   }
 } // namespace lp
