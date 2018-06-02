@@ -95,28 +95,23 @@ namespace lp
 
     void Bus::DeleteSubscriber(std::shared_ptr<Subscriber> subscriber)
     {
-      std::lock_guard<std::mutex> lock(mSubscribersMutex);
-      mSubscribers.remove(subscriber);
-      subscriber->Reset();
+      DeleteManagedResource(mSubscribersMutex, mSubscribers, subscriber);
     }
 
     void Bus::DeletePublisher(std::shared_ptr<Publisher> publisher)
     {
+      DeleteManagedResource(mPublishersMutex, mPublishers, publisher);
       std::lock_guard<std::mutex> lock(mPublishersMutex);
-      mPublishers.remove(publisher);
-      publisher->Reset();
     }
 
     bool Bus::ContainsSubscriber(std::shared_ptr<bus::Subscriber> subscriber)
     {
-      std::lock_guard<std::mutex> lock(mSubscribersMutex);
-      return std::find(mSubscribers.begin(), mSubscribers.end(), subscriber) != mSubscribers.end();
+      return ContainsManagedResource(mSubscribersMutex, mSubscribers, subscriber);
     }
 
     bool Bus::ContainsPublisher(std::shared_ptr<bus::Publisher> publisher)
     {
-      std::lock_guard<std::mutex> lock(mPublishersMutex);
-      return std::find(mPublishers.begin(), mPublishers.end(), publisher) != mPublishers.end();
+      return ContainsManagedResource(mPublishersMutex, mPublishers, publisher);
     }
 
     void Bus::Start()

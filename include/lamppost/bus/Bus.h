@@ -17,6 +17,8 @@
 #include <thread>
 
 // Private includes
+#include <lamppost/bus/ActionProvider.h>
+#include <lamppost/bus/ActionConsumer.h>
 #include <lamppost/bus/Publisher.h>
 #include <lamppost/bus/Subscriber.h>
 #include <lamppost/exceptions/DuplicateKeyException.h>
@@ -50,6 +52,11 @@ namespace lp
       std::mutex mSubscribersMutex;
       std::list<std::shared_ptr<Subscriber>> mSubscribers;
 
+      std::mutex mActionProvidersMutex;
+      std::list<std::shared_ptr<ActionProvider>> mActionProviders;
+      std::mutex mActionConsumersMutex;
+      std::list<std::shared_ptr<ActionConsumer>> mActionConsumers;
+
       void Publish(std::string topic, std::shared_ptr<messages::Datagram> datagram);
       void Distribute(std::shared_ptr<messages::Message> message);
 
@@ -66,36 +73,60 @@ namespace lp
       template<class ... Args>
       std::shared_ptr<Publisher> CreatePublisher(std::string topic, Args ... args)
       {
-        std::shared_ptr<Publisher> publisher = std::make_shared<Publisher>(
+        return CreateManagedResource(
+          mPublishersMutex,
+          mPublishers,
           topic,
           [this, topic](std::shared_ptr<messages::Datagram> datagram)
           {
             this->Publish(topic, datagram);
           },
           std::forward<Args>(args)...);
+      }
 
-        std::lock_guard<std::mutex> lock(mPublishersMutex);
-        mPublishers.push_back(publisher);
+      template<class ClassType, class ... Args>
+      std::shared_ptr<ClassType> CreateManagedResource(std::mutex& mutex, std::list<std::shared_ptr<ClassType>>& container, Args ... args)
+      {
+        std::shared_ptr<ClassType> instance = std::make_shared<ClassType>(std::forward<Args>(args)...);
 
-        return publisher;
+        std::lock_guard<std::mutex> lock(mutex);
+        container.push_back(instance);
+
+        return instance;
+      };
+
+      template<class ClassType>
+      void DeleteManagedResource(std::mutex& mutex, std::list<std::shared_ptr<ClassType>>& container, std::shared_ptr<ClassType> instance)
+      {
+        std::lock_guard<std::mutex> lock(mutex);
+        container.remove(instance);
+        instance->Reset();
+      }
+
+      template<class ClassType>
+      bool ContainsManagedResource(std::mutex& mutex, std::list<std::shared_ptr<ClassType>>& container, std::shared_ptr<ClassType> instance)
+      {
+        std::lock_guard<std::mutex> lock(mutex);
+        return std::find(container.begin(), container.end(), instance) != container.end();
       }
 
       template<class ... Args>
       std::shared_ptr<Subscriber> CreateSubscriber(Args ... args)
       {
-        std::shared_ptr<Subscriber> subscriber = std::make_shared<Subscriber>(std::forward<Args>(args)...);
-
-        std::lock_guard<std::mutex> lock(mSubscribersMutex);
-        mSubscribers.push_back(subscriber);
-
-        return subscriber;
+        return CreateManagedResource(mSubscribersMutex, mSubscribers, std::forward<Args>(args)...);
       }
 
-      void DeleteSubscriber(std::shared_ptr<bus::Subscriber> subscriber);
-      void DeletePublisher(std::shared_ptr<bus::Publisher> publisher);
+      template<class ... Args>
+      std::shared_ptr<ActionProvider> CreateActionProvider(Args ... args)
+      {
+        return CreateManagedResource(mActionProvidersMutex, mActionProviders, std::forward<Args>(args)...);
+      }
 
       bool ContainsSubscriber(std::shared_ptr<bus::Subscriber> subscriber);
       bool ContainsPublisher(std::shared_ptr<bus::Publisher> publisher);
+
+      void DeleteSubscriber(std::shared_ptr<bus::Subscriber> subscriber);
+      void DeletePublisher(std::shared_ptr<bus::Publisher> publisher);
 
       void Start();
       void Run();

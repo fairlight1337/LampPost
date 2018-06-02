@@ -44,6 +44,8 @@ set(SRC
     src/lamppost/exceptions/DuplicateKeyException.cpp
     src/lamppost/bus/Publisher.cpp
     src/lamppost/bus/Subscriber.cpp
+    src/lamppost/bus/ActionProvider.cpp
+    src/lamppost/bus/ActionConsumer.cpp
     src/lamppost/log/Log.cpp
     src/lamppost/settings/SettingsManager.cpp)
 
