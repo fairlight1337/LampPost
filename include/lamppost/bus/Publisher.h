@@ -6,6 +6,7 @@
 #include <string>
 #include <utility>
 
+#include <lamppost/bus/BusParticipant.h>
 #include <lamppost/exceptions/ArgumentNullException.h>
 #include <lamppost/messages/Datagram.h>
 
@@ -14,10 +15,9 @@ namespace lp
 {
   namespace bus
   {
-    class Publisher
+    class Publisher : public BusParticipant
     {
     private:
-      std::string mTopic;
       std::function<void(std::shared_ptr<messages::Datagram>)> mPublishingFunction;
 
     public:

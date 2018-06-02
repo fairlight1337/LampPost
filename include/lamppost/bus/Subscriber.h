@@ -7,6 +7,7 @@
 #include <string>
 #include <utility>
 
+#include <lamppost/bus/BusParticipant.h>
 #include <lamppost/messages/Message.h>
 
 
@@ -14,10 +15,9 @@ namespace lp
 {
   namespace bus
   {
-    class Subscriber
+    class Subscriber : public BusParticipant
     {
     private:
-      std::string mTopic;
       std::function<void(std::shared_ptr<messages::Message>)> mCallback;
 
     public:
@@ -26,8 +26,6 @@ namespace lp
       virtual ~Subscriber() = default;
 
       void Receive(std::shared_ptr<messages::Message> message);
-
-      std::string GetTopic();
 
       void Reset();
     };

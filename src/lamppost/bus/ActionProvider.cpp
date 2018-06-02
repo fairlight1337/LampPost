@@ -5,8 +5,12 @@ namespace lp
 {
   namespace bus
   {
-    ActionProvider::ActionProvider(std::string actionTopicNamespace)
-      : mActionTopicNamespace(actionTopicNamespace)
+    ActionProvider::ActionProvider(std::string topic)
+      : BusParticipant(topic)
+    {
+    }
+
+    void ActionProvider::Reset()
     {
     }
   }

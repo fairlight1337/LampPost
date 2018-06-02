@@ -4,19 +4,20 @@
 
 #include <string>
 
+#include <lamppost/bus/BusParticipant.h>
+
 
 namespace lp
 {
   namespace bus
   {
-    class ActionProvider
+    class ActionProvider : public BusParticipant
     {
-    private:
-      std::string mActionTopicNamespace;
-
     public:
-      ActionProvider(std::string actionTopicNamespace);
+      ActionProvider(std::string topic);
       ~ActionProvider() = default;
+
+      void Reset() override;
     };
   }
 }

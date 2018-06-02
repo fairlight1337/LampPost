@@ -5,5 +5,13 @@ namespace lp
 {
   namespace bus
   {
+    ActionConsumer::ActionConsumer(std::string topic)
+      : BusParticipant(topic)
+    {
+    }
+
+    void ActionConsumer::Reset()
+    {
+    }
   }
 }

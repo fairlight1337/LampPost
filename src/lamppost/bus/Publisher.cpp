@@ -8,7 +8,7 @@ namespace lp
     Publisher::Publisher(
       std::string topic,
       std::function<void(std::shared_ptr<lp::messages::Datagram>)> publishingFunction)
-      : mTopic(topic),
+      : BusParticipant(topic),
         mPublishingFunction(publishingFunction)
     {
       if(publishingFunction == nullptr)

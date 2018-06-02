@@ -2,15 +2,20 @@
 #define LAMPPOST_ACTIONCONSUMER_H
 
 
+#include <lamppost/bus/BusParticipant.h>
+
+
 namespace lp
 {
   namespace bus
   {
-    class ActionConsumer
+    class ActionConsumer : public BusParticipant
     {
     public:
-      ActionConsumer() = default;
+      ActionConsumer(std::string topic);
       ~ActionConsumer() = default;
+
+      void Reset() override;
     };
   }
 }
