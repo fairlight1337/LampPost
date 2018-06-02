@@ -12,10 +12,10 @@ namespace lp
   {
     for(const std::string& configurationFile : mConfiguration.mConfigurationFiles)
     {
-      mConfigurationManager.ReadConfigurationFile(configurationFile);
+      mSettingsManager.ReadConfigurationFile(configurationFile);
     }
 
-    for(const std::string& pluginTemplateSearchPath : mConfigurationManager.GetPluginTemplateSearchPaths())
+    for(const std::string& pluginTemplateSearchPath : mSettingsManager.GetPluginTemplateSearchPaths())
     {
       mPluginManager.AddTemplateSearchPath(pluginTemplateSearchPath);
     }

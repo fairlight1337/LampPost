@@ -7,7 +7,7 @@
 #include <memory>
 #include <string>
 
-#include <lamppost/config/ConfigurationManager.h>
+#include <lamppost/settings/SettingsManager.h>
 #include <lamppost/LampPostConfiguration.h>
 #include <lamppost/plugin/PluginManager.h>
 #include <lamppost/log/Log.h>
@@ -24,7 +24,7 @@ namespace lp
     PluginManager mPluginManager;
     log::Log mLog;
     std::atomic<RunState> mRunState;
-    config::ConfigurationManager mConfigurationManager;
+    settings::SettingsManager mSettingsManager;
 
     void Setup();
     void Teardown();

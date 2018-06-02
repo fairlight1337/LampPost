@@ -1,5 +1,5 @@
-#ifndef LAMPPOST_CONFIGURATIONMANAGER_H
-#define LAMPPOST_CONFIGURATIONMANAGER_H
+#ifndef LAMPPOST_SETTINGSMANAGER_H
+#define LAMPPOST_SETTINGSMANAGER_H
 
 
 #include <list>
@@ -8,24 +8,24 @@
 
 namespace lp
 {
-  namespace config
+  namespace settings
   {
-    class ConfigurationManager
+    class SettingsManager
     {
     private:
       std::list<std::string> mPluginTemplateSearchPaths;
 
     public:
-      ConfigurationManager() = default;
-      ~ConfigurationManager() = default;
+      SettingsManager() = default;
+      ~SettingsManager() = default;
 
       void AddPluginTemplateSearchPath(std::string pluginTemplateSearchPath);
       const std::list<std::string> GetPluginTemplateSearchPaths();
 
       void ReadConfigurationFile(std::string path);
     };
-  } // namespace config
+  } // namespace settings
 } // namespace lp
 
 
-#endif //LAMPPOST_CONFIGURATIONMANAGER_H
+#endif //LAMPPOST_SETTINGSMANAGER_H

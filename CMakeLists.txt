@@ -45,7 +45,7 @@ set(SRC
     src/lamppost/bus/Publisher.cpp
     src/lamppost/bus/Subscriber.cpp
     src/lamppost/log/Log.cpp
-    src/lamppost/config/ConfigurationManager.cpp)
+    src/lamppost/settings/SettingsManager.cpp)
 
 add_library(${PROJECT_NAME}
     ${SRC})
