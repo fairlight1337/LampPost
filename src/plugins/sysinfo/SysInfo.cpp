@@ -20,6 +20,8 @@ namespace lp
           std::string message = datagram->Get<std::string>();
           mLog.Info("Got it: " + message);
         });
+
+      mSysInfoActionProvider = GetActionProvider("/sysinfoaction");
     }
 
     void SysInfo::Run()

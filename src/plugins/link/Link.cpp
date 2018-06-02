@@ -16,6 +16,8 @@ namespace lp
         {
           mLog.Info("Got a message");
         });
+
+      mSysInfoActionConsumer = GetActionConsumer("/sysinfoaction");
     }
 
     void Link::Run()

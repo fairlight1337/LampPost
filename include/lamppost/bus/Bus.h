@@ -60,30 +60,6 @@ namespace lp
       void Publish(std::string topic, std::shared_ptr<messages::Datagram> datagram);
       void Distribute(std::shared_ptr<messages::Message> message);
 
-    public:
-      Bus(std::string name);
-      Bus(std::string name, std::function<void(std::shared_ptr<messages::Message>)> publishMessageFunction);
-      virtual ~Bus();
-
-      std::shared_ptr<Bus> CreateChildBus(std::string name);
-      std::shared_ptr<Bus> GetChildBus(std::string name);
-
-      std::string GetName();
-
-      template<class ... Args>
-      std::shared_ptr<Publisher> CreatePublisher(std::string topic, Args ... args)
-      {
-        return CreateManagedResource(
-          mPublishersMutex,
-          mPublishers,
-          topic,
-          [this, topic](std::shared_ptr<messages::Datagram> datagram)
-          {
-            this->Publish(topic, datagram);
-          },
-          std::forward<Args>(args)...);
-      }
-
       template<class ClassType, class ... Args>
       std::shared_ptr<ClassType> CreateManagedResource(std::mutex& mutex, std::list<std::shared_ptr<ClassType>>& container, Args ... args)
       {
@@ -110,6 +86,30 @@ namespace lp
         return std::find(container.begin(), container.end(), instance) != container.end();
       }
 
+    public:
+      Bus(std::string name);
+      Bus(std::string name, std::function<void(std::shared_ptr<messages::Message>)> publishMessageFunction);
+      virtual ~Bus();
+
+      std::shared_ptr<Bus> CreateChildBus(std::string name);
+      std::shared_ptr<Bus> GetChildBus(std::string name);
+
+      std::string GetName();
+
+      template<class ... Args>
+      std::shared_ptr<Publisher> CreatePublisher(std::string topic, Args ... args)
+      {
+        return CreateManagedResource(
+          mPublishersMutex,
+          mPublishers,
+          topic,
+          [this, topic](std::shared_ptr<messages::Datagram> datagram)
+          {
+            this->Publish(topic, datagram);
+          },
+          std::forward<Args>(args)...);
+      }
+
       template<class ... Args>
       std::shared_ptr<Subscriber> CreateSubscriber(Args ... args)
       {
@@ -120,6 +120,12 @@ namespace lp
       std::shared_ptr<ActionProvider> CreateActionProvider(Args ... args)
       {
         return CreateManagedResource(mActionProvidersMutex, mActionProviders, std::forward<Args>(args)...);
+      }
+
+      template<class ... Args>
+      std::shared_ptr<ActionConsumer> CreateActionConsumer(Args ... args)
+      {
+        return CreateManagedResource(mActionConsumersMutex, mActionConsumers, std::forward<Args>(args)...);
       }
 
       bool ContainsSubscriber(std::shared_ptr<bus::Subscriber> subscriber);

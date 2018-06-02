@@ -13,5 +13,5 @@ namespace lp
     void ActionConsumer::Reset()
     {
     }
-  }
-}
+  } // namespace bus
+} // namespace lp

@@ -14,10 +14,12 @@ namespace lp
   namespace plugins
   {
     class SysInfo : public PluginInstance
-      {
+    {
     private:
       std::shared_ptr<bus::Publisher> mSysInfoPublisher;
       std::shared_ptr<bus::Subscriber> mSysInfoSubscriber;
+
+      std::shared_ptr<bus::ActionProvider> mSysInfoActionProvider;
 
     public:
       SysInfo(PluginConfiguration configuration);

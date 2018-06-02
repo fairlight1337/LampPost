@@ -25,7 +25,10 @@ namespace lp
     }
 
     Bus::Bus(std::string name, std::function<void(std::shared_ptr<messages::Message>)> publishMessageFunction)
-      : Identifiable(name), mPublishMessageFunction(publishMessageFunction), mShouldRun(false), mIsRootBus(false)
+      : Identifiable(name),
+        mPublishMessageFunction(publishMessageFunction),
+        mShouldRun(false),
+        mIsRootBus(false)
     {
       if(name.empty())
       {

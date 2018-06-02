@@ -16,14 +16,14 @@ namespace lp
 
     public:
       BusParticipant(std::string topic);
-      ~BusParticipant() = default;
+      virtual ~BusParticipant() = default;
 
       std::string GetTopic();
 
       virtual void Reset() = 0;
     };
-  }
-}
+  } // namespace bus
+} // namespace lp
 
 
 #endif //LAMPPOST_BUSPARTICIPANT_H

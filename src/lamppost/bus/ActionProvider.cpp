@@ -13,5 +13,5 @@ namespace lp
     void ActionProvider::Reset()
     {
     }
-  }
-}
+  } // namespace bus
+} // namespace lp

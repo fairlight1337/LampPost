@@ -17,8 +17,8 @@ namespace lp
 
       void Reset() override;
     };
-  }
-}
+  } // namespace bus
+} // namespace lp
 
 
 #endif //LAMPPOST_ACTIONCONSUMER_H

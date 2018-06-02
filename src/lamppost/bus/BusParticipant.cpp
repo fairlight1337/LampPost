@@ -14,5 +14,5 @@ namespace lp
     {
       return mTopic;
     }
-  }
-}
+  } // namespace bus
+} // namespace lp

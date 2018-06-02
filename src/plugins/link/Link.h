@@ -17,6 +17,7 @@ namespace lp
     {
     private:
       std::shared_ptr<bus::Subscriber> mSysInfoSubscriber;
+      std::shared_ptr<bus::ActionConsumer> mSysInfoActionConsumer;
 
     public:
       Link(PluginConfiguration configuration);

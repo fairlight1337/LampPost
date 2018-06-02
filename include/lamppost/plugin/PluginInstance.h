@@ -77,6 +77,18 @@ namespace lp
       return mConfiguration.mBus->CreateSubscriber(std::forward<Args>(args)...);
     }
 
+    template<class ... Args>
+    std::shared_ptr<bus::ActionProvider> GetActionProvider(Args ... args)
+    {
+      return mConfiguration.mBus->CreateActionProvider(std::forward<Args>(args)...);
+    }
+
+    template<class ... Args>
+    std::shared_ptr<bus::ActionConsumer> GetActionConsumer(Args ... args)
+    {
+      return mConfiguration.mBus->CreateActionConsumer(std::forward<Args>(args)...);
+    }
+
     void DeleteSubscriber(std::shared_ptr<bus::Subscriber> subscriber);
     void DeletePublisher(std::shared_ptr<bus::Publisher> publisher);
 
