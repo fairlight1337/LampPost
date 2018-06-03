@@ -5,6 +5,12 @@ namespace lp
 {
   namespace bus
   {
+    Subscriber::Subscriber(std::string topic)
+      : BusParticipant(std::move(topic)),
+        mCallback(nullptr)
+    {
+    }
+
     Subscriber::Subscriber(std::string topic, std::function<void(std::shared_ptr<messages::Datagram>)> callback)
       : BusParticipant(topic),
         mCallback([callback](std::shared_ptr<lp::messages::Message> message)
@@ -19,8 +25,8 @@ namespace lp
     }
 
     Subscriber::Subscriber(std::string topic, std::function<void(std::shared_ptr<messages::Message>)> callback)
-      : BusParticipant(topic),
-        mCallback(callback)
+      : BusParticipant(std::move(topic)),
+        mCallback(std::move(callback))
     {
     }
 
@@ -28,13 +34,25 @@ namespace lp
     {
       if(mCallback != nullptr)
       {
-        mCallback(message);
+        mCallback(std::move(message));
       }
     }
 
     void Subscriber::Reset()
     {
       mCallback = nullptr;
+    }
+
+    void Subscriber::SetCallback(std::function<void(std::shared_ptr<messages::Datagram>)> callback)
+    {
+      mCallback = [callback](std::shared_ptr<lp::messages::Message> message)
+        {
+          std::shared_ptr<lp::messages::Datagram> datagram = message->GetDatagram();
+
+          if(datagram != nullptr) {
+            callback(datagram);
+          }
+        };
     }
   } // namespace bus
 } // namespace lp

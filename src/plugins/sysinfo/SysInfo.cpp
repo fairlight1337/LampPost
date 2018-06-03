@@ -21,7 +21,17 @@ namespace lp
           mLog.Info("Got it: " + message);
         });
 
-      mSysInfoActionProvider = GetActionProvider("/sysinfoaction");
+      mSysInfoActionProvider = GetActionProvider(
+        "/sysinfoaction",
+        [this](std::string invocationId, std::shared_ptr<messages::Datagram> request)
+        {
+          std::cout << "Received action request. Replying.";
+
+          std::shared_ptr<messages::Datagram> response = std::make_shared<messages::Datagram>();
+          *response = "Reponse message.";
+
+          mSysInfoActionProvider->Respond(invocationId, response);
+        });
     }
 
     void SysInfo::Run()

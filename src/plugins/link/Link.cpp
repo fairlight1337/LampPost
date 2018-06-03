@@ -17,16 +17,24 @@ namespace lp
           mLog.Info("Got a message");
         });
 
-      mSysInfoActionConsumer = GetActionConsumer("/sysinfoaction");
+      mSysInfoActionConsumer = GetActionConsumer(
+        "/sysinfoaction",
+        [](std::shared_ptr<messages::Datagram> response)
+        {
+          std::cout << "Received a response: " << response->Get<std::string>() << std::endl;
+        });
     }
 
     void Link::Run()
     {
       while(mShouldRun)
       {
-        // TODO(fairlight1337): Implement this.
+        std::shared_ptr<messages::Datagram> request = std::make_shared<messages::Datagram>();
+        *request = "Test request";
 
-        Sleep(std::chrono::seconds(2));
+        mSysInfoActionConsumer->Request(request);
+
+        Sleep(std::chrono::seconds(1));
       }
     }
 

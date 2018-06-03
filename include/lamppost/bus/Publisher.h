@@ -26,7 +26,7 @@ namespace lp
 
       void Publish(std::shared_ptr<messages::Datagram> datagram);
 
-      void Reset();
+      void Reset() override;
     };
   } // namespace bus
 } // namespace lp

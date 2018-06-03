@@ -117,15 +117,50 @@ namespace lp
       }
 
       template<class ... Args>
-      std::shared_ptr<ActionProvider> CreateActionProvider(Args ... args)
+      std::shared_ptr<ActionProvider> CreateActionProvider(std::string topic, Args ... args)
       {
-        return CreateManagedResource(mActionProvidersMutex, mActionProviders, std::forward<Args>(args)...);
+        std::shared_ptr<Subscriber> requestSubscriber = CreateSubscriber(topic + "/request");
+        std::shared_ptr<Publisher> responsePublisher = CreatePublisher(topic + "/response");
+
+        std::shared_ptr<ActionProvider> instance = CreateManagedResource(
+          mActionProvidersMutex,
+          mActionProviders,
+          requestSubscriber,
+          responsePublisher,
+          topic,
+          std::forward<Args>(args)...);
+
+        requestSubscriber->SetCallback(
+          [instance](std::shared_ptr<messages::Datagram> datagram)
+          {
+            // TODO(fairlight133): Unpack invocation here.
+            instance->ProcessRequest("", datagram);
+          });
+
+        return instance;
       }
 
       template<class ... Args>
-      std::shared_ptr<ActionConsumer> CreateActionConsumer(Args ... args)
+      std::shared_ptr<ActionConsumer> CreateActionConsumer(std::string topic, Args ... args)
       {
-        return CreateManagedResource(mActionConsumersMutex, mActionConsumers, std::forward<Args>(args)...);
+        std::shared_ptr<Publisher> requestPublisher = CreatePublisher(topic + "/request");
+        std::shared_ptr<Subscriber> responseSubscriber = CreateSubscriber(topic + "/response");
+
+        std::shared_ptr<ActionConsumer> instance = CreateManagedResource(
+          mActionConsumersMutex,
+          mActionConsumers,
+          responseSubscriber,
+          requestPublisher,
+          topic,
+          std::forward<Args>(args)...);
+
+        responseSubscriber->SetCallback(
+          [instance](std::shared_ptr<messages::Datagram> datagram)
+          {
+            instance->ProcessResponse(datagram);
+          });
+
+        return instance;
       }
 
       bool ContainsSubscriber(std::shared_ptr<bus::Subscriber> subscriber);
