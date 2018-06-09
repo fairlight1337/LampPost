@@ -48,7 +48,8 @@ set(SRC
     src/lamppost/bus/ActionProvider.cpp
     src/lamppost/bus/ActionConsumer.cpp
     src/lamppost/log/Log.cpp
-    src/lamppost/settings/SettingsManager.cpp)
+    src/lamppost/settings/SettingsManager.cpp
+    src/lamppost/utilities/Uuid.cpp)
 
 add_library(${PROJECT_NAME}
     ${SRC})

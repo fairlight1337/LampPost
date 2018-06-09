@@ -13,7 +13,8 @@ namespace lp
       : BusParticipant(std::move(topic)),
         mResponseSubscriber(std::move(responseSubscriber)),
         mRequestPublisher(std::move(requestPublisher)),
-        mCallback(std::move(callback))
+        mDefaultCallback(std::move(callback)),
+        mCallback(nullptr)
     {
     }
 
@@ -23,15 +24,22 @@ namespace lp
     }
 
     void ActionConsumer::RequestAsync(
-      std::shared_ptr<messages::Datagram> /*request*/,
+      std::shared_ptr<messages::Datagram> request,
       std::function<void(std::shared_ptr<messages::Datagram>)> callback)
     {
       if(callback == nullptr)
       {
-        callback = mCallback;
+        callback = mDefaultCallback;
       }
 
-      // TODO(fairlight1337): Handle properly requesting an action invocation here.
+      mCallback = callback;
+
+      std::shared_ptr<messages::Datagram> wrappedRequest = std::make_shared<messages::Datagram>();
+      (*wrappedRequest)["invocationId"] = std::make_shared<messages::Datagram>();
+      (*(*wrappedRequest)["invocationId"]) = static_cast<std::string>(utilities::Uuid::CreateUuid());
+      (*wrappedRequest)["request"] = std::move(request);
+
+      mRequestPublisher->Publish(wrappedRequest);
     }
 
     std::shared_ptr<messages::Datagram> ActionConsumer::Request(std::shared_ptr<messages::Datagram> request, int timeoutMs)

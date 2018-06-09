@@ -133,8 +133,11 @@ namespace lp
         requestSubscriber->SetCallback(
           [instance](std::shared_ptr<messages::Datagram> datagram)
           {
-            // TODO(fairlight133): Unpack invocation here.
-            instance->ProcessRequest("", datagram);
+            if((*datagram)["invocationId"] != nullptr)
+            {
+              std::string invocationId = (*datagram)["invocationId"]->Get<std::string>();
+              instance->ProcessRequest(invocationId, datagram);
+            }
           });
 
         return instance;

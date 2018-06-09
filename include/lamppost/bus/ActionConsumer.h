@@ -14,6 +14,7 @@
 #include <lamppost/bus/Publisher.h>
 #include <lamppost/bus/Subscriber.h>
 #include <lamppost/messages/Datagram.h>
+#include <lamppost/utilities/Uuid.h>
 
 
 namespace lp
@@ -26,6 +27,7 @@ namespace lp
       std::shared_ptr<Subscriber> mResponseSubscriber;
       std::shared_ptr<Publisher> mRequestPublisher;
 
+      std::function<void(std::shared_ptr<messages::Datagram>)> mDefaultCallback;
       std::function<void(std::shared_ptr<messages::Datagram>)> mCallback;
 
     public:
