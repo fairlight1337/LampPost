@@ -17,12 +17,7 @@ namespace lp
           mLog.Info("Got a message");
         });
 
-      mSysInfoActionConsumer = GetActionConsumer(
-        "/sysinfoaction",
-        [](std::shared_ptr<messages::Datagram> response)
-        {
-          std::cout << "Received a response: " << response->Get<std::string>() << std::endl;
-        });
+      mSysInfoActionConsumer = GetActionConsumer("/sysinfoaction");
     }
 
     void Link::Run()
@@ -30,9 +25,18 @@ namespace lp
       while(mShouldRun)
       {
         std::shared_ptr<messages::Datagram> request = std::make_shared<messages::Datagram>();
-        *request = "Test request";
+        (*request) = "Test request";
 
-        mSysInfoActionConsumer->Request(request);
+        std::shared_ptr<messages::Datagram> response = mSysInfoActionConsumer->Request(request);
+
+        if(response != nullptr)
+        {
+          std::cout << "Received a response: " << response->Get<std::string>() << std::endl;
+        }
+        else
+        {
+          std::cout << "Failed to receive a response." << std::endl;
+        }
 
         Sleep(std::chrono::seconds(1));
       }

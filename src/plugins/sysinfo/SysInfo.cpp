@@ -28,7 +28,7 @@ namespace lp
           std::cout << "Received action request. Replying.";
 
           std::shared_ptr<messages::Datagram> response = std::make_shared<messages::Datagram>();
-          *response = "Reponse message.";
+          (*response) = std::string("Reponse message.");
 
           mSysInfoActionProvider->Respond(invocationId, response);
         });

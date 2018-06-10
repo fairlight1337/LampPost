@@ -133,9 +133,10 @@ namespace lp
         requestSubscriber->SetCallback(
           [instance](std::shared_ptr<messages::Datagram> datagram)
           {
-            if((*datagram)["invocationId"] != nullptr)
+            if(datagram != nullptr && (*datagram)["invocationId"] != nullptr)
             {
               std::string invocationId = (*datagram)["invocationId"]->Get<std::string>();
+
               instance->ProcessRequest(invocationId, datagram);
             }
           });
@@ -160,7 +161,10 @@ namespace lp
         responseSubscriber->SetCallback(
           [instance](std::shared_ptr<messages::Datagram> datagram)
           {
-            instance->ProcessResponse(datagram);
+            std::string invocationId = (*datagram)["invocationId"]->Get<std::string>();
+            std::shared_ptr<messages::Datagram> response = (*datagram)["response"];
+
+            instance->ProcessResponse(invocationId, response);
           });
 
         return instance;

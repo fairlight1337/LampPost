@@ -17,11 +17,13 @@ namespace lp
 
       mPublishMessageFunction = [this](std::shared_ptr<messages::Message> message)
         {
-        std::lock_guard<std::mutex> lock(mQueueMutex);
-        mQueuedMessages.push_back(message);
+          {
+            std::lock_guard<std::mutex> lock(mQueueMutex);
+            mQueuedMessages.push_back(message);
+          }
 
-        mNotifier.notify_one();
-      };
+          mNotifier.notify_one();
+        };
     }
 
     Bus::Bus(std::string name, std::function<void(std::shared_ptr<messages::Message>)> publishMessageFunction)
@@ -146,13 +148,18 @@ namespace lp
           break;
         }
 
-        std::lock_guard<std::mutex> lock(mQueueMutex);
-        for(const std::shared_ptr<messages::Message>& message : mQueuedMessages)
+        std::deque<std::shared_ptr<messages::Message>> queuedMessages;
+        {
+          std::lock_guard<std::mutex> lock(mQueueMutex);
+          queuedMessages = mQueuedMessages;
+
+          mQueuedMessages.clear();
+        }
+
+        for(const std::shared_ptr<messages::Message>& message : queuedMessages)
         {
           Distribute(message);
         }
-
-        mQueuedMessages.clear();
       }
     }
 

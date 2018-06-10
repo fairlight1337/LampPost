@@ -28,6 +28,8 @@ namespace lp
       (*wrappedResponse)["invocationId"] = std::make_shared<messages::Datagram>();
       (*(*wrappedResponse)["invocationId"]) = std::move(invocationId);
       (*wrappedResponse)["response"] = std::move(response);
+
+      mResponsePublisher->Publish(wrappedResponse);
     }
 
     void ActionProvider::ProcessRequest(std::string invocationId, std::shared_ptr<messages::Datagram> request)

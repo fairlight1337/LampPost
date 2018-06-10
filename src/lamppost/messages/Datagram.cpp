@@ -37,11 +37,6 @@ namespace lp
         mValue = nullptr;
       }
 
-      if(mDictionary.find(key) == mDictionary.end())
-      {
-        throw exceptions::KeyNotFoundException(key, "Key not found in dictionary.");
-      }
-
       return mDictionary[key];
     }
 

@@ -8,19 +8,15 @@ namespace lp
     ActionConsumer::ActionConsumer(
       std::shared_ptr<Subscriber> responseSubscriber,
       std::shared_ptr<Publisher> requestPublisher,
-      std::string topic,
-      std::function<void(std::shared_ptr<messages::Datagram>)> callback)
+      std::string topic)
       : BusParticipant(std::move(topic)),
         mResponseSubscriber(std::move(responseSubscriber)),
-        mRequestPublisher(std::move(requestPublisher)),
-        mDefaultCallback(std::move(callback)),
-        mCallback(nullptr)
+        mRequestPublisher(std::move(requestPublisher))
     {
     }
 
     void ActionConsumer::Reset()
     {
-      mCallback = nullptr;
     }
 
     void ActionConsumer::RequestAsync(
@@ -29,14 +25,16 @@ namespace lp
     {
       if(callback == nullptr)
       {
-        callback = mDefaultCallback;
+        throw exceptions::ArgumentNullException("callback", "Callback may not be null.");
       }
 
-      mCallback = callback;
+      utilities::Uuid uuid = utilities::Uuid::CreateUuid();
+      std::string uuidString = static_cast<std::string>(uuid);
+      mOpenRequests[uuidString] = callback;
 
       std::shared_ptr<messages::Datagram> wrappedRequest = std::make_shared<messages::Datagram>();
       (*wrappedRequest)["invocationId"] = std::make_shared<messages::Datagram>();
-      (*(*wrappedRequest)["invocationId"]) = static_cast<std::string>(utilities::Uuid::CreateUuid());
+      (*(*wrappedRequest)["invocationId"]) = uuidString;
       (*wrappedRequest)["request"] = std::move(request);
 
       mRequestPublisher->Publish(wrappedRequest);
@@ -49,18 +47,19 @@ namespace lp
       std::mutex mtx;
 
       std::unique_lock<std::mutex> ul(mtx);
-
       std::shared_ptr<messages::Datagram> response = nullptr;
-
       waiting = true;
 
       RequestAsync(
         std::move(request),
         [&](std::shared_ptr<messages::Datagram> internalResponse)
         {
-          response = internalResponse;
-          waiting = false;
-          cv.notify_one();
+          if(waiting)
+          {
+            response = internalResponse;
+            waiting = false;
+            cv.notify_one();
+          }
         });
 
       cv.wait_for(ul, std::chrono::milliseconds(timeoutMs),
@@ -72,9 +71,14 @@ namespace lp
       return response;
     }
 
-    void ActionConsumer::ProcessResponse(std::shared_ptr<messages::Datagram> response)
+    void ActionConsumer::ProcessResponse(std::string invocationId, std::shared_ptr<messages::Datagram> response)
     {
-      mCallback(std::move(response));
+      if(mOpenRequests.find(invocationId) != mOpenRequests.end())
+      {
+        mOpenRequests[invocationId](std::move(response));
+        mOpenRequests.erase(invocationId);
+      }
+
     }
   } // namespace bus
 } // namespace lp
