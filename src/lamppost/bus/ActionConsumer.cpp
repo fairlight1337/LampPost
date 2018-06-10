@@ -44,13 +44,15 @@ namespace lp
 
     std::shared_ptr<messages::Datagram> ActionConsumer::Request(std::shared_ptr<messages::Datagram> request, int timeoutMs)
     {
-      std::atomic<bool> waiting = true;
+      std::atomic<bool> waiting;
       std::condition_variable cv;
       std::mutex mtx;
 
       std::unique_lock<std::mutex> ul(mtx);
 
       std::shared_ptr<messages::Datagram> response = nullptr;
+
+      waiting = true;
 
       RequestAsync(
         std::move(request),
