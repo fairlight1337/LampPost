@@ -30,7 +30,7 @@ namespace lp
 
         std::mt19937 rng;
         rng.seed(std::random_device()());
-        std::uniform_int_distribution<std::mt19937::result_type> dist(1, -1);
+        std::uniform_int_distribution<unsigned int> dist(1, -1);
 
         char buffer[128];
         snprintf(buffer, 128, "%x%x-%x-%x-%x-%x%x%x",
