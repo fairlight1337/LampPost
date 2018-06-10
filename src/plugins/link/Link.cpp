@@ -25,7 +25,7 @@ namespace lp
       while(mShouldRun)
       {
         std::shared_ptr<messages::Datagram> request = std::make_shared<messages::Datagram>();
-        (*request) = "Test request";
+        *request = std::string("Test request");
 
         std::shared_ptr<messages::Datagram> response = mSysInfoActionConsumer->Request(request);
 
