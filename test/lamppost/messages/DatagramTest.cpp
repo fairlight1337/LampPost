@@ -11,6 +11,12 @@
 // The sample datagram value.
 const std::string cSampleDatagramValue = "The Sample Value";
 
+// The other sample datagram value.
+const std::string cOtherSampleDatagramValue = "The Other Sample Value";
+
+// The sample list index.
+const int cSampleListIndex = 0;
+
 #pragma endregion
 
 #pragma region Constructor
@@ -43,3 +49,43 @@ TEST(Datagram, WhenItemIsAddedToList_ThenTheCountIncreasesByOne)
 }
 
 #pragma endregion // GetCount
+
+#pragma region Add
+
+TEST(Datagram, WhenItemIsAddedAndDatagramIsNotAList_ThenAnExceptionIsThrown)
+{
+  // Arrange.
+  lp::messages::Datagram datagram;
+  datagram = cSampleDatagramValue;
+
+  std::shared_ptr<lp::messages::Datagram> otherDatagram = std::make_shared<lp::messages::Datagram>();
+  datagram = cOtherSampleDatagramValue;
+
+  // Act, Assert.
+  EXPECT_THROW(datagram.Add(otherDatagram), lp::exceptions::InvalidOperationException);
+}
+
+#pragma endregion // Add
+
+#pragma region Remove
+
+TEST(Datagram, WhenItemIsRemovedFromIndexAndDatagramIsNotAList_ThenAnExceptionIsThrown)
+{
+  // Arrange.
+  lp::messages::Datagram datagram;
+  datagram = cSampleDatagramValue;
+
+  // Act, Assert.
+  EXPECT_THROW(datagram.Remove(cSampleListIndex), lp::exceptions::IndexOutOfBoundsException);
+}
+
+TEST(Datagram, WhenItemIsRemovedFromIndexAndIndexIsOutOfBoundsOfList_ThenAnExceptionIsThrown)
+{
+  // Arrange.
+  lp::messages::Datagram datagram; // Datagrams are empty lists by default.
+
+  // Act, Assert.
+  EXPECT_THROW(datagram.Remove(cSampleListIndex), lp::exceptions::InvalidOperationException);
+}
+
+#pragma endregion // Remove
