@@ -16,6 +16,7 @@ namespace lp
 
     public:
       Datagram();
+      explicit Datagram(std::shared_ptr<RawDatagram> rawDatagram);
 
       template<class ... Args>
       Datagram(Args ... args)
@@ -24,6 +25,22 @@ namespace lp
       }
 
       ~Datagram() = default;
+
+      template<typename DataType>
+      DataType Get()
+      {
+        return mRawDatagram->Get<DataType>();
+      }
+
+      Datagram operator[](std::string key)
+      {
+        return Datagram((*mRawDatagram)[key]);
+      }
+
+      Datagram operator[](unsigned int index)
+      {
+        return Datagram((*mRawDatagram)[index]);
+      }
     };
   } // namespace messages
 } // namespace lp
