@@ -24,7 +24,7 @@
 #include <lamppost/exceptions/DuplicateKeyException.h>
 #include <lamppost/exceptions/KeyNotFoundException.h>
 #include <lamppost/Identifiable.h>
-#include <lamppost/messages/Datagram.h>
+#include <lamppost/messages/RawDatagram.h>
 #include <lamppost/messages/Message.h>
 
 
@@ -57,7 +57,7 @@ namespace lp
       std::mutex mActionConsumersMutex;
       std::list<std::shared_ptr<ActionConsumer>> mActionConsumers;
 
-      void Publish(std::string topic, std::shared_ptr<messages::Datagram> datagram);
+      void Publish(std::string topic, std::shared_ptr<messages::RawDatagram> datagram);
       void Distribute(std::shared_ptr<messages::Message> message);
 
       template<class ClassType, class ... Args>
@@ -103,7 +103,7 @@ namespace lp
           mPublishersMutex,
           mPublishers,
           topic,
-          [this, topic](std::shared_ptr<messages::Datagram> datagram)
+          [this, topic](std::shared_ptr<messages::RawDatagram> datagram)
           {
             this->Publish(topic, datagram);
           },
@@ -131,7 +131,7 @@ namespace lp
           std::forward<Args>(args)...);
 
         requestSubscriber->SetCallback(
-          [instance](std::shared_ptr<messages::Datagram> datagram)
+          [instance](std::shared_ptr<messages::RawDatagram> datagram)
           {
             if(datagram != nullptr && (*datagram)["invocationId"] != nullptr)
             {
@@ -159,10 +159,10 @@ namespace lp
           std::forward<Args>(args)...);
 
         responseSubscriber->SetCallback(
-          [instance](std::shared_ptr<messages::Datagram> datagram)
+          [instance](std::shared_ptr<messages::RawDatagram> datagram)
           {
             std::string invocationId = (*datagram)["invocationId"]->Get<std::string>();
-            std::shared_ptr<messages::Datagram> response = (*datagram)["response"];
+            std::shared_ptr<messages::RawDatagram> response = (*datagram)["response"];
 
             instance->ProcessResponse(invocationId, response);
           });

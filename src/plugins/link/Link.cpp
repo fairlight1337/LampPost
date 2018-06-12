@@ -24,10 +24,10 @@ namespace lp
     {
       while(mShouldRun)
       {
-        std::shared_ptr<messages::Datagram> request = std::make_shared<messages::Datagram>();
+        std::shared_ptr<messages::RawDatagram> request = std::make_shared<messages::RawDatagram>();
         *request = std::string("Test request");
 
-        std::shared_ptr<messages::Datagram> response = mSysInfoActionConsumer->Request(request);
+        std::shared_ptr<messages::RawDatagram> response = mSysInfoActionConsumer->Request(request);
 
         if(response != nullptr)
         {

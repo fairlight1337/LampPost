@@ -14,7 +14,7 @@
 #include <lamppost/bus/BusParticipant.h>
 #include <lamppost/bus/Publisher.h>
 #include <lamppost/bus/Subscriber.h>
-#include <lamppost/messages/Datagram.h>
+#include <lamppost/messages/RawDatagram.h>
 #include <lamppost/utilities/Uuid.h>
 
 
@@ -28,7 +28,7 @@ namespace lp
       std::shared_ptr<Subscriber> mResponseSubscriber;
       std::shared_ptr<Publisher> mRequestPublisher;
 
-      std::map<std::string, std::function<void(std::shared_ptr<messages::Datagram>)>> mOpenRequests;
+      std::map<std::string, std::function<void(std::shared_ptr<messages::RawDatagram>)>> mOpenRequests;
 
     public:
       ActionConsumer(std::shared_ptr<Subscriber> responseSubscriber, std::shared_ptr<Publisher> requestPublisher, std::string topic);
@@ -36,10 +36,10 @@ namespace lp
 
       void Reset() override;
 
-      void RequestAsync(std::shared_ptr<messages::Datagram> request, std::function<void(std::shared_ptr<messages::Datagram>)> callback = nullptr);
-      std::shared_ptr<messages::Datagram> Request(std::shared_ptr<messages::Datagram> request, int timeoutMs = 1000);
+      void RequestAsync(std::shared_ptr<messages::RawDatagram> request, std::function<void(std::shared_ptr<messages::RawDatagram>)> callback = nullptr);
+      std::shared_ptr<messages::RawDatagram> Request(std::shared_ptr<messages::RawDatagram> request, int timeoutMs = 1000);
 
-      void ProcessResponse(std::string invocationId, std::shared_ptr<messages::Datagram> response);
+      void ProcessResponse(std::string invocationId, std::shared_ptr<messages::RawDatagram> response);
     };
   } // namespace bus
 } // namespace lp

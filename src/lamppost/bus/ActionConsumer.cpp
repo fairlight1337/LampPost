@@ -20,8 +20,8 @@ namespace lp
     }
 
     void ActionConsumer::RequestAsync(
-      std::shared_ptr<messages::Datagram> request,
-      std::function<void(std::shared_ptr<messages::Datagram>)> callback)
+      std::shared_ptr<messages::RawDatagram> request,
+      std::function<void(std::shared_ptr<messages::RawDatagram>)> callback)
     {
       if(callback == nullptr)
       {
@@ -32,27 +32,27 @@ namespace lp
       std::string uuidString = static_cast<std::string>(uuid);
       mOpenRequests[uuidString] = callback;
 
-      std::shared_ptr<messages::Datagram> wrappedRequest = std::make_shared<messages::Datagram>();
-      (*wrappedRequest)["invocationId"] = std::make_shared<messages::Datagram>();
+      std::shared_ptr<messages::RawDatagram> wrappedRequest = std::make_shared<messages::RawDatagram>();
+      (*wrappedRequest)["invocationId"] = std::make_shared<messages::RawDatagram>();
       (*(*wrappedRequest)["invocationId"]) = uuidString;
       (*wrappedRequest)["request"] = std::move(request);
 
       mRequestPublisher->Publish(wrappedRequest);
     }
 
-    std::shared_ptr<messages::Datagram> ActionConsumer::Request(std::shared_ptr<messages::Datagram> request, int timeoutMs)
+    std::shared_ptr<messages::RawDatagram> ActionConsumer::Request(std::shared_ptr<messages::RawDatagram> request, int timeoutMs)
     {
       std::atomic<bool> waiting;
       std::condition_variable cv;
       std::mutex mtx;
 
       std::unique_lock<std::mutex> ul(mtx);
-      std::shared_ptr<messages::Datagram> response = nullptr;
+      std::shared_ptr<messages::RawDatagram> response = nullptr;
       waiting = true;
 
       RequestAsync(
         std::move(request),
-        [&](std::shared_ptr<messages::Datagram> internalResponse)
+        [&](std::shared_ptr<messages::RawDatagram> internalResponse)
         {
           if(waiting)
           {
@@ -71,7 +71,7 @@ namespace lp
       return response;
     }
 
-    void ActionConsumer::ProcessResponse(std::string invocationId, std::shared_ptr<messages::Datagram> response)
+    void ActionConsumer::ProcessResponse(std::string invocationId, std::shared_ptr<messages::RawDatagram> response)
     {
       if(mOpenRequests.find(invocationId) != mOpenRequests.end())
       {

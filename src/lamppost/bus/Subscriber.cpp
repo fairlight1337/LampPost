@@ -11,11 +11,11 @@ namespace lp
     {
     }
 
-    Subscriber::Subscriber(std::string topic, std::function<void(std::shared_ptr<messages::Datagram>)> callback)
+    Subscriber::Subscriber(std::string topic, std::function<void(std::shared_ptr<messages::RawDatagram>)> callback)
       : BusParticipant(topic),
         mCallback([callback](std::shared_ptr<lp::messages::Message> message)
                   {
-                    std::shared_ptr<lp::messages::Datagram> datagram = message->GetDatagram();
+                    std::shared_ptr<lp::messages::RawDatagram> datagram = message->GetDatagram();
 
                     if(datagram != nullptr) {
                       callback(datagram);
@@ -43,11 +43,11 @@ namespace lp
       mCallback = nullptr;
     }
 
-    void Subscriber::SetCallback(std::function<void(std::shared_ptr<messages::Datagram>)> callback)
+    void Subscriber::SetCallback(std::function<void(std::shared_ptr<messages::RawDatagram>)> callback)
     {
       mCallback = [callback](std::shared_ptr<lp::messages::Message> message)
         {
-          std::shared_ptr<lp::messages::Datagram> datagram = message->GetDatagram();
+          std::shared_ptr<lp::messages::RawDatagram> datagram = message->GetDatagram();
 
           if(datagram != nullptr) {
             callback(datagram);

@@ -3,7 +3,7 @@
 
 #include <gtest/gtest.h>
 
-#include <lamppost/messages/Datagram.h>
+#include <lamppost/messages/RawDatagram.h>
 
 
 #pragma region Constants
@@ -21,25 +21,25 @@ const int cSampleListIndex = 0;
 
 #pragma region Constructor
 
-TEST(Datagram, WhenDefaultConstructorIsCalled_ThenTheTypeIsList)
+TEST(RawDatagram, WhenDefaultConstructorIsCalled_ThenTheTypeIsList)
 {
   // Arrange, Act.
-  lp::messages::Datagram datagram;
+  lp::messages::RawDatagram datagram;
 
   // Assert.
-  EXPECT_EQ(lp::messages::DatagramType::List, datagram.GetType());
+  EXPECT_EQ(lp::messages::RawDatagramType::List, datagram.GetType());
 }
 
 #pragma endregion // Constructor
 
 #pragma region GetCount
 
-TEST(Datagram, WhenItemIsAddedToList_ThenTheCountIncreasesByOne)
+TEST(RawDatagram, WhenItemIsAddedToList_ThenTheCountIncreasesByOne)
 {
   // Arrange.
-  lp::messages::Datagram datagram;
+  lp::messages::RawDatagram datagram;
   int oldCount = datagram.GetCount();
-  std::shared_ptr<lp::messages::Datagram> otherDatagram = std::make_shared<lp::messages::Datagram>();
+  std::shared_ptr<lp::messages::RawDatagram> otherDatagram = std::make_shared<lp::messages::RawDatagram>();
 
   // Act.
   datagram.Add(otherDatagram);
@@ -52,13 +52,13 @@ TEST(Datagram, WhenItemIsAddedToList_ThenTheCountIncreasesByOne)
 
 #pragma region Add
 
-TEST(Datagram, WhenItemIsAddedAndDatagramIsNotAList_ThenAnExceptionIsThrown)
+TEST(RawDatagram, WhenItemIsAddedAndDatagramIsNotAList_ThenAnExceptionIsThrown)
 {
   // Arrange.
-  lp::messages::Datagram datagram;
+  lp::messages::RawDatagram datagram;
   datagram = cSampleDatagramValue;
 
-  std::shared_ptr<lp::messages::Datagram> otherDatagram = std::make_shared<lp::messages::Datagram>();
+  std::shared_ptr<lp::messages::RawDatagram> otherDatagram = std::make_shared<lp::messages::RawDatagram>();
   datagram = cOtherSampleDatagramValue;
 
   // Act, Assert.
@@ -69,20 +69,20 @@ TEST(Datagram, WhenItemIsAddedAndDatagramIsNotAList_ThenAnExceptionIsThrown)
 
 #pragma region Remove
 
-TEST(Datagram, WhenItemIsRemovedFromIndexAndDatagramIsNotAList_ThenAnExceptionIsThrown)
+TEST(RawDatagram, WhenItemIsRemovedFromIndexAndDatagramIsNotAList_ThenAnExceptionIsThrown)
 {
   // Arrange.
-  lp::messages::Datagram datagram;
+  lp::messages::RawDatagram datagram;
   datagram = cSampleDatagramValue;
 
   // Act, Assert.
   EXPECT_THROW(datagram.Remove(cSampleListIndex), lp::exceptions::InvalidOperationException);
 }
 
-TEST(Datagram, WhenItemIsRemovedFromIndexAndIndexIsOutOfBoundsOfList_ThenAnExceptionIsThrown)
+TEST(RawDatagram, WhenItemIsRemovedFromIndexAndIndexIsOutOfBoundsOfList_ThenAnExceptionIsThrown)
 {
   // Arrange.
-  lp::messages::Datagram datagram; // Datagrams are empty lists by default.
+  lp::messages::RawDatagram datagram; // Datagrams are empty lists by default.
 
   // Act, Assert.
   EXPECT_THROW(datagram.Remove(cSampleListIndex), lp::exceptions::IndexOutOfBoundsException);

@@ -1,5 +1,5 @@
-#ifndef LAMPPOST_DATAGRAM_H
-#define LAMPPOST_DATAGRAM_H
+#ifndef LAMPPOST_RAWDATAGRAM_H
+#define LAMPPOST_RAWDATAGRAM_H
 
 
 #include <algorithm>
@@ -20,51 +20,51 @@ namespace lp
 {
   namespace messages
   {
-    enum class DatagramType
+    enum class RawDatagramType
     {
       List = 0,
       Dictionary = 1,
       Value = 2
     };
 
-    class Datagram
+    class RawDatagram
     {
     private:
-      std::map<std::string, std::shared_ptr<Datagram>> mDictionary;
-      std::list<std::shared_ptr<Datagram>> mList;
+      std::map<std::string, std::shared_ptr<RawDatagram>> mDictionary;
+      std::list<std::shared_ptr<RawDatagram>> mList;
       std::shared_ptr<DataBase> mValue;
 
-      DatagramType mType;
+      RawDatagramType mType;
 
       template<typename T>
       void SetValue(T value)
       {
-        if(mType != DatagramType::Value)
+        if(mType != RawDatagramType::Value)
         {
           mDictionary.clear();
           mList.clear();
 
-          mType = DatagramType::Value;
+          mType = RawDatagramType::Value;
         }
 
         mValue = std::make_shared<Data<T>>(value);
       }
 
     public:
-      Datagram();
-      ~Datagram();
+      RawDatagram();
+      ~RawDatagram();
 
-      DatagramType GetType();
+      RawDatagramType GetType();
 
       // Dictionary
-      std::shared_ptr<Datagram>& operator[](std::string key);
-      std::shared_ptr<Datagram>& Get(const std::string& key);
+      std::shared_ptr<RawDatagram>& operator[](std::string key);
+      std::shared_ptr<RawDatagram>& Get(const std::string& key);
       void Remove(std::string key);
 
       // List
-      std::shared_ptr<Datagram>& operator[](unsigned int index);
-      std::shared_ptr<Datagram>& Get(unsigned int index);
-      void Add(std::shared_ptr<Datagram> datagram);
+      std::shared_ptr<RawDatagram>& operator[](unsigned int index);
+      std::shared_ptr<RawDatagram>& Get(unsigned int index);
+      void Add(std::shared_ptr<RawDatagram> datagram);
       void Remove(unsigned int index);
 
       // Dictionary and List
@@ -72,10 +72,10 @@ namespace lp
       void Clear();
 
       // Values
-      Datagram& operator=(std::string value);
-      Datagram& operator=(int value);
-      Datagram& operator=(double value);
-      Datagram& operator=(bool value);
+      RawDatagram& operator=(std::string value);
+      RawDatagram& operator=(int value);
+      RawDatagram& operator=(double value);
+      RawDatagram& operator=(bool value);
 
       template<typename T>
       T Get()
@@ -96,4 +96,4 @@ namespace lp
 } // namespace lp
 
 
-#endif //LAMPPOST_DATAGRAM_H
+#endif //LAMPPOST_RAWDATAGRAM_H

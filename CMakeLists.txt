@@ -33,7 +33,7 @@ set(SRC
     src/lamppost/Filesystem.cpp
     src/lamppost/messages/Message.cpp
     src/lamppost/messages/DataBase.cpp
-    src/lamppost/messages/Datagram.cpp
+    src/lamppost/messages/RawDatagram.cpp
     src/lamppost/exceptions/KeyNotFoundException.cpp
     src/lamppost/exceptions/ArgumentNullException.cpp
     src/lamppost/exceptions/IndexOutOfBoundsException.cpp
@@ -133,5 +133,5 @@ endmacro()
 add_lp_test(lamppost LampPostConfigurationTest)
 add_lp_test(lamppost PluginManagerConfigurationTest)
 add_lp_test(lamppost/bus BusTest)
-add_lp_test(lamppost/messages DatagramTest)
 add_lp_test(lamppost/messages MessageTest)
+add_lp_test(lamppost/messages RawDatagramTest)

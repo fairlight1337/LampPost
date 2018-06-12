@@ -7,7 +7,7 @@ namespace lp
   {
     Publisher::Publisher(
       std::string topic,
-      std::function<void(std::shared_ptr<lp::messages::Datagram>)> publishingFunction)
+      std::function<void(std::shared_ptr<lp::messages::RawDatagram>)> publishingFunction)
       : BusParticipant(topic),
         mPublishingFunction(publishingFunction)
     {
@@ -17,11 +17,11 @@ namespace lp
       }
     }
 
-    void Publisher::Publish(std::shared_ptr<lp::messages::Datagram> datagram)
+    void Publisher::Publish(std::shared_ptr<lp::messages::RawDatagram> datagram)
     {
       if(datagram == nullptr)
       {
-        throw exceptions::ArgumentNullException("message", "Datagram may not be null.");
+        throw exceptions::ArgumentNullException("message", "RawDatagram may not be null.");
       }
 
       if(mPublishingFunction != nullptr)

@@ -22,7 +22,7 @@ namespace lp
 
     public:
       Subscriber(std::string topic);
-      explicit Subscriber(std::string topic, std::function<void(std::shared_ptr<messages::Datagram>)> callback);
+      explicit Subscriber(std::string topic, std::function<void(std::shared_ptr<messages::RawDatagram>)> callback);
       explicit Subscriber(std::string topic, std::function<void(std::shared_ptr<messages::Message>)> callback);
       virtual ~Subscriber() = default;
 
@@ -30,7 +30,7 @@ namespace lp
 
       void Reset() override;
 
-      void SetCallback(std::function<void(std::shared_ptr<messages::Datagram>)> callback);
+      void SetCallback(std::function<void(std::shared_ptr<messages::RawDatagram>)> callback);
     };
   } // namespace bus
 } // namespace lp

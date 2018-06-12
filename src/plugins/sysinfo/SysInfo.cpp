@@ -15,7 +15,7 @@ namespace lp
       mSysInfoPublisher = GetPublisher("/sysinfo");
       mSysInfoSubscriber = GetSubscriber(
         "/sysinfo",
-        [this](std::shared_ptr<messages::Datagram> datagram)
+        [this](std::shared_ptr<messages::RawDatagram> datagram)
         {
           std::string message = datagram->Get<std::string>();
           mLog.Info("Got it: " + message);
@@ -23,11 +23,11 @@ namespace lp
 
       mSysInfoActionProvider = GetActionProvider(
         "/sysinfoaction",
-        [this](std::shared_ptr<bus::ActionProvider> provider, std::string invocationId, std::shared_ptr<messages::Datagram> request)
+        [this](std::shared_ptr<bus::ActionProvider> provider, std::string invocationId, std::shared_ptr<messages::RawDatagram> request)
         {
           std::cout << "Received action request. Replying.";
 
-          std::shared_ptr<messages::Datagram> response = std::make_shared<messages::Datagram>();
+          std::shared_ptr<messages::RawDatagram> response = std::make_shared<messages::RawDatagram>();
           (*response) = std::string("Reponse message.");
 
           provider->Respond(invocationId, response);
@@ -38,7 +38,7 @@ namespace lp
     {
       while(mShouldRun)
       {
-        std::shared_ptr<messages::Datagram> datagram = std::make_shared<messages::Datagram>();
+        std::shared_ptr<messages::RawDatagram> datagram = std::make_shared<messages::RawDatagram>();
         *datagram = std::string("Hello Bus!");
 
         mSysInfoPublisher->Publish(datagram);

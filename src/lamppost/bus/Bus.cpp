@@ -90,7 +90,7 @@ namespace lp
       return mChildBusses[name];
     }
 
-    void Bus::Publish(std::string topic, std::shared_ptr<messages::Datagram> datagram)
+    void Bus::Publish(std::string topic, std::shared_ptr<messages::RawDatagram> datagram)
     {
       if(mPublishMessageFunction != nullptr)
       {

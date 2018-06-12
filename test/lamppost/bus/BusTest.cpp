@@ -142,7 +142,7 @@ TEST(Bus, WhenMessageIsPublished_ThenThePublishingFunctionIsCalledWithTheCorrect
     {
     if(message)
     {
-      std::shared_ptr<lp::messages::Datagram> datagram = message->GetDatagram();
+      std::shared_ptr<lp::messages::RawDatagram> datagram = message->GetDatagram();
 
       if(datagram)
       {
@@ -156,7 +156,7 @@ TEST(Bus, WhenMessageIsPublished_ThenThePublishingFunctionIsCalledWithTheCorrect
 
   lp::bus::Bus bus(cSampleBusName, publishingFunction);
   std::shared_ptr<lp::bus::Publisher> publisher = bus.CreatePublisher(cSampleTopic);
-  std::shared_ptr<lp::messages::Datagram> publishDatagram = std::make_shared<lp::messages::Datagram>();
+  std::shared_ptr<lp::messages::RawDatagram> publishDatagram = std::make_shared<lp::messages::RawDatagram>();
   *publishDatagram = cSampleDataMessage;
 
   // Act.
@@ -177,12 +177,12 @@ TEST(Bus, WhenSubscribedToTopicAndMessageIsPublishedOnThatTopic_ThenTheMessageIs
 
   lp::bus::Bus bus(cSampleBusName);
   std::shared_ptr<lp::bus::Publisher> publisher = bus.CreatePublisher(cSampleTopic);
-  std::shared_ptr<lp::messages::Datagram> publishDatagram = std::make_shared<lp::messages::Datagram>();
+  std::shared_ptr<lp::messages::RawDatagram> publishDatagram = std::make_shared<lp::messages::RawDatagram>();
   *publishDatagram = cSampleDataMessage;
 
   std::shared_ptr<lp::bus::Subscriber> subscriber = bus.CreateSubscriber(
     cSampleTopic,
-    [&](std::shared_ptr<lp::messages::Datagram> datagram)
+    [&](std::shared_ptr<lp::messages::RawDatagram> datagram)
     {
       if(datagram)
       {
@@ -219,7 +219,7 @@ TEST(Bus, WhenSubscriberIsCreatedInBus_ThenTheBusContainsTheSubscriber)
   // Act.
   std::shared_ptr<lp::bus::Subscriber> subscriber = bus.CreateSubscriber(
     cSampleTopic,
-    [](std::shared_ptr<lp::messages::Datagram> datagram) {});
+    [](std::shared_ptr<lp::messages::RawDatagram> datagram) {});
 
   // Assert.
   EXPECT_TRUE(bus.ContainsSubscriber(subscriber));
@@ -251,7 +251,7 @@ TEST(Bus, WhenExistingSubscriberIsDeletedFromBus_ThenTheBusDoesNotContainsTheSub
   lp::bus::Bus bus(cSampleBusName);
   std::shared_ptr<lp::bus::Subscriber> subscriber = bus.CreateSubscriber(
     cSampleTopic,
-    [](std::shared_ptr<lp::messages::Datagram> datagram) {});
+    [](std::shared_ptr<lp::messages::RawDatagram> datagram) {});
 
   // Act.
   bus.DeleteSubscriber(subscriber);
@@ -287,9 +287,9 @@ TEST(Bus, WhenRequestingAnActionAndAnActionProviderIsPresent_ThenTheResponseIsRe
   lp::bus::Bus bus(cSampleBusName);
   std::shared_ptr<lp::bus::ActionProvider> provider = bus.CreateActionProvider(
     cSampleActionTopicNamespace,
-    [](std::shared_ptr<lp::bus::ActionProvider> provider, std::string invocationId, std::shared_ptr<lp::messages::Datagram> request)
+    [](std::shared_ptr<lp::bus::ActionProvider> provider, std::string invocationId, std::shared_ptr<lp::messages::RawDatagram> request)
     {
-      std::shared_ptr<lp::messages::Datagram> response = std::make_shared<lp::messages::Datagram>();
+      std::shared_ptr<lp::messages::RawDatagram> response = std::make_shared<lp::messages::RawDatagram>();
       (*response) = cSampleDataMessage;
 
       provider->Respond(invocationId, response);
@@ -299,8 +299,8 @@ TEST(Bus, WhenRequestingAnActionAndAnActionProviderIsPresent_ThenTheResponseIsRe
   std::thread busRunner(&lp::bus::Bus::Start, &bus);
 
   // Act.
-  std::shared_ptr<lp::messages::Datagram> requestData = std::make_shared<lp::messages::Datagram>();
-  std::shared_ptr<lp::messages::Datagram> responseData = consumer->Request(requestData);
+  std::shared_ptr<lp::messages::RawDatagram> requestData = std::make_shared<lp::messages::RawDatagram>();
+  std::shared_ptr<lp::messages::RawDatagram> responseData = consumer->Request(requestData);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(cBusRuntimeDurationMs));
 
@@ -323,8 +323,8 @@ TEST(Bus, WhenRequestingAnActionAndNoActionProviderIsPresent_ThenNoResponseIsRec
   std::thread busRunner(&lp::bus::Bus::Start, &bus);
 
   // Act.
-  std::shared_ptr<lp::messages::Datagram> requestData = std::make_shared<lp::messages::Datagram>();
-  std::shared_ptr<lp::messages::Datagram> responseData = consumer->Request(requestData);
+  std::shared_ptr<lp::messages::RawDatagram> requestData = std::make_shared<lp::messages::RawDatagram>();
+  std::shared_ptr<lp::messages::RawDatagram> responseData = consumer->Request(requestData);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(cBusRuntimeDurationMs));
 

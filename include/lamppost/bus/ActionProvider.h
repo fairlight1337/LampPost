@@ -10,7 +10,7 @@
 #include <lamppost/bus/BusParticipant.h>
 #include <lamppost/bus/Publisher.h>
 #include <lamppost/bus/Subscriber.h>
-#include <lamppost/messages/Datagram.h>
+#include <lamppost/messages/RawDatagram.h>
 
 
 namespace lp
@@ -23,17 +23,17 @@ namespace lp
       std::shared_ptr<Subscriber> mRequestSubscriber;
       std::shared_ptr<Publisher> mResponsePublisher;
 
-      std::function<void(std::shared_ptr<ActionProvider>, std::string, std::shared_ptr<messages::Datagram>)> mCallback;
+      std::function<void(std::shared_ptr<ActionProvider>, std::string, std::shared_ptr<messages::RawDatagram>)> mCallback;
 
     public:
-      ActionProvider(std::shared_ptr<Subscriber> requestSubscriber, std::shared_ptr<Publisher> responsePublisher, std::string topic, std::function<void(std::shared_ptr<ActionProvider>, std::string, std::shared_ptr<messages::Datagram>)> callback);
+      ActionProvider(std::shared_ptr<Subscriber> requestSubscriber, std::shared_ptr<Publisher> responsePublisher, std::string topic, std::function<void(std::shared_ptr<ActionProvider>, std::string, std::shared_ptr<messages::RawDatagram>)> callback);
       ~ActionProvider() = default;
 
       void Reset() override;
 
-      void Respond(std::string invocationId, std::shared_ptr<messages::Datagram> response);
+      void Respond(std::string invocationId, std::shared_ptr<messages::RawDatagram> response);
 
-      void ProcessRequest(std::string invocationId, std::shared_ptr<messages::Datagram> request);
+      void ProcessRequest(std::string invocationId, std::shared_ptr<messages::RawDatagram> request);
     };
   } // namespace bus
 } // namespace lp
