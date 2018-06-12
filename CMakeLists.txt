@@ -34,6 +34,7 @@ set(SRC
     src/lamppost/messages/Message.cpp
     src/lamppost/messages/DataBase.cpp
     src/lamppost/messages/RawDatagram.cpp
+    src/lamppost/messages/Datagram.cpp
     src/lamppost/exceptions/KeyNotFoundException.cpp
     src/lamppost/exceptions/ArgumentNullException.cpp
     src/lamppost/exceptions/IndexOutOfBoundsException.cpp
