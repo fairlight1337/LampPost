@@ -76,7 +76,7 @@ TEST(Datagram, WhenItemIsRemovedFromIndexAndDatagramIsNotAList_ThenAnExceptionIs
   datagram = cSampleDatagramValue;
 
   // Act, Assert.
-  EXPECT_THROW(datagram.Remove(cSampleListIndex), lp::exceptions::IndexOutOfBoundsException);
+  EXPECT_THROW(datagram.Remove(cSampleListIndex), lp::exceptions::InvalidOperationException);
 }
 
 TEST(Datagram, WhenItemIsRemovedFromIndexAndIndexIsOutOfBoundsOfList_ThenAnExceptionIsThrown)
@@ -85,7 +85,7 @@ TEST(Datagram, WhenItemIsRemovedFromIndexAndIndexIsOutOfBoundsOfList_ThenAnExcep
   lp::messages::Datagram datagram; // Datagrams are empty lists by default.
 
   // Act, Assert.
-  EXPECT_THROW(datagram.Remove(cSampleListIndex), lp::exceptions::InvalidOperationException);
+  EXPECT_THROW(datagram.Remove(cSampleListIndex), lp::exceptions::IndexOutOfBoundsException);
 }
 
 #pragma endregion // Remove
