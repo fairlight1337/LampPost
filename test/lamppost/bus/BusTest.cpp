@@ -314,4 +314,26 @@ TEST(Bus, WhenRequestingAnActionAndAnActionProviderIsPresent_ThenTheResponseIsRe
   busRunner.join();
 }
 
+TEST(Bus, WhenRequestingAnActionAndNoActionProviderIsPresent_ThenNoResponseIsReceived)
+{
+  // Arrange.
+  lp::bus::Bus bus(cSampleBusName);
+  std::shared_ptr<lp::bus::ActionConsumer> consumer = bus.CreateActionConsumer(cSampleActionTopicNamespace);
+
+  std::thread busRunner(&lp::bus::Bus::Start, &bus);
+
+  // Act.
+  std::shared_ptr<lp::messages::Datagram> requestData = std::make_shared<lp::messages::Datagram>();
+  std::shared_ptr<lp::messages::Datagram> responseData = consumer->Request(requestData);
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(cBusRuntimeDurationMs));
+
+  // Assert.
+  EXPECT_EQ(nullptr, responseData);
+
+  // Cleanup.
+  bus.Stop();
+  busRunner.join();
+}
+
 #pragma endregion // Action Provide Consume
