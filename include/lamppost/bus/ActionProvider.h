@@ -17,16 +17,16 @@ namespace lp
 {
   namespace bus
   {
-    class ActionProvider : public BusParticipant
+    class ActionProvider : public BusParticipant, public std::enable_shared_from_this<ActionProvider>
     {
     private:
       std::shared_ptr<Subscriber> mRequestSubscriber;
       std::shared_ptr<Publisher> mResponsePublisher;
 
-      std::function<void(std::string, std::shared_ptr<messages::Datagram>)> mCallback;
+      std::function<void(std::shared_ptr<ActionProvider>, std::string, std::shared_ptr<messages::Datagram>)> mCallback;
 
     public:
-      ActionProvider(std::shared_ptr<Subscriber> requestSubscriber, std::shared_ptr<Publisher> responsePublisher, std::string topic, std::function<void(std::string, std::shared_ptr<messages::Datagram>)> callback);
+      ActionProvider(std::shared_ptr<Subscriber> requestSubscriber, std::shared_ptr<Publisher> responsePublisher, std::string topic, std::function<void(std::shared_ptr<ActionProvider>, std::string, std::shared_ptr<messages::Datagram>)> callback);
       ~ActionProvider() = default;
 
       void Reset() override;

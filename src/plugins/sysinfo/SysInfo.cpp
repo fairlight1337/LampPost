@@ -23,14 +23,14 @@ namespace lp
 
       mSysInfoActionProvider = GetActionProvider(
         "/sysinfoaction",
-        [this](std::string invocationId, std::shared_ptr<messages::Datagram> request)
+        [this](std::shared_ptr<bus::ActionProvider> provider, std::string invocationId, std::shared_ptr<messages::Datagram> request)
         {
           std::cout << "Received action request. Replying.";
 
           std::shared_ptr<messages::Datagram> response = std::make_shared<messages::Datagram>();
           (*response) = std::string("Reponse message.");
 
-          mSysInfoActionProvider->Respond(invocationId, response);
+          provider->Respond(invocationId, response);
         });
     }
 

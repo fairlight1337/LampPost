@@ -20,6 +20,9 @@ const std::string cSampleTopic("/thesampletopic");
 // The sample data message.
 const std::string cSampleDataMessage("The sample data message.");
 
+// The sample action topic namespace.
+const std::string cSampleActionTopicNamespace("/thesampleaction");
+
 // The bus runtime duration (in milliseconds).
 const int cBusRuntimeDurationMs = 100;
 
@@ -275,3 +278,40 @@ TEST(Bus, WhenExistingPublisherIsDeletedFromBus_ThenTheBusDoesNotContainsThePubl
 }
 
 #pragma endregion // DeletePublisher
+
+#pragma region Action Provide Consume
+
+TEST(Bus, WhenRequestingAnActionAndAnActionProviderIsPresent_ThenTheResponseIsReceived)
+{
+  // Arrange.
+  lp::bus::Bus bus(cSampleBusName);
+  std::shared_ptr<lp::bus::ActionProvider> provider = bus.CreateActionProvider(
+    cSampleActionTopicNamespace,
+    [](std::shared_ptr<lp::bus::ActionProvider> provider, std::string invocationId, std::shared_ptr<lp::messages::Datagram> request)
+    {
+      std::shared_ptr<lp::messages::Datagram> response = std::make_shared<lp::messages::Datagram>();
+      (*response) = cSampleDataMessage;
+
+      provider->Respond(invocationId, response);
+    });
+  std::shared_ptr<lp::bus::ActionConsumer> consumer = bus.CreateActionConsumer(cSampleActionTopicNamespace);
+
+  std::thread busRunner(&lp::bus::Bus::Start, &bus);
+
+  // Act.
+  std::shared_ptr<lp::messages::Datagram> requestData = std::make_shared<lp::messages::Datagram>();
+  std::shared_ptr<lp::messages::Datagram> responseData = consumer->Request(requestData);
+
+  std::this_thread::sleep_for(std::chrono::milliseconds(cBusRuntimeDurationMs));
+
+  // Assert.
+  EXPECT_NE(nullptr, responseData);
+  EXPECT_NO_THROW(responseData->Get<std::string>());
+  EXPECT_STREQ(cSampleDataMessage.c_str(), responseData->Get<std::string>().c_str());
+
+  // Cleanup.
+  bus.Stop();
+  busRunner.join();
+}
+
+#pragma endregion // Action Provide Consume

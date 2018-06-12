@@ -9,7 +9,7 @@ namespace lp
       std::shared_ptr<Subscriber> requestSubscriber,
       std::shared_ptr<Publisher> responsePublisher,
       std::string topic,
-      std::function<void(std::string, std::shared_ptr<messages::Datagram>)> callback)
+      std::function<void(std::shared_ptr<ActionProvider>, std::string, std::shared_ptr<messages::Datagram>)> callback)
       : BusParticipant(std::move(topic)),
         mRequestSubscriber(std::move(requestSubscriber)),
         mResponsePublisher(std::move(responsePublisher)),
@@ -34,7 +34,7 @@ namespace lp
 
     void ActionProvider::ProcessRequest(std::string invocationId, std::shared_ptr<messages::Datagram> request)
     {
-      mCallback(std::move(invocationId), std::move(request));
+      mCallback(this->shared_from_this(), std::move(invocationId), std::move(request));
     }
   } // namespace bus
 } // namespace lp
