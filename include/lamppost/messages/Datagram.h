@@ -15,7 +15,6 @@ namespace lp
       std::shared_ptr<RawDatagram> mRawDatagram;
 
     public:
-      Datagram();
       explicit Datagram(std::shared_ptr<RawDatagram> rawDatagram);
 
       template<class ... Args>
@@ -32,14 +31,46 @@ namespace lp
         return mRawDatagram->Get<DataType>();
       }
 
-      Datagram operator[](std::string key)
-      {
-        return Datagram((*mRawDatagram)[key]);
-      }
-
       Datagram operator[](unsigned int index)
       {
         return Datagram((*mRawDatagram)[index]);
+      }
+
+      Datagram operator[](std::string key)
+      {
+        std::shared_ptr<RawDatagram> rawDatagram = (*mRawDatagram)[key];
+        if(rawDatagram == nullptr)
+        {
+          (*mRawDatagram)[key] = std::make_shared<RawDatagram>();
+          rawDatagram = (*mRawDatagram)[key];
+        }
+
+        return Datagram(rawDatagram);
+      }
+
+      template<class ... Args>
+      void Add(Args ... args)
+      {
+        mRawDatagram->Add(std::forward<Args>(args)...);
+      }
+
+      template<class ... Args>
+      void Remove(Args ... args)
+      {
+        mRawDatagram->Remove(std::forward<Args>(args)...);
+      }
+
+      unsigned int GetCount();
+      void Clear();
+
+      RawDatagramType GetType();
+
+      template<typename ContentType>
+      Datagram& operator=(ContentType contentValue)
+      {
+        (*mRawDatagram) = contentValue;
+
+        return *this;
       }
     };
   } // namespace messages

@@ -52,6 +52,15 @@ namespace lp
 
     public:
       RawDatagram();
+
+      template<typename ContentType>
+      RawDatagram(ContentType contentValue)
+        : mType(RawDatagramType::Value),
+          mValue(nullptr)
+      {
+        SetValue(contentValue);
+      }
+
       ~RawDatagram();
 
       RawDatagramType GetType();
