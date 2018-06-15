@@ -72,6 +72,13 @@ namespace lp
 
         return *this;
       }
+
+      operator std::string() const
+      {
+        return mRawDatagram->Get<std::string>();
+      }
+
+      bool IsEmpty();
     };
   } // namespace messages
 } // namespace lp

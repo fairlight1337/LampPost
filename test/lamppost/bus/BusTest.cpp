@@ -46,8 +46,8 @@ TEST(Bus, WhenSimpleConstructorIsCalled_ThenThePropertiesAreSetCorrectly)
 TEST(Bus, WhenExtendedConstructorIsCalled_ThenThePropertiesAreSetCorrectly)
 {
   // Arrange.
-  std::function<void(std::shared_ptr<lp::messages::Message>)> publishingFunction =
-    [](std::shared_ptr<lp::messages::Message> message) {};
+  std::function<void(lp::messages::Message)> publishingFunction =
+    [](lp::messages::Message message) {};
 
   // Act.
   lp::bus::Bus bus(cSampleBusName, publishingFunction);
@@ -67,8 +67,8 @@ TEST(Bus, WhenSimpleConstructorIsCalledWithInvalidArguments_ThenAnExceptionIsThr
 TEST(Bus, WhenExtendedConstructorIsCalledWithInvalidArguments_ThenAnExceptionIsThrown)
 {
   // Arrange.
-  std::function<void(std::shared_ptr<lp::messages::Message>)> publishingFunction =
-    [](std::shared_ptr<lp::messages::Message> message) {};
+  std::function<void(lp::messages::Message)> publishingFunction =
+    [](lp::messages::Message message) {};
 
   // Act, Assert.
   ASSERT_THROW(lp::bus::Bus bus("", publishingFunction), lp::exceptions::ArgumentNullException);
@@ -137,27 +137,20 @@ TEST(Bus, WhenMessageIsPublished_ThenThePublishingFunctionIsCalledWithTheCorrect
 {
   // Arrange.
   bool publishingFunctionWasCalledCorrectly = false;
-  std::function<void(std::shared_ptr<lp::messages::Message>)> publishingFunction =
-    [&](std::shared_ptr<lp::messages::Message> message)
+  std::function<void(lp::messages::Message)> publishingFunction =
+    [&](lp::messages::Message message)
     {
-    if(message)
-    {
-      std::shared_ptr<lp::messages::RawDatagram> datagram = message->GetDatagram();
+      lp::messages::Datagram datagram = message.GetDatagram();
 
-      if(datagram)
+      if(datagram.Get<std::string>() == cSampleDataMessage)
       {
-        if(datagram->Get<std::string>() == cSampleDataMessage)
-        {
-          publishingFunctionWasCalledCorrectly = true;
-        }
+        publishingFunctionWasCalledCorrectly = true;
       }
-    }
-  };
+    };
 
   lp::bus::Bus bus(cSampleBusName, publishingFunction);
   std::shared_ptr<lp::bus::Publisher> publisher = bus.CreatePublisher(cSampleTopic);
-  std::shared_ptr<lp::messages::RawDatagram> publishDatagram = std::make_shared<lp::messages::RawDatagram>();
-  *publishDatagram = cSampleDataMessage;
+  lp::messages::Datagram publishDatagram = std::string(cSampleDataMessage);
 
   // Act.
   publisher->Publish(publishDatagram);
@@ -177,19 +170,15 @@ TEST(Bus, WhenSubscribedToTopicAndMessageIsPublishedOnThatTopic_ThenTheMessageIs
 
   lp::bus::Bus bus(cSampleBusName);
   std::shared_ptr<lp::bus::Publisher> publisher = bus.CreatePublisher(cSampleTopic);
-  std::shared_ptr<lp::messages::RawDatagram> publishDatagram = std::make_shared<lp::messages::RawDatagram>();
-  *publishDatagram = cSampleDataMessage;
+  lp::messages::Datagram publishDatagram = std::string(cSampleDataMessage);
 
   std::shared_ptr<lp::bus::Subscriber> subscriber = bus.CreateSubscriber(
     cSampleTopic,
-    [&](std::shared_ptr<lp::messages::RawDatagram> datagram)
+    [&](lp::messages::Datagram datagram)
     {
-      if(datagram)
+      if(datagram.Get<std::string>() == cSampleDataMessage)
       {
-        if(datagram->Get<std::string>() == cSampleDataMessage)
-        {
-          messageWasReceivedProperly = true;
-        }
+        messageWasReceivedProperly = true;
       }
     });
 
@@ -219,7 +208,7 @@ TEST(Bus, WhenSubscriberIsCreatedInBus_ThenTheBusContainsTheSubscriber)
   // Act.
   std::shared_ptr<lp::bus::Subscriber> subscriber = bus.CreateSubscriber(
     cSampleTopic,
-    [](std::shared_ptr<lp::messages::RawDatagram> datagram) {});
+    [](lp::messages::Datagram datagram) {});
 
   // Assert.
   EXPECT_TRUE(bus.ContainsSubscriber(subscriber));
@@ -251,7 +240,7 @@ TEST(Bus, WhenExistingSubscriberIsDeletedFromBus_ThenTheBusDoesNotContainsTheSub
   lp::bus::Bus bus(cSampleBusName);
   std::shared_ptr<lp::bus::Subscriber> subscriber = bus.CreateSubscriber(
     cSampleTopic,
-    [](std::shared_ptr<lp::messages::RawDatagram> datagram) {});
+    [](lp::messages::Datagram datagram) {});
 
   // Act.
   bus.DeleteSubscriber(subscriber);
@@ -287,10 +276,9 @@ TEST(Bus, WhenRequestingAnActionAndAnActionProviderIsPresent_ThenTheResponseIsRe
   lp::bus::Bus bus(cSampleBusName);
   std::shared_ptr<lp::bus::ActionProvider> provider = bus.CreateActionProvider(
     cSampleActionTopicNamespace,
-    [](std::shared_ptr<lp::bus::ActionProvider> provider, std::string invocationId, std::shared_ptr<lp::messages::RawDatagram> request)
+    [](std::shared_ptr<lp::bus::ActionProvider> provider, std::string invocationId, lp::messages::Datagram request)
     {
-      std::shared_ptr<lp::messages::RawDatagram> response = std::make_shared<lp::messages::RawDatagram>();
-      (*response) = cSampleDataMessage;
+      lp::messages::Datagram response = cSampleDataMessage;
 
       provider->Respond(invocationId, response);
     });
@@ -299,15 +287,14 @@ TEST(Bus, WhenRequestingAnActionAndAnActionProviderIsPresent_ThenTheResponseIsRe
   std::thread busRunner(&lp::bus::Bus::Start, &bus);
 
   // Act.
-  std::shared_ptr<lp::messages::RawDatagram> requestData = std::make_shared<lp::messages::RawDatagram>();
-  std::shared_ptr<lp::messages::RawDatagram> responseData = consumer->Request(requestData);
+  lp::messages::Datagram requestData;
+  lp::messages::Datagram responseData = consumer->Request(requestData);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(cBusRuntimeDurationMs));
 
   // Assert.
-  EXPECT_NE(nullptr, responseData);
-  EXPECT_NO_THROW(responseData->Get<std::string>());
-  EXPECT_STREQ(cSampleDataMessage.c_str(), responseData->Get<std::string>().c_str());
+  EXPECT_NO_THROW(responseData.Get<std::string>());
+  EXPECT_STREQ(cSampleDataMessage.c_str(), responseData.Get<std::string>().c_str());
 
   // Cleanup.
   bus.Stop();
@@ -323,13 +310,13 @@ TEST(Bus, WhenRequestingAnActionAndNoActionProviderIsPresent_ThenNoResponseIsRec
   std::thread busRunner(&lp::bus::Bus::Start, &bus);
 
   // Act.
-  std::shared_ptr<lp::messages::RawDatagram> requestData = std::make_shared<lp::messages::RawDatagram>();
-  std::shared_ptr<lp::messages::RawDatagram> responseData = consumer->Request(requestData);
+  lp::messages::Datagram requestData;
+  lp::messages::Datagram responseData = consumer->Request(requestData);
 
   std::this_thread::sleep_for(std::chrono::milliseconds(cBusRuntimeDurationMs));
 
   // Assert.
-  EXPECT_EQ(nullptr, responseData);
+  EXPECT_TRUE(responseData.IsEmpty());
 
   // Cleanup.
   bus.Stop();

@@ -18,19 +18,19 @@ namespace lp
     class Subscriber : public BusParticipant
     {
     private:
-      std::function<void(std::shared_ptr<messages::Message>)> mCallback;
+      MessageCallbackType mCallback;
 
     public:
       Subscriber(std::string topic);
-      explicit Subscriber(std::string topic, std::function<void(std::shared_ptr<messages::RawDatagram>)> callback);
-      explicit Subscriber(std::string topic, std::function<void(std::shared_ptr<messages::Message>)> callback);
+      explicit Subscriber(std::string topic, DatagramCallbackType callback);
       virtual ~Subscriber() = default;
 
-      void Receive(std::shared_ptr<messages::Message> message);
+      void Receive(messages::Message message);
 
       void Reset() override;
 
-      void SetCallback(std::function<void(std::shared_ptr<messages::RawDatagram>)> callback);
+      void SetDatagramCallback(DatagramCallbackType callback);
+      void SetMessageCallback(MessageCallbackType callback);
     };
   } // namespace bus
 } // namespace lp

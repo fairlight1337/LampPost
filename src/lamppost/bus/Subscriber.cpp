@@ -11,26 +11,19 @@ namespace lp
     {
     }
 
-    Subscriber::Subscriber(std::string topic, std::function<void(std::shared_ptr<messages::RawDatagram>)> callback)
-      : BusParticipant(topic),
-        mCallback([callback](std::shared_ptr<lp::messages::Message> message)
+    Subscriber::Subscriber(std::string topic, DatagramCallbackType callback)
+      : BusParticipant(std::move(topic)),
+        mCallback([callback](lp::messages::Message message)
                   {
-                    std::shared_ptr<lp::messages::RawDatagram> datagram = message->GetDatagram();
+                    messages::Datagram datagram = message.GetDatagram();
 
-                    if(datagram != nullptr) {
-                      callback(datagram);
-                    }
+                    // TODO: Check value here.
+                    callback(datagram);
                   })
     {
     }
 
-    Subscriber::Subscriber(std::string topic, std::function<void(std::shared_ptr<messages::Message>)> callback)
-      : BusParticipant(std::move(topic)),
-        mCallback(std::move(callback))
-    {
-    }
-
-    void Subscriber::Receive(std::shared_ptr<messages::Message> message)
+    void Subscriber::Receive(messages::Message message)
     {
       if(mCallback != nullptr)
       {
@@ -43,16 +36,22 @@ namespace lp
       mCallback = nullptr;
     }
 
-    void Subscriber::SetCallback(std::function<void(std::shared_ptr<messages::RawDatagram>)> callback)
+    void Subscriber::SetDatagramCallback(DatagramCallbackType callback)
     {
-      mCallback = [callback](std::shared_ptr<lp::messages::Message> message)
+      mCallback = [callback](lp::messages::Message message)
         {
-          std::shared_ptr<lp::messages::RawDatagram> datagram = message->GetDatagram();
+          messages::Datagram datagram = message.GetDatagram();
 
-          if(datagram != nullptr) {
-            callback(datagram);
-          }
+          // TODO: Check value here.
+          callback(datagram);
         };
     }
+
+    void Subscriber::SetMessageCallback(MessageCallbackType callback)
+    {
+      mCallback = callback;
+    }
+
+
   } // namespace bus
 } // namespace lp

@@ -15,7 +15,7 @@ namespace lp
         throw exceptions::ArgumentNullException("name", "Bus name may not be empty.");
       }
 
-      mPublishMessageFunction = [this](std::shared_ptr<messages::Message> message)
+      mPublishMessageFunction = [this](messages::Message message)
         {
           {
             std::lock_guard<std::mutex> lock(mQueueMutex);
@@ -26,7 +26,7 @@ namespace lp
         };
     }
 
-    Bus::Bus(std::string name, std::function<void(std::shared_ptr<messages::Message>)> publishMessageFunction)
+    Bus::Bus(std::string name, std::function<void(messages::Message)> publishMessageFunction)
       : Identifiable(name),
         mPublishMessageFunction(publishMessageFunction),
         mShouldRun(false),
@@ -90,11 +90,11 @@ namespace lp
       return mChildBusses[name];
     }
 
-    void Bus::Publish(std::string topic, std::shared_ptr<messages::RawDatagram> datagram)
+    void Bus::Publish(std::string topic, messages::Datagram datagram)
     {
       if(mPublishMessageFunction != nullptr)
       {
-        mPublishMessageFunction(std::make_shared<messages::Message>(GetIdentifier(), topic, datagram));
+        mPublishMessageFunction(messages::Message(GetIdentifier(), topic, datagram));
       }
     }
 
@@ -148,7 +148,7 @@ namespace lp
           break;
         }
 
-        std::deque<std::shared_ptr<messages::Message>> queuedMessages;
+        std::deque<messages::Message> queuedMessages;
         {
           std::lock_guard<std::mutex> lock(mQueueMutex);
           queuedMessages = mQueuedMessages;
@@ -156,7 +156,7 @@ namespace lp
           mQueuedMessages.clear();
         }
 
-        for(const std::shared_ptr<messages::Message>& message : queuedMessages)
+        for(const messages::Message& message : queuedMessages)
         {
           Distribute(message);
         }
@@ -168,7 +168,7 @@ namespace lp
       mShouldRun = false;
     }
 
-    void Bus::Distribute(std::shared_ptr<lp::messages::Message> message)
+    void Bus::Distribute(lp::messages::Message message)
     {
       if(mShouldRun)
       {
@@ -177,7 +177,7 @@ namespace lp
           for(const std::shared_ptr<Subscriber>& subscriber : mSubscribers)
           {
             // TODO(fairlight1337): Match ant-like and possibly regex expressions for topic names here.
-            if(subscriber->GetTopic() == message->GetTopic())
+            if(subscriber->GetTopic() == message.GetTopic())
             {
               subscriber->Receive(message);
             }

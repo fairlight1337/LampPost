@@ -11,8 +11,9 @@ namespace lp
     }
 
     void Link::Initialize() {
-      mSysInfoSubscriber = GetSubscriber("/sysinfo",
-        [this](std::shared_ptr<messages::Message> message)
+      mSysInfoSubscriber = GetSubscriber("/sysinfo");
+      mSysInfoSubscriber->SetMessageCallback(
+        [this](messages::Message message)
         {
           mLog.Info("Got a message");
         });
@@ -24,14 +25,14 @@ namespace lp
     {
       while(mShouldRun)
       {
-        std::shared_ptr<messages::RawDatagram> request = std::make_shared<messages::RawDatagram>();
-        *request = std::string("Test request");
+        messages::Datagram request;
+        request = std::string("Test request");
 
-        std::shared_ptr<messages::RawDatagram> response = mSysInfoActionConsumer->Request(request);
+        messages::Datagram response = mSysInfoActionConsumer->Request(request);
 
-        if(response != nullptr)
+        if(!response.IsEmpty())
         {
-          std::cout << "Received a response: " << response->Get<std::string>() << std::endl;
+          std::cout << "Received a response: " << response.Get<std::string>() << std::endl;
         }
         else
         {

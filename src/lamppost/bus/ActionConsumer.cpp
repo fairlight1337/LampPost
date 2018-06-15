@@ -20,8 +20,8 @@ namespace lp
     }
 
     void ActionConsumer::RequestAsync(
-      std::shared_ptr<messages::RawDatagram> request,
-      std::function<void(std::shared_ptr<messages::RawDatagram>)> callback)
+      messages::Datagram request,
+      std::function<void(messages::Datagram)> callback)
     {
       if(callback == nullptr)
       {
@@ -32,27 +32,26 @@ namespace lp
       std::string uuidString = static_cast<std::string>(uuid);
       mOpenRequests[uuidString] = callback;
 
-      std::shared_ptr<messages::RawDatagram> wrappedRequest = std::make_shared<messages::RawDatagram>();
-      (*wrappedRequest)["invocationId"] = std::make_shared<messages::RawDatagram>();
-      (*(*wrappedRequest)["invocationId"]) = uuidString;
-      (*wrappedRequest)["request"] = std::move(request);
+      messages::Datagram wrappedRequest;
+      wrappedRequest["invocationId"] = uuidString;
+      wrappedRequest["request"] = std::move(request);
 
       mRequestPublisher->Publish(wrappedRequest);
     }
 
-    std::shared_ptr<messages::RawDatagram> ActionConsumer::Request(std::shared_ptr<messages::RawDatagram> request, int timeoutMs)
+    messages::Datagram ActionConsumer::Request(messages::Datagram request, int timeoutMs)
     {
       std::atomic<bool> waiting;
       std::condition_variable cv;
       std::mutex mtx;
 
       std::unique_lock<std::mutex> ul(mtx);
-      std::shared_ptr<messages::RawDatagram> response = nullptr;
+      messages::Datagram response;
       waiting = true;
 
       RequestAsync(
         std::move(request),
-        [&](std::shared_ptr<messages::RawDatagram> internalResponse)
+        [&](messages::Datagram internalResponse)
         {
           if(waiting)
           {
@@ -71,7 +70,7 @@ namespace lp
       return response;
     }
 
-    void ActionConsumer::ProcessResponse(std::string invocationId, std::shared_ptr<messages::RawDatagram> response)
+    void ActionConsumer::ProcessResponse(std::string invocationId, messages::Datagram response)
     {
       if(mOpenRequests.find(invocationId) != mOpenRequests.end())
       {

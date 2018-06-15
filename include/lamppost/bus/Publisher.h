@@ -9,7 +9,7 @@
 
 #include <lamppost/bus/BusParticipant.h>
 #include <lamppost/exceptions/ArgumentNullException.h>
-#include <lamppost/messages/RawDatagram.h>
+#include <lamppost/messages/Datagram.h>
 
 
 namespace lp
@@ -19,13 +19,13 @@ namespace lp
     class Publisher : public BusParticipant
     {
     private:
-      std::function<void(std::shared_ptr<messages::RawDatagram>)> mPublishingFunction;
+      DatagramCallbackType mPublishingFunction;
 
     public:
-      Publisher(std::string topic, std::function<void(std::shared_ptr<messages::RawDatagram>)> publishingFunction);
+      Publisher(std::string topic, DatagramCallbackType publishingFunction);
       virtual ~Publisher() = default;
 
-      void Publish(std::shared_ptr<messages::RawDatagram> datagram);
+      void Publish(messages::Datagram datagram);
 
       void Reset() override;
     };

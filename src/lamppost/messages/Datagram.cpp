@@ -8,6 +8,10 @@ namespace lp
     Datagram::Datagram(std::shared_ptr<RawDatagram> rawDatagram)
       : mRawDatagram(rawDatagram)
     {
+      if(mRawDatagram == nullptr)
+      {
+        mRawDatagram = std::make_shared<RawDatagram>();
+      }
     }
 
     unsigned int Datagram::GetCount()
@@ -23,6 +27,11 @@ namespace lp
     RawDatagramType Datagram::GetType()
     {
       return mRawDatagram->GetType();
+    }
+
+    bool Datagram::IsEmpty()
+    {
+      return mRawDatagram->GetType() == RawDatagramType::Empty;
     }
   } // namespace messages
 } // namespace lp

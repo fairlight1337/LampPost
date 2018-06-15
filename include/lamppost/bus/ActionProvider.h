@@ -23,17 +23,17 @@ namespace lp
       std::shared_ptr<Subscriber> mRequestSubscriber;
       std::shared_ptr<Publisher> mResponsePublisher;
 
-      std::function<void(std::shared_ptr<ActionProvider>, std::string, std::shared_ptr<messages::RawDatagram>)> mCallback;
+      std::function<void(std::shared_ptr<ActionProvider>, std::string, lp::messages::Datagram)> mCallback;
 
     public:
-      ActionProvider(std::shared_ptr<Subscriber> requestSubscriber, std::shared_ptr<Publisher> responsePublisher, std::string topic, std::function<void(std::shared_ptr<ActionProvider>, std::string, std::shared_ptr<messages::RawDatagram>)> callback);
+      ActionProvider(std::shared_ptr<Subscriber> requestSubscriber, std::shared_ptr<Publisher> responsePublisher, std::string topic, std::function<void(std::shared_ptr<ActionProvider>, std::string, messages::Datagram)> callback);
       ~ActionProvider() = default;
 
       void Reset() override;
 
-      void Respond(std::string invocationId, std::shared_ptr<messages::RawDatagram> response);
+      void Respond(std::string invocationId, lp::messages::Datagram response);
 
-      void ProcessRequest(std::string invocationId, std::shared_ptr<messages::RawDatagram> request);
+      void ProcessRequest(std::string invocationId, lp::messages::Datagram request);
     };
   } // namespace bus
 } // namespace lp

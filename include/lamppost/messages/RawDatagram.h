@@ -22,9 +22,10 @@ namespace lp
   {
     enum class RawDatagramType
     {
-      List = 0,
-      Dictionary = 1,
-      Value = 2
+      Empty = 0,
+      List = 1,
+      Dictionary = 2,
+      Value = 3
     };
 
     class RawDatagram

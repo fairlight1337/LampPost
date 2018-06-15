@@ -21,13 +21,13 @@ const int cSampleListIndex = 0;
 
 #pragma region Constructor
 
-TEST(RawDatagram, WhenDefaultConstructorIsCalled_ThenTheTypeIsList)
+TEST(RawDatagram, WhenDefaultConstructorIsCalled_ThenTheTypeIsEmpty)
 {
   // Arrange, Act.
-  lp::messages::RawDatagram datagram;
+  lp::messages::RawDatagram datagram = std::make_shared<lp::messages::RawDatagram>();
 
   // Assert.
-  EXPECT_EQ(lp::messages::RawDatagramType::List, datagram.GetType());
+  EXPECT_EQ(lp::messages::RawDatagramType::Empty, datagram.GetType());
 }
 
 #pragma endregion // Constructor

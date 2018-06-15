@@ -24,7 +24,7 @@
 #include <lamppost/exceptions/DuplicateKeyException.h>
 #include <lamppost/exceptions/KeyNotFoundException.h>
 #include <lamppost/Identifiable.h>
-#include <lamppost/messages/RawDatagram.h>
+#include <lamppost/messages/Datagram.h>
 #include <lamppost/messages/Message.h>
 
 
@@ -40,10 +40,10 @@ namespace lp
       std::map<std::string, std::shared_ptr<Bus>> mChildBusses;
       std::mutex mChildBussesMutex;
       std::mutex mQueueMutex;
-      std::deque<std::shared_ptr<messages::Message>> mQueuedMessages;
+      std::deque<messages::Message> mQueuedMessages;
       std::condition_variable mNotifier;
       std::mutex mNotifierMutex;
-      std::function<void(std::shared_ptr<messages::Message>)> mPublishMessageFunction;
+      std::function<void(messages::Message)> mPublishMessageFunction;
       std::atomic<bool> mShouldRun;
       bool mIsRootBus;
 
@@ -57,8 +57,8 @@ namespace lp
       std::mutex mActionConsumersMutex;
       std::list<std::shared_ptr<ActionConsumer>> mActionConsumers;
 
-      void Publish(std::string topic, std::shared_ptr<messages::RawDatagram> datagram);
-      void Distribute(std::shared_ptr<messages::Message> message);
+      void Publish(std::string topic, lp::messages::Datagram datagram);
+      void Distribute(messages::Message message);
 
       template<class ClassType, class ... Args>
       std::shared_ptr<ClassType> CreateManagedResource(std::mutex& mutex, std::list<std::shared_ptr<ClassType>>& container, Args ... args)
@@ -88,7 +88,7 @@ namespace lp
 
     public:
       Bus(std::string name);
-      Bus(std::string name, std::function<void(std::shared_ptr<messages::Message>)> publishMessageFunction);
+      Bus(std::string name, std::function<void(messages::Message)> publishMessageFunction);
       virtual ~Bus();
 
       std::shared_ptr<Bus> CreateChildBus(std::string name);
@@ -103,7 +103,7 @@ namespace lp
           mPublishersMutex,
           mPublishers,
           topic,
-          [this, topic](std::shared_ptr<messages::RawDatagram> datagram)
+          [this, topic](messages::Datagram datagram)
           {
             this->Publish(topic, datagram);
           },
@@ -130,15 +130,13 @@ namespace lp
           topic,
           std::forward<Args>(args)...);
 
-        requestSubscriber->SetCallback(
-          [instance](std::shared_ptr<messages::RawDatagram> datagram)
+        requestSubscriber->SetDatagramCallback(
+          [instance](messages::Datagram datagram)
           {
-            if(datagram != nullptr && (*datagram)["invocationId"] != nullptr)
-            {
-              std::string invocationId = (*datagram)["invocationId"]->Get<std::string>();
+            // TODO: Check for presence of field here.
+            std::string invocationId = static_cast<std::string>(datagram["invocationId"]);
 
-              instance->ProcessRequest(invocationId, datagram);
-            }
+            instance->ProcessRequest(invocationId, datagram);
           });
 
         return instance;
@@ -158,11 +156,11 @@ namespace lp
           topic,
           std::forward<Args>(args)...);
 
-        responseSubscriber->SetCallback(
-          [instance](std::shared_ptr<messages::RawDatagram> datagram)
+        responseSubscriber->SetDatagramCallback(
+          [instance](messages::Datagram datagram)
           {
-            std::string invocationId = (*datagram)["invocationId"]->Get<std::string>();
-            std::shared_ptr<messages::RawDatagram> response = (*datagram)["response"];
+            std::string invocationId = static_cast<std::string>(datagram["invocationId"]);
+            messages::Datagram response = datagram["response"];
 
             instance->ProcessResponse(invocationId, response);
           });

@@ -6,7 +6,7 @@ namespace lp
   namespace messages
   {
     RawDatagram::RawDatagram()
-      : mType(RawDatagramType::List),
+      : mType(RawDatagramType::Empty),
         mValue(nullptr)
     {
     }

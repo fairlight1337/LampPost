@@ -3,9 +3,9 @@
 
 namespace lp {
   namespace messages {
-    Message::Message(std::string sender, std::string topic, std::shared_ptr<lp::messages::RawDatagram> datagram)
-      : mSender(sender),
-        mTopic(topic),
+    Message::Message(std::string sender, std::string topic, Datagram datagram)
+      : mSender(std::move(sender)),
+        mTopic(std::move(topic)),
         mDatagram(datagram)
     {
     }
@@ -20,7 +20,7 @@ namespace lp {
       return mTopic;
     }
 
-    std::shared_ptr<RawDatagram> Message::GetDatagram()
+    Datagram Message::GetDatagram()
     {
       return mDatagram;
     }

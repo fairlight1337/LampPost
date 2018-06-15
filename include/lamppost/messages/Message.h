@@ -4,7 +4,7 @@
 
 #include <string>
 
-#include <lamppost/messages/RawDatagram.h>
+#include <lamppost/messages/Datagram.h>
 
 
 namespace lp
@@ -16,15 +16,15 @@ namespace lp
     private:
       std::string mSender;
       std::string mTopic;
-      std::shared_ptr<RawDatagram> mDatagram;
+      Datagram mDatagram;
 
     public:
-      Message(std::string sender, std::string topic, std::shared_ptr<RawDatagram> datagram);
+      Message(std::string sender, std::string topic, Datagram datagram);
       ~Message() = default;
 
       std::string GetSender();
       std::string GetTopic();
-      std::shared_ptr<RawDatagram> GetDatagram();
+      Datagram GetDatagram();
     };
   } // namespace messages
 } // namespace lp

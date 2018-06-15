@@ -18,13 +18,13 @@ const std::string cSampleDictionaryStringValue = "SampleValue";
 
 #pragma region Constructor
 
-TEST(Datagram, WhenDefaultConstructorIsCalled_ThenTheTypeIsList)
+TEST(Datagram, WhenDefaultConstructorIsCalled_ThenTheTypeIsEmpty)
 {
   // Arrange, Act.
   lp::messages::Datagram datagram;
 
   // Assert.
-  EXPECT_EQ(lp::messages::RawDatagramType::List, datagram.GetType());
+  EXPECT_EQ(lp::messages::RawDatagramType::Empty, datagram.GetType());
 }
 
 #pragma endregion // Constructor
