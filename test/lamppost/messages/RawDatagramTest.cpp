@@ -15,7 +15,7 @@ const std::string cSampleDatagramValue = "The Sample Value";
 const std::string cOtherSampleDatagramValue = "The Other Sample Value";
 
 // The sample list index.
-const int cSampleListIndex = 0;
+const int cSampleListIndex = 1;
 
 #pragma endregion
 
@@ -24,10 +24,10 @@ const int cSampleListIndex = 0;
 TEST(RawDatagram, WhenDefaultConstructorIsCalled_ThenTheTypeIsEmpty)
 {
   // Arrange, Act.
-  lp::messages::RawDatagram datagram = std::make_shared<lp::messages::RawDatagram>();
+  std::shared_ptr<lp::messages::RawDatagram> datagram = std::make_shared<lp::messages::RawDatagram>();
 
   // Assert.
-  EXPECT_EQ(lp::messages::RawDatagramType::Empty, datagram.GetType());
+  EXPECT_EQ(lp::messages::RawDatagramType::Empty, datagram->GetType());
 }
 
 #pragma endregion // Constructor
@@ -38,6 +38,8 @@ TEST(RawDatagram, WhenItemIsAddedToList_ThenTheCountIncreasesByOne)
 {
   // Arrange.
   lp::messages::RawDatagram datagram;
+  std::shared_ptr<lp::messages::RawDatagram> child = std::make_shared<lp::messages::RawDatagram>();
+  datagram.Add(child); // Make `datagram` a list.
   int oldCount = datagram.GetCount();
   std::shared_ptr<lp::messages::RawDatagram> otherDatagram = std::make_shared<lp::messages::RawDatagram>();
 
@@ -49,23 +51,6 @@ TEST(RawDatagram, WhenItemIsAddedToList_ThenTheCountIncreasesByOne)
 }
 
 #pragma endregion // GetCount
-
-#pragma region Add
-
-TEST(RawDatagram, WhenItemIsAddedAndDatagramIsNotAList_ThenAnExceptionIsThrown)
-{
-  // Arrange.
-  lp::messages::RawDatagram datagram;
-  datagram = cSampleDatagramValue;
-
-  std::shared_ptr<lp::messages::RawDatagram> otherDatagram = std::make_shared<lp::messages::RawDatagram>();
-  datagram = cOtherSampleDatagramValue;
-
-  // Act, Assert.
-  EXPECT_THROW(datagram.Add(otherDatagram), lp::exceptions::InvalidOperationException);
-}
-
-#pragma endregion // Add
 
 #pragma region Remove
 
@@ -82,7 +67,9 @@ TEST(RawDatagram, WhenItemIsRemovedFromIndexAndDatagramIsNotAList_ThenAnExceptio
 TEST(RawDatagram, WhenItemIsRemovedFromIndexAndIndexIsOutOfBoundsOfList_ThenAnExceptionIsThrown)
 {
   // Arrange.
-  lp::messages::RawDatagram datagram; // Datagrams are empty lists by default.
+  lp::messages::RawDatagram datagram;
+  std::shared_ptr<lp::messages::RawDatagram> child = std::make_shared<lp::messages::RawDatagram>();
+  datagram.Add(child); // Make `datagram` a list.
 
   // Act, Assert.
   EXPECT_THROW(datagram.Remove(cSampleListIndex), lp::exceptions::IndexOutOfBoundsException);

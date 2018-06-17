@@ -131,7 +131,10 @@ namespace lp
     {
       if(mType != RawDatagramType::List)
       {
-        throw exceptions::InvalidOperationException("RawDatagram must be a list.");
+        mDictionary.clear();
+        mValue = nullptr;
+
+        mType = RawDatagramType::List;
       }
 
       mList.push_back(datagram);
