@@ -74,6 +74,7 @@ namespace lp
 
       std::shared_ptr<Bus> childBus = std::make_shared<Bus>(name, mPublishMessageFunction);
       mChildBusses[name] = childBus;
+
       childBus->Start();
 
       return childBus;

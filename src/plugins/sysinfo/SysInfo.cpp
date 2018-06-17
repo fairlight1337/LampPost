@@ -25,10 +25,12 @@ namespace lp
         "/sysinfoaction",
         [this](std::shared_ptr<bus::ActionProvider> provider, std::string invocationId, messages::Datagram request)
         {
-          std::cout << "Received action request. Replying.";
+          std::stringstream sts;
+          sts << std::string("Received action request: ");
+          sts << request;
+          mLog.Info(sts.str());
 
-          messages::Datagram response;
-          response = std::string("Reponse message.");
+          messages::Datagram response(std::string("This is the response message."));
 
           provider->Respond(invocationId, response);
         });
@@ -38,8 +40,7 @@ namespace lp
     {
       while(mShouldRun)
       {
-        messages::Datagram datagram;
-        datagram = std::string("Hello Bus!");
+        messages::Datagram datagram(std::string("Hello Bus!"));
 
         mSysInfoPublisher->Publish(datagram);
         mLog.Info("Sent datagram");

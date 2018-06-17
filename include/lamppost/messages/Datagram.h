@@ -15,6 +15,7 @@ namespace lp
       std::shared_ptr<RawDatagram> mRawDatagram;
 
     public:
+      Datagram(const Datagram& datagram);
       explicit Datagram(std::shared_ptr<RawDatagram> rawDatagram);
 
       template<class ... Args>
@@ -68,7 +69,14 @@ namespace lp
       template<typename ContentType>
       Datagram& operator=(ContentType contentValue)
       {
-        (*mRawDatagram) = contentValue;
+        *mRawDatagram = contentValue;
+
+        return *this;
+      }
+
+      Datagram& operator=(const Datagram& otherDatagram)
+      {
+        *mRawDatagram = *(otherDatagram.mRawDatagram->Copy());
 
         return *this;
       }
@@ -79,6 +87,13 @@ namespace lp
       }
 
       bool IsEmpty();
+
+      friend std::ostream& operator<<(std::ostream& outputStream, const Datagram& datagram)
+      {
+        outputStream << *(datagram.mRawDatagram);
+
+        return outputStream;
+      }
     };
   } // namespace messages
 } // namespace lp

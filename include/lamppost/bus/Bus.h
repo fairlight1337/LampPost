@@ -133,7 +133,7 @@ namespace lp
         requestSubscriber->SetDatagramCallback(
           [instance](messages::Datagram datagram)
           {
-            // TODO: Check for presence of field here.
+            // TODO: Check for presence of invocationId field here.
             std::string invocationId = static_cast<std::string>(datagram["invocationId"]);
 
             instance->ProcessRequest(invocationId, datagram);

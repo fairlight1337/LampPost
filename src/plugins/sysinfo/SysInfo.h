@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <memory>
+#include <sstream>
 
 #include <lamppost/plugin/PluginInstance.h>
 #include <lamppost/plugin/PluginTemplateInfo.h>

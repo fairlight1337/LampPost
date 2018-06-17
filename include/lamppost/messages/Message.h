@@ -25,6 +25,13 @@ namespace lp
       std::string GetSender();
       std::string GetTopic();
       Datagram GetDatagram();
+
+      friend std::ostream& operator<<(std::ostream& outputStream, const Message& message)
+      {
+        outputStream << "[" << message.mSender << " to " << message.mTopic << "]: " << message.mDatagram;
+
+        return outputStream;
+      }
     };
   } // namespace messages
 } // namespace lp

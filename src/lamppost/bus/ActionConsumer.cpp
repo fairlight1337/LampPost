@@ -34,7 +34,7 @@ namespace lp
 
       messages::Datagram wrappedRequest;
       wrappedRequest["invocationId"] = uuidString;
-      wrappedRequest["request"] = std::move(request);
+      wrappedRequest["request"] = request;
 
       mRequestPublisher->Publish(wrappedRequest);
     }
@@ -50,7 +50,7 @@ namespace lp
       waiting = true;
 
       RequestAsync(
-        std::move(request),
+        request,
         [&](messages::Datagram internalResponse)
         {
           if(waiting)
@@ -74,7 +74,7 @@ namespace lp
     {
       if(mOpenRequests.find(invocationId) != mOpenRequests.end())
       {
-        mOpenRequests[invocationId](std::move(response));
+        mOpenRequests[invocationId](response);
         mOpenRequests.erase(invocationId);
       }
 

@@ -27,7 +27,7 @@ namespace lp
     {
       if(mCallback != nullptr)
       {
-        mCallback(std::move(message));
+        mCallback(message);
       }
     }
 

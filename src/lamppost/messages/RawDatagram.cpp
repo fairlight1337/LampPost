@@ -11,6 +11,12 @@ namespace lp
     {
     }
 
+    RawDatagram::RawDatagram(std::shared_ptr<DataBase> data)
+      : mType(RawDatagramType::Value),
+        mValue(data)
+    {
+    }
+
     RawDatagram::~RawDatagram()
     {
       mDictionary.clear();
@@ -21,6 +27,41 @@ namespace lp
     RawDatagramType RawDatagram::GetType()
     {
       return mType;
+    }
+
+    std::shared_ptr<RawDatagram> RawDatagram::Copy()
+    {
+      std::shared_ptr<RawDatagram> copy = std::make_shared<RawDatagram>();
+      copy->mType = mType;
+
+      switch(mType)
+      {
+        case RawDatagramType::Empty:
+          break;
+
+        case RawDatagramType::Dictionary:
+        {
+          for(std::pair<std::string, std::shared_ptr<RawDatagram>> pair : mDictionary)
+          {
+            (*copy)[pair.first] = pair.second->Copy();
+          }
+        } break;
+
+        case RawDatagramType::List:
+        {
+          for(std::shared_ptr<RawDatagram> listItem : mList)
+          {
+            copy->Add(listItem->Copy());
+          }
+        } break;
+
+        case RawDatagramType::Value:
+        {
+          *copy = mValue->Copy();
+        } break;
+      }
+
+      return copy;
     }
 
     std::shared_ptr<RawDatagram>& RawDatagram::operator[](std::string key)
@@ -35,6 +76,11 @@ namespace lp
         mType = RawDatagramType::Dictionary;
         mList.clear();
         mValue = nullptr;
+      }
+
+      if(mDictionary.find(key) == mDictionary.end())
+      {
+        mDictionary[key] = std::make_shared<RawDatagram>();
       }
 
       return mDictionary[key];
@@ -171,6 +217,21 @@ namespace lp
     RawDatagram& RawDatagram::operator=(std::string value)
     {
       SetValue(value);
+
+      return *this;
+    }
+
+    RawDatagram& RawDatagram::operator=(const std::shared_ptr<DataBase>& data)
+    {
+      if(mType != RawDatagramType::Value)
+      {
+        mDictionary.clear();
+        mList.clear();
+
+        mType = RawDatagramType::Value;
+      }
+
+      mValue = data;
 
       return *this;
     }

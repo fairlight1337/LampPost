@@ -24,6 +24,16 @@ namespace lp
       {
         return mValue;
       }
+
+      std::shared_ptr<DataBase> Copy() override
+      {
+        return std::make_shared<Data<T>>(mValue);
+      }
+
+      void ToString(std::ostream& outputStream) const override
+      {
+        outputStream << mValue;
+      }
     };
   } // namespace messages
 } // namespace lp

@@ -26,14 +26,14 @@ namespace lp
     {
       messages::Datagram wrappedResponse;
       wrappedResponse["invocationId"] = std::move(invocationId);
-      wrappedResponse["response"] = std::move(response);
+      wrappedResponse["response"] = response;
 
       mResponsePublisher->Publish(wrappedResponse);
     }
 
     void ActionProvider::ProcessRequest(std::string invocationId, messages::Datagram request)
     {
-      mCallback(this->shared_from_this(), std::move(invocationId), std::move(request));
+      mCallback(this->shared_from_this(), std::move(invocationId), request);
     }
   } // namespace bus
 } // namespace lp

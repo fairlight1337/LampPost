@@ -25,18 +25,21 @@ namespace lp
     {
       while(mShouldRun)
       {
-        messages::Datagram request;
-        request = std::string("Test request");
+        messages::Datagram request(std::string("Test request"));
 
         messages::Datagram response = mSysInfoActionConsumer->Request(request);
 
         if(!response.IsEmpty())
         {
-          std::cout << "Received a response: " << response.Get<std::string>() << std::endl;
+          std::stringstream sts;
+          sts << "Received a response: ";
+          sts << response;
+
+          mLog.Error(sts.str());
         }
         else
         {
-          std::cout << "Failed to receive a response." << std::endl;
+          mLog.Error("Failed to receive a response.");
         }
 
         Sleep(std::chrono::seconds(1));
