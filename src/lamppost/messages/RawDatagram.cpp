@@ -49,7 +49,7 @@ namespace lp
 
         case RawDatagramType::List:
         {
-          for(std::shared_ptr<RawDatagram> listItem : mList)
+          for(const std::shared_ptr<RawDatagram>& listItem : mList)
           {
             copy->Add(listItem->Copy());
           }

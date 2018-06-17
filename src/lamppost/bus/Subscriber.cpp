@@ -17,7 +17,7 @@ namespace lp
                   {
                     messages::Datagram datagram = message.GetDatagram();
 
-                    // TODO: Check value here.
+                    // TODO(fairlight1337): Check value here.
                     callback(datagram);
                   })
     {
@@ -42,7 +42,7 @@ namespace lp
         {
           messages::Datagram datagram = message.GetDatagram();
 
-          // TODO: Check value here.
+          // TODO(fairlight1337): Check value here.
           callback(datagram);
         };
     }
