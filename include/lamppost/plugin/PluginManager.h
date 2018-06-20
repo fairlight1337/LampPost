@@ -46,6 +46,7 @@ namespace lp
     #pragma region Statics
 
     static std::string sTemplateFileExtension;
+    static std::string sTemplateFilePrefix;
     
     static PluginLibraryHandle OpenPluginLibrary(std::string path);
     static void ClosePluginLibrary(PluginLibraryHandle handle);

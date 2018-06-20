@@ -5,8 +5,10 @@ namespace lp
 {
 #if defined(_WIN32) || defined(_WIN64)
   std::string PluginManager::sTemplateFileExtension = "dll";
+  std::string PluginManager::sTemplateFilePrefix = "plugin_";
 #elif defined(__unix__) || defined(__linux__) || defined(__FreeBSD__) || defined(__APPLE__)
   std::string PluginManager::sTemplateFileExtension = "so";
+  std::string PluginManager::sTemplateFilePrefix = "libplugin_";
 #endif
 
   PluginManager::PluginManager(PluginManagerConfiguration configuration)
@@ -68,7 +70,9 @@ namespace lp
   {
     bool loadedSuccessfully = false;
 
-    if(Filesystem::PathExists(filePath) && Filesystem::GetFileExtension(filePath) == sTemplateFileExtension)
+    if(Filesystem::PathExists(filePath) &&
+       Filesystem::GetFileExtension(filePath) == sTemplateFileExtension &&
+       Filesystem::GetFilename(filePath).substr(0, sTemplateFilePrefix.length()) == sTemplateFilePrefix)
     {
       mLog.Info("Now loading: " + filePath, 2);
 
