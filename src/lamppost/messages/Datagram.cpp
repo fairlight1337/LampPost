@@ -6,19 +6,22 @@ namespace lp
   namespace messages
   {
     Datagram::Datagram(const Datagram& datagram)
+      : mRawDatagram(std::make_shared<RawDatagram>())
     {
-      mRawDatagram = std::make_shared<RawDatagram>();
-
       if(datagram.mRawDatagram != nullptr)
       {
         *mRawDatagram = *(datagram.mRawDatagram->Copy());
       }
     }
 
-    Datagram::Datagram(std::shared_ptr<RawDatagram> rawDatagram)
+    Datagram::Datagram(RawDatagramType rawDatagramType)
+      : mRawDatagram(std::make_shared<RawDatagram>(rawDatagramType))
     {
-      mRawDatagram = rawDatagram;
+    }
 
+    Datagram::Datagram(std::shared_ptr<RawDatagram> rawDatagram)
+      : mRawDatagram(std::move(rawDatagram))
+    {
       if(mRawDatagram == nullptr)
       {
         mRawDatagram = std::make_shared<RawDatagram>();

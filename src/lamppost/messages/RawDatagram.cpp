@@ -11,6 +11,21 @@ namespace lp
     {
     }
 
+    RawDatagram::RawDatagram(RawDatagramType rawDatagramType)
+      : mType(rawDatagramType)
+    {
+      switch(mType)
+      {
+        case RawDatagramType::Value:
+          mValue = std::make_shared<Data<int>>(0);
+          break;
+
+        default:
+          mValue = nullptr;
+          break;
+      }
+    }
+
     RawDatagram::RawDatagram(std::shared_ptr<DataBase> data)
       : mType(RawDatagramType::Value),
         mValue(data)

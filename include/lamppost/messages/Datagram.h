@@ -16,6 +16,7 @@ namespace lp
 
     public:
       Datagram(const Datagram& datagram);
+      Datagram(RawDatagramType rawDatagramType);
       explicit Datagram(std::shared_ptr<RawDatagram> rawDatagram);
 
       template<class ... Args>

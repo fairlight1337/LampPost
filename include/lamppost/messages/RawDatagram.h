@@ -53,6 +53,7 @@ namespace lp
 
     public:
       RawDatagram();
+      RawDatagram(RawDatagramType rawDatagramType);
       RawDatagram(std::shared_ptr<DataBase> data);
 
       template<typename ContentType>
