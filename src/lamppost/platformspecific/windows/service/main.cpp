@@ -21,8 +21,8 @@ void serviceMain(DWORD dwArgc, LPTSTR* lpszArgv)
 void __cdecl _tmain(int argc, TCHAR *argv[])
 {
   // If command-line parameter is "install", install the service.
+  // If command-line parameter is "uninstall", uninstall the service.
   // Otherwise, the service is probably being started by the SCM.
-
   if(lstrcmpi(argv[1], TEXT("install")) == 0)
   {
     service.Install();
@@ -42,7 +42,6 @@ void __cdecl _tmain(int argc, TCHAR *argv[])
 
     // This call returns when the service has stopped.
     // The process should simply terminate when the call returns.
-
     if(!StartServiceCtrlDispatcher(DispatchTable))
     {
       service.ReportEventA(TEXT("StartServiceCtrlDispatcher"));
