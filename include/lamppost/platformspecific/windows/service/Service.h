@@ -11,6 +11,9 @@
 #include <lamppost/exceptions/InvalidOperationException.h>
 #include <lamppost/LampPost.h>
 
+#include <Wtsapi32.h>
+#pragma comment(lib, "Wtsapi32.lib")
+
 
 #define SVC_ERROR ((DWORD)0xC0020001L)
 
@@ -45,6 +48,8 @@ namespace lp
           void ReportStatus(DWORD dwCurrentState, DWORD dwWin32ExitCode, DWORD dwWaitHint);
 
           void RunLampPost();
+
+          void SendMessageToUi(std::string title, std::string message);
 
         public:
           Service(std::string name, std::string description);

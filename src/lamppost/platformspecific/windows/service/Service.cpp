@@ -24,6 +24,20 @@ namespace lp
         {
         }
 
+        void Service::SendMessageToUi(std::string title, std::string message)
+        {
+          DWORD consoleSession = ::WTSGetActiveConsoleSessionId();
+          DWORD response;
+          BOOL ret = ::WTSSendMessage(WTS_CURRENT_SERVER_HANDLE,
+                                      consoleSession,
+                                      (LPTSTR)(title.c_str()), title.length(),
+                                      (LPTSTR)(message.c_str()), message.length(),
+                                      MB_OK,
+                                      60,
+                                      &response,
+                                      TRUE);
+        }
+
         LPSTR Service::GetName()
         {
           return (LPSTR)mName.c_str();
