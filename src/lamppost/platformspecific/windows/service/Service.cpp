@@ -196,7 +196,7 @@ namespace lp
           // Report running status when initialization is complete.
           ReportStatus(SERVICE_RUNNING, NO_ERROR, 0);
 
-          //std::thread lampPostThread(&Service::RunLampPost, this);
+          std::thread lampPostThread(&Service::RunLampPost, this);
 
           while(!mLampPost.IsStopped())
           {
@@ -208,7 +208,7 @@ namespace lp
           }
 
           mLampPost.Stop();
-          //lampPostThread.join();
+          lampPostThread.join();
         }
 
         void Service::RunLampPost()
