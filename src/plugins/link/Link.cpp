@@ -51,32 +51,5 @@ namespace lp
       DeleteSubscriber(mSysInfoSubscriber);
       mSysInfoSubscriber = nullptr;
     }
-
-    std::shared_ptr<data::RawBytes> Link::Serialize(messages::Message messageToSerialize)
-    {
-      flatbuffers::FlatBufferBuilder flatBufferBuilder;
-      flatbuffers::Offset<schemas::Message> serializedMessage = schemas::CreateMessage(
-        flatBufferBuilder,
-        flatBufferBuilder.CreateString(messageToSerialize.GetSender()),
-        flatBufferBuilder.CreateString(messageToSerialize.GetTopic()));
-
-      // TODO(fairlight1337): Add recursive serialization of datagram here!
-
-      flatBufferBuilder.Finish(serializedMessage);
-
-      return std::make_shared<data::RawBytes>(flatBufferBuilder.GetBufferPointer(), flatBufferBuilder.GetSize());
-    }
-
-    messages::Message Link::Deserialize(std::shared_ptr<data::RawBytes> bytesToDeserialize)
-    {
-      const schemas::Message* deserializedMessage = schemas::GetMessage(bytesToDeserialize->GetContent());
-
-      // TODO(fairlight1337): Add recursive deserialization of datagram here!
-
-      messages::Datagram datagram;
-      messages::Message message(deserializedMessage->sender()->str(), deserializedMessage->topic()->str(), datagram);
-
-      return message;
-    }
   } // namespace plugins
 } // namespace lp

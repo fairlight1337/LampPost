@@ -97,7 +97,7 @@ target_link_libraries(${PROJECT_NAME}-bin
 
 ### Flatbuffers
 add_custom_target(GenerateFlatbuffersFiles
-    COMMAND flatc --cpp -o "${CMAKE_CURRENT_SOURCE_DIR}/include/lamppost/schemas/" "${CMAKE_CURRENT_SOURCE_DIR}/schemas/Message.fbs")
+    COMMAND flatc --cpp -o "${CMAKE_CURRENT_SOURCE_DIR}/include/lamppost/schemas/" "${CMAKE_CURRENT_SOURCE_DIR}/schemas/FBMessage.fbs")
 
 add_dependencies(${PROJECT_NAME}
     GenerateFlatbuffersFiles)

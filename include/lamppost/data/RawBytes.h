@@ -2,6 +2,8 @@
 #define LAMPPOST_RAWBYTES_H
 
 
+#include <cstring>
+
 #include <lamppost/exceptions/ArgumentNullException.h>
 
 
@@ -13,14 +15,14 @@ namespace lp
     {
     private:
       void* mContent;
-      size_t mSize;
+      std::size_t mSize;
 
     public:
-      RawBytes(void* content, size_t size);
+      RawBytes(void* content, std::size_t size);
       ~RawBytes();
 
       const void* GetContent();
-      size_t GetSize();
+      std::size_t GetSize();
     };
   }
 }

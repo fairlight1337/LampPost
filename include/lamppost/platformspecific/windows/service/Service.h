@@ -4,12 +4,12 @@
 
 #include <string>
 
+#include <lamppost/exceptions/InvalidOperationException.h>
+#include <lamppost/LampPost.h>
+
 #include <strsafe.h>
 #include <tchar.h>
 #include <windows.h>
-
-#include <lamppost/exceptions/InvalidOperationException.h>
-#include <lamppost/LampPost.h>
 
 #include <Wtsapi32.h>
 #pragma comment(lib, "Wtsapi32.lib")

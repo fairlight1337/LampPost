@@ -5,22 +5,22 @@ namespace lp
 {
   namespace data
   {
-    RawBytes::RawBytes(void* content, size_t size)
+    RawBytes::RawBytes(void* content, std::size_t size)
     {
       if(content == nullptr)
       {
         throw exceptions::ArgumentNullException("content", "Content may not be null.");
       }
 
-      mContent = new char[size];
-      memcpy(mContent, content, size);
+      mContent = (void*)(new char[size]);
+      std::memcpy(mContent, content, size);
     }
 
     RawBytes::~RawBytes()
     {
       if(mContent != nullptr)
       {
-        delete[] mContent;
+        delete[] (char*)mContent;
       }
     }
 
@@ -29,7 +29,7 @@ namespace lp
       return mContent;
     }
 
-    size_t RawBytes::GetSize()
+    std::size_t RawBytes::GetSize()
     {
       return mSize;
     }

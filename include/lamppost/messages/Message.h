@@ -2,9 +2,15 @@
 #define LAMPPOST_MESSAGE_H
 
 
+#include <memory>
 #include <string>
 
+#include <flatbuffers/idl.h>
+#include <flatbuffers/util.h>
+
+#include <lamppost/data/RawBytes.h>
 #include <lamppost/messages/Datagram.h>
+#include <lamppost/schemas/FBMessage_generated.h>
 
 
 namespace lp
@@ -32,6 +38,9 @@ namespace lp
 
         return outputStream;
       }
+
+      std::shared_ptr<data::RawBytes> Serialize();
+      static messages::Message Deserialize(std::shared_ptr<data::RawBytes> bytesToDeserialize);
     };
   } // namespace messages
 } // namespace lp

@@ -1,9 +1,9 @@
 namespace lp.schemas;
 
-table Message
+table FBMessage
 {
   sender:string;
   topic:string;
 }
 
-root_type Message;
+root_type FBMessage;
