@@ -5,3 +5,5 @@ table Message
   sender:string;
   topic:string;
 }
+
+root_type Message;

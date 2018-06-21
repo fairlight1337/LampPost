@@ -6,6 +6,10 @@
 #include <memory>
 #include <sstream>
 
+#include <flatbuffers/idl.h>
+#include <flatbuffers/util.h>
+
+#include <lamppost/data/RawBytes.h>
 #include <lamppost/plugin/PluginInstance.h>
 #include <lamppost/plugin/PluginTemplateInfo.h>
 #include <lamppost/schemas/Message_generated.h>
@@ -21,7 +25,8 @@ namespace lp
       std::shared_ptr<bus::Subscriber> mSysInfoSubscriber;
       std::shared_ptr<bus::ActionConsumer> mSysInfoActionConsumer;
 
-
+      std::shared_ptr<data::RawBytes> Serialize(messages::Message messageToSerialize);
+      messages::Message Deserialize(std::shared_ptr<data::RawBytes> bytesToDeserialize);
 
     public:
       Link(PluginConfiguration configuration);
