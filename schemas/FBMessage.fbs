@@ -1,9 +1,13 @@
+include "FBDatagram.fbs";
+
 namespace lp.schemas;
 
 table FBMessage
 {
   sender:string;
   topic:string;
+
+  datagram:FBDatagram;
 }
 
 root_type FBMessage;

@@ -1,0 +1,33 @@
+namespace lp.schemas;
+
+enum DatagramType : byte
+{
+  Empty = 0,
+  Value,
+  List,
+  Dictionary
+}
+
+enum ValueType : byte
+{
+  String = 0,
+  Integer,
+  Double
+}
+
+table FBDatagram
+{
+  datagram_type:DatagramType;
+  value_type:ValueType;
+
+  string_content:string;
+  integer_content:int;
+  double_content:double;
+
+  list_content:[FBDatagram];
+
+  dictionary_keys:[string];
+  dictionary_contents:[FBDatagram];
+}
+
+root_type FBDatagram;
