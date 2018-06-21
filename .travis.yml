@@ -13,6 +13,7 @@ matrix:
       - mkdir build
       - cd build
       - cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ..
+      - make
       - find ../src -name "*.h" -o -name "*.cpp" -print | xargs -I{} clang-tidy -checks=*,-performance-unnecessary-value-param,-cppcoreguidelines-pro-bounds-constant-array-index,-modernize-pass-by-value,-cert-err58-cpp,-modernize-use-auto,-cppcoreguidelines-pro-type-union-access,-cert-err60-cpp -p=./ {} > tidy_output.txt
       - find ../include -name "*.h" -o -name "*.cpp" -print | xargs -I{} clang-tidy -checks=*,-performance-unnecessary-value-param,-cppcoreguidelines-pro-bounds-constant-array-index,-modernize-pass-by-value,-cert-err58-cpp,-modernize-use-auto,-cppcoreguidelines-pro-type-union-access,-cert-err60-cpp -p=./ {} >> tidy_output.txt
       - clang-tidy -checks=*,-performance-unnecessary-value-param,-cppcoreguidelines-pro-bounds-constant-array-index,-modernize-pass-by-value,-cert-err58-cpp,-modernize-use-auto,-cppcoreguidelines-pro-type-union-access,-cert-err60-cpp -p=./ src/main.cpp >> tidy_output.txt
