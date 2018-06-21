@@ -6,13 +6,14 @@ namespace lp
   namespace data
   {
     RawBytes::RawBytes(void* content, std::size_t size)
+      : mSize(size)
     {
       if(content == nullptr)
       {
         throw exceptions::ArgumentNullException("content", "Content may not be null.");
       }
 
-      mContent = (void*)(new char[size]);
+      mContent = static_cast<void*>(new char[size]);
       std::memcpy(mContent, content, size);
     }
 
@@ -20,7 +21,7 @@ namespace lp
     {
       if(mContent != nullptr)
       {
-        delete[] (char*)mContent;
+        delete[] static_cast<char*>(mContent);
       }
     }
 
@@ -33,5 +34,5 @@ namespace lp
     {
       return mSize;
     }
-  }
-}
+  } // namespace data
+} // namespace lp

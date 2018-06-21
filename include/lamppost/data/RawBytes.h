@@ -24,8 +24,8 @@ namespace lp
       const void* GetContent();
       std::size_t GetSize();
     };
-  }
-}
+  } // namespace data
+} // namespace lp
 
 
 #endif //LAMPPOST_RAWBYTES_H
