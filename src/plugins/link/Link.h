@@ -8,6 +8,7 @@
 
 #include <lamppost/plugin/PluginInstance.h>
 #include <lamppost/plugin/PluginTemplateInfo.h>
+#include <lamppost/schemas/Message_generated.h>
 
 
 namespace lp
@@ -19,6 +20,8 @@ namespace lp
     private:
       std::shared_ptr<bus::Subscriber> mSysInfoSubscriber;
       std::shared_ptr<bus::ActionConsumer> mSysInfoActionConsumer;
+
+
 
     public:
       Link(PluginConfiguration configuration);

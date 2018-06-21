@@ -1,0 +1,7 @@
+namespace lp.schemas;
+
+table Message
+{
+  sender:string;
+  topic:string;
+}

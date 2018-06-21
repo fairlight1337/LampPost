@@ -17,12 +17,13 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 set(gtest_force_shared_crt ON CACHE BOOL "Force generation of shared libraries for GTest." FORCE)
-add_subdirectory(
-    3rdparty/googletest)
+add_subdirectory(3rdparty/googletest)
+add_subdirectory(3rdparty/flatbuffers)
 
 include_directories(
     include
-    ${gtest_SOURCE_DIR}/include)
+    ${gtest_SOURCE_DIR}/include
+    3rdparty/flatbuffers/include)
 
 set(SRC
     src/lamppost/LampPost.cpp
@@ -55,6 +56,9 @@ set(SRC
 add_library(${PROJECT_NAME}
     ${SRC})
 
+target_link_libraries(${PROJECT_NAME}
+    flatbuffers)
+
 if(WIN32 OR WIN64)
     target_link_libraries(${PROJECT_NAME}
         shlwapi.lib)
@@ -86,6 +90,14 @@ add_executable(${PROJECT_NAME}-bin
 
 target_link_libraries(${PROJECT_NAME}-bin
     ${PROJECT_NAME})
+
+
+### Flatbuffers
+add_custom_target(GenerateFlatbuffersFiles
+    COMMAND flatc --cpp -o "${CMAKE_CURRENT_SOURCE_DIR}/include/lamppost/schemas/" "${CMAKE_CURRENT_SOURCE_DIR}/schemas/Message.fbs")
+
+add_dependencies(${PROJECT_NAME}
+    GenerateFlatbuffersFiles)
 
 
 ### Windows Service
