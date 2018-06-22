@@ -302,7 +302,7 @@ namespace lp
         case RawDatagramType::List:
           datagramType = schemas::DatagramType::DatagramType_List;
 
-          for(std::shared_ptr<RawDatagram> listItem : mList)
+          for(const std::shared_ptr<RawDatagram>& listItem : mList)
           {
             listContentRaw.push_back(listItem->SerializeToStructure(builder));
           }
@@ -443,26 +443,15 @@ namespace lp
             {
               isEqual = true;
 
-              for(const std::pair<std::string, std::shared_ptr<RawDatagram>>& pair : mDictionary)
+              for(std::pair<std::string, std::shared_ptr<RawDatagram>> pair : mDictionary)
               {
                 std::string key = pair.first;
                 std::map<std::string, std::shared_ptr<RawDatagram>>::const_iterator iterRhs = rhs.mDictionary.find(key);
 
-                if(iterRhs == rhs.mDictionary.end())
+                if((iterRhs == rhs.mDictionary.end()) || (*(*iterRhs).second != *(pair.second)))
                 {
                   isEqual = false;
                   break;
-                }
-                else
-                {
-                  std::shared_ptr<RawDatagram> datagramRhs = (*iterRhs).second;
-                  std::shared_ptr<RawDatagram> datagramOwn = pair.second;
-
-                  if(*datagramRhs != *datagramOwn)
-                  {
-                    isEqual = false;
-                    break;
-                  }
                 }
               }
             }
