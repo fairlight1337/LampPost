@@ -28,6 +28,11 @@ namespace lp
       }
     }
 
+    bool Datagram::operator==(const Datagram& rhs) const
+    {
+      return *(rhs.mRawDatagram) == *mRawDatagram;
+    }
+
     unsigned int Datagram::GetCount()
     {
       return mRawDatagram->GetCount();

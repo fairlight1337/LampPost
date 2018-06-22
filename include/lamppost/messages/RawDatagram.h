@@ -9,11 +9,15 @@
 #include <string>
 #include <utility>
 
-#include <lamppost/messages/DataBase.h>
-#include <lamppost/messages/Data.h>
+#include <flatbuffers/idl.h>
+#include <flatbuffers/util.h>
+
 #include <lamppost/exceptions/KeyNotFoundException.h>
 #include <lamppost/exceptions/InvalidOperationException.h>
 #include <lamppost/exceptions/IndexOutOfBoundsException.h>
+#include <lamppost/messages/DataBase.h>
+#include <lamppost/messages/Data.h>
+#include <lamppost/schemas/FBDatagram_generated.h>
 
 
 namespace lp
@@ -106,6 +110,12 @@ namespace lp
         }
       }
 
+      template<typename T>
+      bool IsOfValueType()
+      {
+        return std::dynamic_pointer_cast<Data<T>>(mValue) != nullptr;
+      }
+
       friend std::ostream& operator<<(std::ostream& outputStream, const RawDatagram& rawDatagram)
       {
         switch(rawDatagram.mType)
@@ -173,6 +183,12 @@ namespace lp
 
         return outputStream;
       }
+
+      flatbuffers::Offset<schemas::FBDatagram> SerializeToStructure(flatbuffers::FlatBufferBuilder& builder);
+      static std::shared_ptr<RawDatagram> Deserialize(const schemas::FBDatagram* structure);
+
+      bool operator==(const RawDatagram& rhs) const;
+      bool operator!=(const RawDatagram& rhs) const;
     };
   } // namespace messages
 } // namespace lp

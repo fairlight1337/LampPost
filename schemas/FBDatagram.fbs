@@ -12,7 +12,8 @@ enum ValueType : byte
 {
   String = 0,
   Integer,
-  Double
+  Double,
+  Boolean
 }
 
 table FBDatagram
@@ -23,6 +24,7 @@ table FBDatagram
   string_content:string;
   integer_content:int;
   double_content:double;
+  boolean_content:bool;
 
   list_content:[FBDatagram];
 

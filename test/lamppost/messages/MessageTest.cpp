@@ -34,3 +34,24 @@ TEST(Datagram, WhenConstructorIsCalled_ThenThePropertiesAreSetCorrectly)
 }
 
 #pragma endregion // Constructor
+
+#pragma region SerializeToBytes, Deserialize
+
+TEST(Datagram, WhenMessageIsSerializedToBytesAndIsDeserializedAgain_ThenTheResultIsEqualToTheOriginalData)
+{
+  // Arrange.
+  lp::messages::Datagram originalDatagram;
+  originalDatagram["test1"] = 5;
+  originalDatagram["test 2"]["hello world"] = std::string("99!");
+
+  lp::messages::Message originalMessage("sender", "topic", originalDatagram);
+
+  // Act.
+  std::shared_ptr<lp::data::RawBytes> bytes = originalMessage.SerializeToBytes();
+  lp::messages::Message resultMessage = lp::messages::Message::Deserialize(bytes);
+
+  // Assert.
+  EXPECT_EQ(originalMessage, resultMessage);
+}
+
+#pragma endregion // SerializeToBytes, Deserialize

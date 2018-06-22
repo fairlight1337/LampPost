@@ -19,6 +19,7 @@ namespace lp
       virtual void ToString(std::ostream& outputStream) const = 0;
 
       virtual std::shared_ptr<DataBase> Copy() = 0;
+      virtual bool Equals(std::shared_ptr<DataBase> rhs) = 0;
 
       friend std::ostream& operator<<(std::ostream& outputStream, const DataBase& dataBase)
       {

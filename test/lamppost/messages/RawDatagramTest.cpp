@@ -71,3 +71,99 @@ TEST(RawDatagram, WhenItemIsRemovedFromIndexAndIndexIsOutOfBoundsOfList_ThenAnEx
 }
 
 #pragma endregion // Remove
+
+#pragma region Equality
+
+TEST(RawDatagram, WhenTwoValueInstancesHaveTheSameContent_ThenTheyAreEqual)
+{
+  // Arrange.
+  lp::messages::RawDatagram datagram1 = std::string("Test");
+  lp::messages::RawDatagram datagram2 = std::string("Test");
+
+  // Act, Assert.
+  EXPECT_EQ(datagram1, datagram2);
+}
+
+TEST(RawDatagram, WhenTwoListInstancesHaveTheSameContent_ThenTheyAreEqual)
+{
+  // Arrange.
+  lp::messages::RawDatagram datagram1;
+  datagram1.Add(std::make_shared<lp::messages::RawDatagram>(std::string("List item 1")));
+  datagram1.Add(std::make_shared<lp::messages::RawDatagram>(std::string("List item 2")));
+  datagram1.Add(std::make_shared<lp::messages::RawDatagram>(std::string("List item 3")));
+
+  lp::messages::RawDatagram datagram2;
+  datagram2.Add(std::make_shared<lp::messages::RawDatagram>(std::string("List item 1")));
+  datagram2.Add(std::make_shared<lp::messages::RawDatagram>(std::string("List item 2")));
+  datagram2.Add(std::make_shared<lp::messages::RawDatagram>(std::string("List item 3")));
+
+  // Act, Assert.
+  EXPECT_EQ(datagram1, datagram2);
+}
+
+TEST(RawDatagram, WhenTwoDictionaryInstancesHaveTheSameContent_ThenTheyAreEqual)
+{
+  // Arrange.
+  lp::messages::RawDatagram datagram1;
+  datagram1["Key 1"] = std::make_shared<lp::messages::RawDatagram>(std::string("Value 1"));
+  datagram1["Key 2"] = std::make_shared<lp::messages::RawDatagram>(std::string("Value 2"));
+  datagram1["Key 3"] = std::make_shared<lp::messages::RawDatagram>(std::string("Value 3"));
+
+  lp::messages::RawDatagram datagram2;
+  datagram2["Key 1"] = std::make_shared<lp::messages::RawDatagram>(std::string("Value 1"));
+  datagram2["Key 2"] = std::make_shared<lp::messages::RawDatagram>(std::string("Value 2"));
+  datagram2["Key 3"] = std::make_shared<lp::messages::RawDatagram>(std::string("Value 3"));
+
+  // Act, Assert.
+  EXPECT_EQ(datagram1, datagram2);
+}
+
+#pragma endregion // Equality
+
+#pragma region Inequality
+
+TEST(RawDatagram, WhenTwoValueInstancesHaveDifferentContent_ThenTheyAreNotEqual)
+{
+  // Arrange.
+  lp::messages::RawDatagram datagram1 = std::string("Test 1");
+  lp::messages::RawDatagram datagram2 = std::string("Test 2");
+
+  // Act, Assert.
+  EXPECT_NE(datagram1, datagram2);
+}
+
+TEST(RawDatagram, WhenTwoListInstancesHaveDifferentContent_ThenTheyAreNotEqual)
+{
+  // Arrange.
+  lp::messages::RawDatagram datagram1;
+  datagram1.Add(std::make_shared<lp::messages::RawDatagram>(std::string("List item 1")));
+  datagram1.Add(std::make_shared<lp::messages::RawDatagram>(std::string("List item 2")));
+  datagram1.Add(std::make_shared<lp::messages::RawDatagram>(std::string("List item 3")));
+
+  lp::messages::RawDatagram datagram2;
+  datagram2.Add(std::make_shared<lp::messages::RawDatagram>(std::string("List item A")));
+  datagram2.Add(std::make_shared<lp::messages::RawDatagram>(std::string("List item B")));
+  datagram2.Add(std::make_shared<lp::messages::RawDatagram>(std::string("List item C")));
+
+  // Act, Assert.
+  EXPECT_NE(datagram1, datagram2);
+}
+
+TEST(RawDatagram, WhenTwoDictionaryInstancesHaveDifferentContent_ThenTheyAreNotEqual)
+{
+  // Arrange.
+  lp::messages::RawDatagram datagram1;
+  datagram1["Key 1"] = std::make_shared<lp::messages::RawDatagram>(std::string("Value 1"));
+  datagram1["Key 2"] = std::make_shared<lp::messages::RawDatagram>(std::string("Value 2"));
+  datagram1["Key 3"] = std::make_shared<lp::messages::RawDatagram>(std::string("Value 3"));
+
+  lp::messages::RawDatagram datagram2;
+  datagram2["Key A"] = std::make_shared<lp::messages::RawDatagram>(std::string("Value A"));
+  datagram2["Key B"] = std::make_shared<lp::messages::RawDatagram>(std::string("Value B"));
+  datagram2["Key C"] = std::make_shared<lp::messages::RawDatagram>(std::string("Value C"));
+
+  // Act, Assert.
+  EXPECT_NE(datagram1, datagram2);
+}
+
+#pragma endregion // Inequality

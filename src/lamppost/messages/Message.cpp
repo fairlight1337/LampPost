@@ -25,15 +25,15 @@ namespace lp {
       return mDatagram;
     }
 
-    std::shared_ptr<data::RawBytes> Message::Serialize()
+    std::shared_ptr<data::RawBytes> Message::SerializeToBytes()
     {
       flatbuffers::FlatBufferBuilder flatBufferBuilder;
+
       flatbuffers::Offset<schemas::FBMessage> serializedMessage = schemas::CreateFBMessage(
         flatBufferBuilder,
         flatBufferBuilder.CreateString(GetSender()),
-        flatBufferBuilder.CreateString(GetTopic()));
-
-      // TODO(fairlight1337): Add recursive serialization of datagram here!
+        flatBufferBuilder.CreateString(GetTopic()),
+        mDatagram.SerializeToStructure(flatBufferBuilder));
 
       flatBufferBuilder.Finish(serializedMessage);
 
@@ -44,12 +44,15 @@ namespace lp {
     {
       const schemas::FBMessage* deserializedMessage = schemas::GetFBMessage(bytesToDeserialize->GetContent());
 
-      // TODO(fairlight1337): Add recursive deserialization of datagram here!
+      return messages::Message(
+        deserializedMessage->sender()->str(),
+        deserializedMessage->topic()->str(),
+        Datagram::Deserialize(deserializedMessage->datagram()));
+    }
 
-      messages::Datagram datagram;
-      messages::Message message(deserializedMessage->sender()->str(), deserializedMessage->topic()->str(), datagram);
-
-      return message;
+    bool Message::operator==(const Message& rhs) const
+    {
+      return rhs.mSender == mSender && rhs.mTopic == mTopic && rhs.mDatagram == mDatagram;
     }
   } // namespace messages
 } // namespace lp

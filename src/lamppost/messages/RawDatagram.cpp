@@ -234,7 +234,7 @@ namespace lp
 
     RawDatagram& RawDatagram::operator=(std::string value)
     {
-      SetValue(value);
+      SetValue(std::move(value));
 
       return *this;
     }
@@ -252,6 +252,230 @@ namespace lp
       mValue = data;
 
       return *this;
+    }
+
+    flatbuffers::Offset<schemas::FBDatagram> RawDatagram::SerializeToStructure(flatbuffers::FlatBufferBuilder &builder)
+    {
+      schemas::DatagramType datagramType;
+      schemas::ValueType valueType = schemas::ValueType::ValueType_String;
+
+      flatbuffers::Offset<flatbuffers::String> stringContent;
+      int32_t integerContent = 0;
+      double doubleContent = 0.0f;
+      bool booleanContent = false;
+      std::vector<flatbuffers::Offset<schemas::FBDatagram>> listContentRaw;
+
+      std::vector<flatbuffers::Offset<flatbuffers::String>> dictionaryKeysContentRaw;
+      std::vector<flatbuffers::Offset<schemas::FBDatagram>> dictionaryValuesContentRaw;
+
+      switch(GetType())
+      {
+        case RawDatagramType::Value:
+          datagramType = schemas::DatagramType::DatagramType_Value;
+
+          if(IsOfValueType<std::string>())
+          {
+            valueType = schemas::ValueType::ValueType_String;
+            stringContent = builder.CreateString(Get<std::string>());
+          }
+          else if(IsOfValueType<int>())
+          {
+            valueType = schemas::ValueType::ValueType_Integer;
+            integerContent = Get<int>();
+          }
+          else if(IsOfValueType<double>())
+          {
+            valueType = schemas::ValueType::ValueType_Double;
+            doubleContent = Get<double>();
+          }
+          else if(IsOfValueType<bool>())
+          {
+            valueType = schemas::ValueType::ValueType_Boolean;
+            booleanContent = Get<bool>();
+          }
+          else
+          {
+            datagramType = schemas::DatagramType::DatagramType_Empty;
+          }
+          break;
+
+        case RawDatagramType::List:
+          datagramType = schemas::DatagramType::DatagramType_List;
+
+          for(std::shared_ptr<RawDatagram> listItem : mList)
+          {
+            listContentRaw.push_back(listItem->SerializeToStructure(builder));
+          }
+          break;
+
+        case RawDatagramType::Dictionary:
+          datagramType = schemas::DatagramType::DatagramType_Dictionary;
+
+          for(std::pair<std::string, std::shared_ptr<RawDatagram>> dictionaryItem : mDictionary)
+          {
+            dictionaryKeysContentRaw.push_back(builder.CreateString(dictionaryItem.first));
+            dictionaryValuesContentRaw.push_back(dictionaryItem.second->SerializeToStructure(builder));
+          }
+          break;
+
+        case RawDatagramType::Empty:
+          datagramType = schemas::DatagramType::DatagramType_Empty;
+          break;
+      }
+
+      flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<schemas::FBDatagram>>> listContent = builder.CreateVector(listContentRaw);
+      flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<flatbuffers::String>>> dictionaryKeysContent = builder.CreateVector(dictionaryKeysContentRaw);
+      flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<schemas::FBDatagram>>> dictionaryValuesContent = builder.CreateVector(dictionaryValuesContentRaw);
+
+      return schemas::CreateFBDatagram(
+        builder,
+        datagramType,
+        valueType,
+        stringContent,
+        integerContent,
+        doubleContent,
+        booleanContent,
+        listContent,
+        dictionaryKeysContent,
+        dictionaryValuesContent);
+    }
+
+    std::shared_ptr<RawDatagram> RawDatagram::Deserialize(const schemas::FBDatagram* structure)
+    {
+      std::shared_ptr<RawDatagram> rawDatagram = std::make_shared<RawDatagram>();
+
+      switch(structure->datagram_type())
+      {
+        case schemas::DatagramType::DatagramType_Value:
+        {
+          switch(structure->value_type())
+          {
+            case schemas::ValueType::ValueType_String:
+              rawDatagram->SetValue<std::string>(structure->string_content()->str());
+              break;
+
+            case schemas::ValueType::ValueType_Double:
+              rawDatagram->SetValue<double>(structure->double_content());
+              break;
+
+            case schemas::ValueType::ValueType_Integer:
+              rawDatagram->SetValue<int>(structure->integer_content());
+              break;
+
+            case schemas::ValueType::ValueType_Boolean:
+              rawDatagram->SetValue<bool>(structure->boolean_content());
+              break;
+          }
+        } break;
+
+        case schemas::DatagramType::DatagramType_List:
+        {
+          unsigned int length = structure->list_content()->size();
+
+          for(unsigned int i = 0; i < length; ++i)
+          {
+            rawDatagram->Add(RawDatagram::Deserialize(structure->list_content()->operator[](i)));
+          }
+        } break;
+
+        case schemas::DatagramType::DatagramType_Dictionary:
+        {
+          unsigned int length = std::min(structure->dictionary_keys()->size(), structure->dictionary_contents()->size());
+
+          for(unsigned int i = 0; i < length; ++i)
+          {
+            rawDatagram->operator[](structure->dictionary_keys()->operator[](i)->str()) = RawDatagram::Deserialize(structure->dictionary_contents()->operator[](i));
+          }
+        } break;
+
+        case schemas::DatagramType::DatagramType_Empty:
+        {
+        } break;
+      }
+
+      return rawDatagram;
+    }
+
+    bool RawDatagram::operator==(const RawDatagram& rhs) const
+    {
+      bool isEqual = false;
+
+      if(rhs.mType == mType)
+      {
+        switch(mType)
+        {
+          case RawDatagramType::Empty:
+          {
+            isEqual = true;
+          } break;
+
+          case RawDatagramType::Value:
+          {
+            isEqual = rhs.mValue != nullptr && mValue != nullptr && rhs.mValue->Equals(mValue);
+          } break;
+
+          case RawDatagramType::List:
+          {
+            if(rhs.mList.size() == mList.size())
+            {
+              isEqual = true;
+
+              std::list<std::shared_ptr<RawDatagram>>::const_iterator iterOwn = mList.begin();
+              std::list<std::shared_ptr<RawDatagram>>::const_iterator iterRhs = rhs.mList.begin();
+
+              while(iterOwn != mList.end())
+              {
+                if(**iterOwn != **iterRhs)
+                {
+                  isEqual = false;
+                  break;
+                }
+
+                iterOwn++;
+                iterRhs++;
+              }
+            }
+          } break;
+
+          case RawDatagramType::Dictionary:
+          {
+            if(rhs.mDictionary.size() == mDictionary.size())
+            {
+              isEqual = true;
+
+              for(const std::pair<std::string, std::shared_ptr<RawDatagram>>& pair : mDictionary)
+              {
+                std::string key = pair.first;
+                std::map<std::string, std::shared_ptr<RawDatagram>>::const_iterator iterRhs = rhs.mDictionary.find(key);
+
+                if(iterRhs == rhs.mDictionary.end())
+                {
+                  isEqual = false;
+                  break;
+                }
+                else
+                {
+                  std::shared_ptr<RawDatagram> datagramRhs = (*iterRhs).second;
+                  std::shared_ptr<RawDatagram> datagramOwn = pair.second;
+
+                  if(*datagramRhs != *datagramOwn)
+                  {
+                    isEqual = false;
+                    break;
+                  }
+                }
+              }
+            }
+          } break;
+        }
+      }
+
+      return isEqual;
+    }
+
+    bool RawDatagram::operator!=(const RawDatagram& rhs) const
+    {
+      return !(*this == rhs);
     }
   } // namespace messages
 } // namespace lp

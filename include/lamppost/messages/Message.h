@@ -39,8 +39,10 @@ namespace lp
         return outputStream;
       }
 
-      std::shared_ptr<data::RawBytes> Serialize();
+      std::shared_ptr<data::RawBytes> SerializeToBytes();
       static messages::Message Deserialize(std::shared_ptr<data::RawBytes> bytesToDeserialize);
+
+      bool operator==(const Message& rhs) const;
     };
   } // namespace messages
 } // namespace lp

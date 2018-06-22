@@ -56,6 +56,8 @@ namespace lp
         mRawDatagram->Add(std::forward<Args>(args)...);
       }
 
+      bool operator==(const Datagram& rhs) const;
+
       template<class ... Args>
       void Remove(Args ... args)
       {
@@ -94,6 +96,16 @@ namespace lp
         outputStream << *(datagram.mRawDatagram);
 
         return outputStream;
+      }
+
+      flatbuffers::Offset<schemas::FBDatagram> SerializeToStructure(flatbuffers::FlatBufferBuilder& builder)
+      {
+        return mRawDatagram->SerializeToStructure(builder);
+      }
+
+      static Datagram Deserialize(const schemas::FBDatagram* structure)
+      {
+        return Datagram(RawDatagram::Deserialize(structure));
       }
     };
   } // namespace messages
