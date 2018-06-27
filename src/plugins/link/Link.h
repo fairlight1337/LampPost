@@ -6,6 +6,8 @@
 #include <memory>
 #include <sstream>
 
+#include <zmq.h>
+
 #include <lamppost/plugin/PluginInstance.h>
 #include <lamppost/plugin/PluginTemplateInfo.h>
 
@@ -22,7 +24,7 @@ namespace lp
 
     public:
       Link(PluginConfiguration configuration);
-      virtual ~Link() = default;
+      ~Link() override = default;
 
       void Initialize() override;
       void Run() override;

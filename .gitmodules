@@ -4,3 +4,6 @@
 [submodule "3rdparty/flatbuffers"]
 	path = 3rdparty/flatbuffers
 	url = https://github.com/google/flatbuffers.git
+[submodule "3rdparty/libzmq"]
+	path = 3rdparty/libzmq
+	url = https://github.com/zeromq/libzmq.git

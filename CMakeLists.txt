@@ -22,10 +22,16 @@ add_subdirectory(3rdparty/googletest)
 set(FLATBUFFERS_BUILD_TESTS OFF CACHE BOOL "Enable the build of tests and samples." FORCE)
 add_subdirectory(3rdparty/flatbuffers)
 
+set(BUILD_TESTS OFF CACHE BOOL "Whether or not to build the tests" FORCE)
+set(ZMQ_BUILD_TESTS OFF CACHE BOOL "Build the tests for ZeroMQ" FORCE)
+add_subdirectory(3rdparty/libzmq)
+
 include_directories(
     include
     ${gtest_SOURCE_DIR}/include
-    3rdparty/flatbuffers/include)
+    3rdparty/flatbuffers/include
+    3rdparty/libzmq/include
+    3rdparty/libzmq/src)
 
 set(SRC
     src/lamppost/LampPost.cpp
@@ -60,7 +66,8 @@ add_library(${PROJECT_NAME}
     ${SRC})
 
 target_link_libraries(${PROJECT_NAME}
-    flatbuffers)
+    flatbuffers
+    ${ZeroMQ_LIBRARY})
 
 if(WIN32 OR WIN64)
     target_link_libraries(${PROJECT_NAME}
