@@ -28,6 +28,11 @@ namespace lp
       }
     }
 
+    bool Datagram::KeyExists(std::string key)
+    {
+      return mRawDatagram->KeyExists(key);
+    }
+
     bool Datagram::operator==(const Datagram& rhs) const
     {
       return *(rhs.mRawDatagram) == *mRawDatagram;

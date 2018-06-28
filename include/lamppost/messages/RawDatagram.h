@@ -12,6 +12,8 @@
 #include <flatbuffers/idl.h>
 #include <flatbuffers/util.h>
 
+#include <json.h>
+
 #include <lamppost/exceptions/KeyNotFoundException.h>
 #include <lamppost/exceptions/InvalidOperationException.h>
 #include <lamppost/exceptions/IndexOutOfBoundsException.h>
@@ -55,6 +57,8 @@ namespace lp
         mValue = std::make_shared<Data<T>>(value);
       }
 
+      static void ParseJsonObject(json_object* jobj, std::shared_ptr<RawDatagram> root);
+
     public:
       RawDatagram();
       RawDatagram(RawDatagramType rawDatagramType);
@@ -77,6 +81,7 @@ namespace lp
       std::shared_ptr<RawDatagram>& operator[](std::string key);
       std::shared_ptr<RawDatagram>& Get(const std::string& key);
       void Remove(std::string key);
+      bool KeyExists(std::string key);
 
       // List
       std::shared_ptr<RawDatagram>& operator[](unsigned int index);
@@ -186,6 +191,7 @@ namespace lp
 
       flatbuffers::Offset<schemas::FBDatagram> SerializeToStructure(flatbuffers::FlatBufferBuilder& builder);
       static std::shared_ptr<RawDatagram> Deserialize(const schemas::FBDatagram* structure);
+      static std::shared_ptr<RawDatagram> DeserializeFromJson(const std::string& json);
 
       bool operator==(const RawDatagram& rhs) const;
       bool operator!=(const RawDatagram& rhs) const;

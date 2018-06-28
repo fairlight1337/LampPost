@@ -7,3 +7,6 @@
 [submodule "3rdparty/libzmq"]
 	path = 3rdparty/libzmq
 	url = https://github.com/zeromq/libzmq.git
+[submodule "3rdparty/json-c"]
+	path = 3rdparty/json-c
+	url = https://github.com/json-c/json-c.git

@@ -6,7 +6,7 @@ namespace lp
   namespace plugins
   {
     Link::Link(PluginConfiguration configuration)
-      : PluginInstance(configuration), mZmqContext(nullptr)
+      : PluginInstance(std::move(configuration)), mZmqContext(nullptr)
     {
     }
 

@@ -14,6 +14,9 @@ const std::string cSampleDatagramValue = "The Sample Value";
 // The other sample datagram value.
 const std::string cOtherSampleDatagramValue = "The Other Sample Value";
 
+// The sample correct json string.
+const std::string cSampleCorrectJsonString = "{\"this\": 5}";
+
 // The sample list index.
 const int cSampleListIndex = 0;
 
@@ -167,3 +170,33 @@ TEST(RawDatagram, WhenTwoDictionaryInstancesHaveDifferentContent_ThenTheyAreNotE
 }
 
 #pragma endregion // Inequality
+
+#pragma region DeserializeFromJson
+
+TEST(RawDatagram, WhenDeserializedFromCorrectJsonDictionary_ThenTheResultIsCorrect)
+{
+  // Arrange.
+  std::shared_ptr<lp::messages::RawDatagram> expectedResult = std::make_shared<lp::messages::RawDatagram>();
+  *(expectedResult->operator[]("this")) = 5;
+
+  // Act.
+  std::shared_ptr<lp::messages::RawDatagram> deserializedRawDatagram = lp::messages::RawDatagram::DeserializeFromJson(cSampleCorrectJsonString);
+
+  // Assert.
+  EXPECT_EQ(*expectedResult, *deserializedRawDatagram);
+}
+
+TEST(RawDatagram, WhenDeserializedFromIncorrectJsonDictionary_ThenTheResultIsIncorrect)
+{
+  // Arrange.
+  std::shared_ptr<lp::messages::RawDatagram> expectedResult = std::make_shared<lp::messages::RawDatagram>();
+  *(expectedResult->operator[]("what")) = std::string("Test");
+
+  // Act.
+  std::shared_ptr<lp::messages::RawDatagram> deserializedRawDatagram = lp::messages::RawDatagram::DeserializeFromJson(cSampleCorrectJsonString);
+
+  // Assert.
+  EXPECT_NE(*expectedResult, *deserializedRawDatagram);
+}
+
+#pragma endregion // DeserializeFromJson

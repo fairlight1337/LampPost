@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(UNIX OR APPLE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -g -O0 --coverage")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -g -O0 --coverage")
 endif(UNIX OR APPLE)
 
 add_definitions(-D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING)
@@ -26,12 +26,16 @@ set(BUILD_TESTS OFF CACHE BOOL "Whether or not to build the tests" FORCE)
 set(ZMQ_BUILD_TESTS OFF CACHE BOOL "Build the tests for ZeroMQ" FORCE)
 add_subdirectory(3rdparty/libzmq)
 
+add_subdirectory(3rdparty/json-c)
+
 include_directories(
     include
     ${gtest_SOURCE_DIR}/include
     3rdparty/flatbuffers/include
     3rdparty/libzmq/include
-    3rdparty/libzmq/src)
+    3rdparty/libzmq/src
+    3rdparty/json-c
+    ${json-c_BINARY_DIR}/include)
 
 set(SRC
     src/lamppost/LampPost.cpp
@@ -66,7 +70,8 @@ add_library(${PROJECT_NAME}
     ${SRC})
 
 target_link_libraries(${PROJECT_NAME}
-    flatbuffers)
+    flatbuffers
+    json-c)
 
 if(WIN32 OR WIN64)
     target_link_libraries(${PROJECT_NAME}

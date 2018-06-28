@@ -13,6 +13,8 @@ namespace lp
   {
     std::string mIdentifier;
     std::shared_ptr<bus::Bus> mBus;
+
+    messages::Datagram mCustomConfiguration;
   };
 } // namespace lp
 

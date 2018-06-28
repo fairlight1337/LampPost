@@ -33,6 +33,8 @@ namespace lp
         return mRawDatagram->Get<DataType>();
       }
 
+      bool KeyExists(std::string key);
+
       Datagram operator[](unsigned int index)
       {
         return Datagram((*mRawDatagram)[index]);
@@ -106,6 +108,11 @@ namespace lp
       static Datagram Deserialize(const schemas::FBDatagram* structure)
       {
         return Datagram(RawDatagram::Deserialize(structure));
+      }
+
+      static Datagram DeserializeFromJson(const std::string json)
+      {
+        return Datagram(RawDatagram::DeserializeFromJson(json));
       }
     };
   } // namespace messages

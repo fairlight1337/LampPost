@@ -84,6 +84,11 @@ namespace lp
       return Get(key);
     }
 
+    bool RawDatagram::KeyExists(std::string key)
+    {
+      return mDictionary.find(key) != mDictionary.end();
+    }
+
     std::shared_ptr<RawDatagram>& RawDatagram::Get(const std::string& key)
     {
       if(mType != RawDatagramType::Dictionary)
@@ -394,6 +399,83 @@ namespace lp
       }
 
       return rawDatagram;
+    }
+
+    std::shared_ptr<RawDatagram> RawDatagram::DeserializeFromJson(const std::string& json)
+    {
+      std::shared_ptr<RawDatagram> rawDatagram = std::make_shared<RawDatagram>();
+
+      struct json_tokener* tok;
+      struct json_object* jobj;
+      enum json_tokener_error error;
+
+      tok = json_tokener_new_ex(1000);
+
+      jobj = json_tokener_parse_ex(tok, json.c_str(), json.length());
+      error = tok->err;
+
+      if(error == json_tokener_success)
+      {
+        ParseJsonObject(jobj, rawDatagram);
+      }
+
+      return rawDatagram;
+    }
+
+    void RawDatagram::ParseJsonObject(json_object* jobj, std::shared_ptr<RawDatagram> root)
+    {
+      switch(json_object_get_type(jobj)) {
+        case json_type_boolean:
+        {
+          *root = static_cast<bool>(json_object_get_boolean(jobj));
+        } break;
+
+        case json_type_double:
+        {
+          *root = json_object_get_double(jobj);
+        } break;
+
+        case json_type_int:
+        {
+          *root = static_cast<int>(json_object_get_int(jobj));
+        } break;
+
+        case json_type_string:
+        {
+          *root = std::string(json_object_get_string(jobj));
+        } break;
+
+        case json_type_array:
+        {
+          json_object* jarray = jobj, *jvalue;
+
+          for(size_t i = 0; i < json_object_array_length(jarray); i++)
+          {
+            jvalue = json_object_array_get_idx(jarray, i);
+            std::shared_ptr<RawDatagram> rawChildDatagram = std::make_shared<RawDatagram>();
+            ParseJsonObject(jvalue, rawChildDatagram);
+
+            root->Add(rawChildDatagram);
+          }
+        } break;
+
+        case json_type_object:
+        {
+          // Note(fairlight1337): The following line is excluded from tidy checks as the utilized macro expands to
+          // (according to tidy) unclean code which cannot be changed at this time.
+          json_object_object_foreach(jobj, key, val) // NOLINT
+          {
+            std::shared_ptr<RawDatagram> rawChildDatagram = std::make_shared<RawDatagram>();
+            ParseJsonObject(val, rawChildDatagram);
+
+            root->operator[](key) = rawChildDatagram;
+          }
+        } break;
+
+        case json_type_null:
+        {
+        } break;
+      }
     }
 
     bool RawDatagram::operator==(const RawDatagram& rhs) const
