@@ -461,7 +461,9 @@ namespace lp
 
         case json_type_object:
         {
-          json_object_object_foreach(jobj, key, val)
+          // Note(fairlight1337): The following line is excluded from tidy checks as the utilized macro expands to
+          // (according to tidy) unclean code which cannot be changed at this time.
+          json_object_object_foreach(jobj, key, val) // NOLINT
           {
             std::shared_ptr<RawDatagram> rawChildDatagram = std::make_shared<RawDatagram>();
             ParseJsonObject(val, rawChildDatagram);
