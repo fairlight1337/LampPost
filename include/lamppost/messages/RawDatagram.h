@@ -12,6 +12,8 @@
 #include <flatbuffers/idl.h>
 #include <flatbuffers/util.h>
 
+#include <json.h>
+
 #include <lamppost/exceptions/KeyNotFoundException.h>
 #include <lamppost/exceptions/InvalidOperationException.h>
 #include <lamppost/exceptions/IndexOutOfBoundsException.h>

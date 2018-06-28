@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(UNIX OR APPLE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -g -O0 --coverage")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -g -O0 --coverage")
 endif(UNIX OR APPLE)
 
 add_definitions(-D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING)
@@ -22,10 +22,15 @@ add_subdirectory(3rdparty/googletest)
 set(FLATBUFFERS_BUILD_TESTS OFF CACHE BOOL "Enable the build of tests and samples." FORCE)
 add_subdirectory(3rdparty/flatbuffers)
 
+add_subdirectory(3rdparty/json-c)
+
+
 include_directories(
     include
     ${gtest_SOURCE_DIR}/include
-    3rdparty/flatbuffers/include)
+    3rdparty/flatbuffers/include
+    3rdparty/json-c
+    ${json-c_BINARY_DIR}/include)
 
 set(SRC
     src/lamppost/LampPost.cpp
@@ -60,7 +65,8 @@ add_library(${PROJECT_NAME}
     ${SRC})
 
 target_link_libraries(${PROJECT_NAME}
-    flatbuffers)
+    flatbuffers
+    json-c)
 
 if(WIN32 OR WIN64)
     target_link_libraries(${PROJECT_NAME}
