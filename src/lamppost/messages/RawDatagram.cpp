@@ -396,6 +396,22 @@ namespace lp
       return rawDatagram;
     }
 
+    std::shared_ptr<RawDatagram> RawDatagram::DeserializeFromJson(const std::string& json)
+    {
+      unsigned int position = 0;
+
+      return DeserializeFromJson(json, position, 0);
+    }
+
+    std::shared_ptr<RawDatagram> RawDatagram::DeserializeFromJson(const std::string& json, unsigned int& position, char endToken)
+    {
+      std::shared_ptr<RawDatagram> rawDatagram = std::make_shared<RawDatagram>();
+
+      // TODO(fairlight1337): Add deserialization from json string here.
+
+      return rawDatagram;
+    }
+
     bool RawDatagram::operator==(const RawDatagram& rhs) const
     {
       bool isEqual = false;

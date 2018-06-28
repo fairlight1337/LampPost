@@ -107,6 +107,11 @@ namespace lp
       {
         return Datagram(RawDatagram::Deserialize(structure));
       }
+
+      static Datagram DeserializeFromJson(const std::string json)
+      {
+        return Datagram(RawDatagram::DeserializeFromJson(json));
+      }
     };
   } // namespace messages
 } // namespace lp

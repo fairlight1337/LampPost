@@ -28,6 +28,11 @@ int main()
 
   // TODO(fairlight1337): Add configuration file references to 'configuration' here.
 
+  std::string json = "{\"this\": 5}";
+  lp::messages::Datagram deserJson = lp::messages::Datagram::DeserializeFromJson(json);
+  std::cout << "Should be: " << json << std::endl;
+  std::cout << "Is: " << deserJson << std::endl;
+
   lamppost = std::make_shared<lp::LampPost>(configuration);
 
   try

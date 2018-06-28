@@ -55,6 +55,8 @@ namespace lp
         mValue = std::make_shared<Data<T>>(value);
       }
 
+      static std::shared_ptr<RawDatagram> DeserializeFromJson(const std::string& json, unsigned int& position, char endToken);
+
     public:
       RawDatagram();
       RawDatagram(RawDatagramType rawDatagramType);
@@ -186,6 +188,7 @@ namespace lp
 
       flatbuffers::Offset<schemas::FBDatagram> SerializeToStructure(flatbuffers::FlatBufferBuilder& builder);
       static std::shared_ptr<RawDatagram> Deserialize(const schemas::FBDatagram* structure);
+      static std::shared_ptr<RawDatagram> DeserializeFromJson(const std::string& json);
 
       bool operator==(const RawDatagram& rhs) const;
       bool operator!=(const RawDatagram& rhs) const;
