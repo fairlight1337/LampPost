@@ -6,11 +6,13 @@ namespace lp
   namespace plugins
   {
     Link::Link(PluginConfiguration configuration)
-      : PluginInstance(configuration)
+      : PluginInstance(configuration), mZmqContext(nullptr)
     {
     }
 
     void Link::Initialize() {
+      mZmqContext = zmq_ctx_new();
+
       mSysInfoSubscriber = GetSubscriber("/sysinfo");
       mSysInfoSubscriber->SetMessageCallback(
         [this](messages::Message message)
@@ -50,6 +52,14 @@ namespace lp
     {
       DeleteSubscriber(mSysInfoSubscriber);
       mSysInfoSubscriber = nullptr;
+
+      if(mZmqContext != nullptr)
+      {
+        zmq_ctx_shutdown(mZmqContext);
+        zmq_ctx_term(mZmqContext);
+
+        mZmqContext = nullptr;
+      }
     }
   } // namespace plugins
 } // namespace lp

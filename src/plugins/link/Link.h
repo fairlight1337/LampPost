@@ -22,6 +22,8 @@ namespace lp
       std::shared_ptr<bus::Subscriber> mSysInfoSubscriber;
       std::shared_ptr<bus::ActionConsumer> mSysInfoActionConsumer;
 
+      void* mZmqContext;
+
     public:
       Link(PluginConfiguration configuration);
       ~Link() override = default;

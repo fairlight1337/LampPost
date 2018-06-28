@@ -66,8 +66,7 @@ add_library(${PROJECT_NAME}
     ${SRC})
 
 target_link_libraries(${PROJECT_NAME}
-    flatbuffers
-    ${ZeroMQ_LIBRARY})
+    flatbuffers)
 
 if(WIN32 OR WIN64)
     target_link_libraries(${PROJECT_NAME}
@@ -131,11 +130,19 @@ macro(add_lp_plugin pluginname)
     target_link_libraries(plugin_${pluginname} ${PROJECT_NAME})
 endmacro()
 
+macro(link_lp_plugin pluginname)
+  set(libraries ${ARGN})
+  target_link_libraries(plugin_${pluginname} ${libraries})
+endmacro()
+
 add_lp_plugin(sysinfo
     src/plugins/sysinfo/SysInfo.cpp)
 
 add_lp_plugin(link
     src/plugins/link/Link.cpp)
+
+link_lp_plugin(link
+    libzmq)
 
 
 ### Tests
