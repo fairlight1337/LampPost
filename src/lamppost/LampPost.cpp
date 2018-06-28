@@ -57,6 +57,38 @@ namespace lp
     sysInfoInstance->Start();
   }
 
+  void LampPost::ReadConfigurationFile(std::string file)
+  {
+    std::ifstream fileStream(file);
+    std::stringstream sts;
+    sts << fileStream.rdbuf();
+
+    messages::Datagram config = messages::Datagram::DeserializeFromJson(sts.str());
+
+    if(config.KeyExists("plugins"))
+    {
+      int pluginsCount = config["plugins"].GetCount();
+
+      if(pluginsCount > 0)
+      {
+        mLog.Info("Instantiating plugins:");
+      }
+
+      for(int i = 0; i < pluginsCount; ++i)
+      {
+        if(config["plugins"][i].KeyExists("type"))
+        {
+          std::string pluginType = config["plugins"][i]["type"];
+
+          PluginConfiguration pluginConfiguration;
+          pluginConfiguration.mCustomConfiguration = config["plugins"][i]["configuration"];
+
+          InstantiatePlugin(pluginType, pluginConfiguration);
+        }
+      }
+    }
+  }
+
   void LampPost::Start()
   {
     mRunState = RunState::Running;
@@ -64,11 +96,21 @@ namespace lp
     mLog.Info("Starting instance.");
     Setup();
 
-    mLog.Info("Instantiating plugins");
-    PluginConfiguration pluginConfiguration;
+    if(mConfiguration.mConfigurationFiles.size() > 0)
+    {
+      mLog.Info("Reading configuration files:");
 
-    InstantiatePlugin("SysInfo", pluginConfiguration);
-    InstantiatePlugin("Link", pluginConfiguration);
+      for(const std::string& configurationFile : mConfiguration.mConfigurationFiles)
+      {
+        mLog.Info(" * " + configurationFile);
+
+        ReadConfigurationFile(configurationFile);
+      }
+    }
+    else
+    {
+      mLog.Info("No configuration files set.");
+    }
 
     mLog.Info("Starting root bus.");
     mRootBus->Start();

@@ -33,6 +33,8 @@ namespace lp
         return mRawDatagram->Get<DataType>();
       }
 
+      bool KeyExists(std::string key);
+
       Datagram operator[](unsigned int index)
       {
         return Datagram((*mRawDatagram)[index]);

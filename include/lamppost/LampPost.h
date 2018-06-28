@@ -31,6 +31,8 @@ namespace lp
 
     void InstantiatePlugin(std::string identifier, PluginConfiguration pluginConfiguration);
 
+    void ReadConfigurationFile(std::string file);
+
   public:
     LampPost(LampPostConfiguration configuration);
     virtual ~LampPost();

@@ -81,6 +81,7 @@ namespace lp
       std::shared_ptr<RawDatagram>& operator[](std::string key);
       std::shared_ptr<RawDatagram>& Get(const std::string& key);
       void Remove(std::string key);
+      bool KeyExists(std::string key);
 
       // List
       std::shared_ptr<RawDatagram>& operator[](unsigned int index);

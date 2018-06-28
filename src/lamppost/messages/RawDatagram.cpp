@@ -84,6 +84,11 @@ namespace lp
       return Get(key);
     }
 
+    bool RawDatagram::KeyExists(std::string key)
+    {
+      return mDictionary.find(key) != mDictionary.end();
+    }
+
     std::shared_ptr<RawDatagram>& RawDatagram::Get(const std::string& key)
     {
       if(mType != RawDatagramType::Dictionary)
