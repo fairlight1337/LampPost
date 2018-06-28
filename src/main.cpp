@@ -30,7 +30,7 @@ int main(int argc, char** argv)
   // Right now, just the first argument to the program's start is used if present.
   if(argc > 1)
   {
-    configuration.mConfigurationFiles.push_back(argv[1]);
+    configuration.mConfigurationFiles.emplace_back(argv[1]);
   }
 
   lamppost = std::make_shared<lp::LampPost>(configuration);

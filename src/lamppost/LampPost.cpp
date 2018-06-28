@@ -96,7 +96,7 @@ namespace lp
     mLog.Info("Starting instance.");
     Setup();
 
-    if(mConfiguration.mConfigurationFiles.size() > 0)
+    if(!mConfiguration.mConfigurationFiles.empty())
     {
       mLog.Info("Reading configuration files:");
 
