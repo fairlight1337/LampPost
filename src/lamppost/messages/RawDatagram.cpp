@@ -398,18 +398,77 @@ namespace lp
 
     std::shared_ptr<RawDatagram> RawDatagram::DeserializeFromJson(const std::string& json)
     {
-      unsigned int position = 0;
-
-      return DeserializeFromJson(json, position, 0);
-    }
-
-    std::shared_ptr<RawDatagram> RawDatagram::DeserializeFromJson(const std::string& json, unsigned int& position, char endToken)
-    {
       std::shared_ptr<RawDatagram> rawDatagram = std::make_shared<RawDatagram>();
 
-      // TODO(fairlight1337): Add deserialization from json string here.
+      struct json_tokener* tok;
+      struct json_object* jobj;
+      enum json_tokener_error error;
+
+      tok = json_tokener_new_ex(1000);
+
+      jobj = json_tokener_parse_ex(tok, json.c_str(), json.length());
+      error = tok->err;
+
+      if(error == json_tokener_success)
+      {
+        ParseJsonObject(jobj, rawDatagram);
+      }
 
       return rawDatagram;
+    }
+
+    void RawDatagram::ParseJsonObject(json_object* jobj, std::shared_ptr<RawDatagram> root)
+    {
+      switch(json_object_get_type(jobj)) {
+        case json_type_boolean:
+        {
+          *root = static_cast<bool>(json_object_get_boolean(jobj));
+        } break;
+
+        case json_type_double:
+        {
+          *root = json_object_get_double(jobj);
+        } break;
+
+        case json_type_int:
+        {
+          *root = static_cast<int>(json_object_get_int(jobj));
+        } break;
+
+        case json_type_string:
+        {
+          *root = std::string(json_object_get_string(jobj));
+        } break;
+
+        case json_type_array:
+        {
+          json_object* jarray = jobj, *jvalue;
+
+          for(size_t i = 0; i < json_object_array_length(jarray); i++)
+          {
+            jvalue = json_object_array_get_idx(jarray, i);
+            std::shared_ptr<RawDatagram> rawChildDatagram = std::make_shared<RawDatagram>();
+            ParseJsonObject(jvalue, rawChildDatagram);
+
+            root->Add(rawChildDatagram);
+          }
+        } break;
+
+        case json_type_object:
+        {
+          json_object_object_foreach(jobj, key, val)
+          {
+            std::shared_ptr<RawDatagram> rawChildDatagram = std::make_shared<RawDatagram>();
+            ParseJsonObject(val, rawChildDatagram);
+
+            root->operator[](key) = rawChildDatagram;
+          }
+        } break;
+
+        case json_type_null:
+        {
+        } break;
+      }
     }
 
     bool RawDatagram::operator==(const RawDatagram& rhs) const

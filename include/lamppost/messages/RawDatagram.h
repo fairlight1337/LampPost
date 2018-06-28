@@ -57,7 +57,7 @@ namespace lp
         mValue = std::make_shared<Data<T>>(value);
       }
 
-      static std::shared_ptr<RawDatagram> DeserializeFromJson(const std::string& json, unsigned int& position, char endToken);
+      static void ParseJsonObject(json_object* jobj, std::shared_ptr<RawDatagram> root);
 
     public:
       RawDatagram();
