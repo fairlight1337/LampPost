@@ -23,6 +23,7 @@ namespace lp
       std::shared_ptr<bus::ActionConsumer> mSysInfoActionConsumer;
 
       void* mZmqContext;
+      void* mZmqServerSocket;
 
     public:
       Link(PluginConfiguration configuration);

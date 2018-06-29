@@ -6,12 +6,48 @@ namespace lp
   namespace plugins
   {
     Link::Link(PluginConfiguration configuration)
-      : PluginInstance(std::move(configuration)), mZmqContext(nullptr)
+      : PluginInstance(std::move(configuration)),
+        mZmqContext(nullptr),
+        mZmqServerSocket(nullptr)
     {
     }
 
     void Link::Initialize() {
       mZmqContext = zmq_ctx_new();
+
+      bool serverRoleIsEnabled = false;
+      int serverPort;
+      std::string serverInterface = "*";
+
+      std::cout << GetCustomConfiguration() << std::endl;
+
+      if(GetCustomConfiguration().KeyExists("server-role"))
+      {
+        if(GetCustomConfiguration()["server-role"].KeyExists("enabled"))
+        {
+          serverRoleIsEnabled = GetCustomConfiguration()["server-role"]["enabled"].Get<bool>();
+        }
+
+        if(GetCustomConfiguration()["sever-role"].KeyExists("port"))
+        {
+          serverPort = GetCustomConfiguration()["server-role"]["port"].Get<int>();
+        }
+
+        if(GetCustomConfiguration()["sever-role"].KeyExists("interface"))
+        {
+          serverInterface = GetCustomConfiguration()["server-role"]["interface"].Get<std::string>();
+        }
+      }
+
+      if(serverRoleIsEnabled)
+      {
+        //mZmqServerSocket = zmq_socket(mZmqContext, ZMQ_SERVER);
+
+        std::string endpointAddress = "tcp://" + serverInterface + ":" + std::to_string(serverPort);
+        mLog.Info("Enabling server role on endpoint: " + endpointAddress);
+
+        //zmq_bind(mZmqServerSocket, endpointAddress.c_str());
+      }
 
       mSysInfoSubscriber = GetSubscriber("/sysinfo");
       mSysInfoSubscriber->SetMessageCallback(
