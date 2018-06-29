@@ -24,6 +24,7 @@ add_subdirectory(3rdparty/flatbuffers)
 
 set(BUILD_TESTS OFF CACHE BOOL "Whether or not to build the tests" FORCE)
 set(ZMQ_BUILD_TESTS OFF CACHE BOOL "Build the tests for ZeroMQ" FORCE)
+set(ENABLE_DRAFTS ON CACHE BOOL "Enable Draft builds" FORCE)
 add_subdirectory(3rdparty/libzmq)
 
 add_subdirectory(3rdparty/json-c)
