@@ -17,6 +17,11 @@ namespace lp
     mConfiguration.mBus = nullptr;
   }
 
+  messages::Datagram& PluginInstance::GetCustomConfiguration()
+  {
+    return mConfiguration.mCustomConfiguration;
+  }
+
   void PluginInstance::DeleteSubscriber(std::shared_ptr<bus::Subscriber> subscriber)
   {
     mConfiguration.mBus->DeleteSubscriber(subscriber);

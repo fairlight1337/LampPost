@@ -61,6 +61,8 @@ namespace lp
       std::this_thread::sleep_for<Rep, Period>(duration);
     };
 
+    messages::Datagram& GetCustomConfiguration();
+
   public:
     PluginInstance(PluginConfiguration configuration);
     virtual ~PluginInstance();
