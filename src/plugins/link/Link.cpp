@@ -8,7 +8,10 @@ namespace lp
     Link::Link(PluginConfiguration configuration)
       : PluginInstance(std::move(configuration)),
         mZmqContext(nullptr),
-        mZmqServerSocket(nullptr)
+        mZmqServerPubSocket(nullptr),
+        mZmqServerSubSocket(nullptr),
+        mZmqClientPubSocket(nullptr),
+        mZmqClientSubSocket(nullptr)
     {
     }
 
@@ -16,36 +19,46 @@ namespace lp
       mLog.Info("Initializing ZMQ context.");
       mZmqContext = zmq_ctx_new();
 
-      bool serverRoleIsEnabled = false;
-      int serverPort = 6968;
-      std::string serverInterface = "*";
-
-      if(GetCustomConfiguration().KeyExists("server-role"))
-      {
-        if(GetCustomConfiguration()["server-role"].KeyExists("enabled"))
-        {
-          serverRoleIsEnabled = GetCustomConfiguration()["server-role"]["enabled"].Get<bool>();
-        }
-
-        if(GetCustomConfiguration()["server-role"].KeyExists("port"))
-        {
-          serverPort = GetCustomConfiguration()["server-role"]["port"].Get<int>();
-        }
-
-        if(GetCustomConfiguration()["server-role"].KeyExists("interface"))
-        {
-          serverInterface = GetCustomConfiguration()["server-role"]["interface"].Get<std::string>();
-        }
-      }
+      bool serverRoleIsEnabled = GetCustomConfiguration().Get<bool>("server-role/enabled", false);
+      int serverPortPub = GetCustomConfiguration().Get<int>("server-role/port-pub", 6967);
+      int serverPortSub = GetCustomConfiguration().Get<int>("server-role/port-sub", 6968);
+      std::string serverInterface = GetCustomConfiguration().Get<std::string>("server-role/interface", "*");
 
       if(serverRoleIsEnabled)
       {
-        mZmqServerSocket = zmq_socket(mZmqContext, ZMQ_SERVER);
+        std::string endpointAddressPub = "tcp://" + serverInterface + ":" + std::to_string(serverPortPub);
+        std::string endpointAddressSub = "tcp://" + serverInterface + ":" + std::to_string(serverPortSub);
 
-        std::string endpointAddress = "tcp://" + serverInterface + ":" + std::to_string(serverPort);
-        mLog.Info("Enabling ZMQ server role on endpoint: " + endpointAddress);
+        mLog.Info("Enabling ZMQ server role:");
+        mLog.Info("Publish: " + endpointAddressPub, 1);
+        mLog.Info("Subscribe: " + endpointAddressSub, 1);
 
-        zmq_bind(mZmqServerSocket, endpointAddress.c_str());
+        mZmqServerPubSocket = zmq_socket(mZmqContext, ZMQ_PUB);
+        zmq_bind(mZmqServerPubSocket, endpointAddressPub.c_str());
+
+        mZmqServerSubSocket = zmq_socket(mZmqContext, ZMQ_SUB);
+        zmq_bind(mZmqServerSubSocket, endpointAddressSub.c_str());
+      }
+
+      bool clientRoleIsEnabled = GetCustomConfiguration().Get<bool>("client-role/enabled", false);
+      int clientPortPub = GetCustomConfiguration().Get<int>("client-role/port-pub", 6967);
+      int clientPortSub = GetCustomConfiguration().Get<int>("client-role/port-sub", 6968);
+      std::string clientServerHost = GetCustomConfiguration().Get<std::string>("client-role/server-host", "localhost");
+
+      if(clientRoleIsEnabled)
+      {
+        std::string endpointAddressPub = "tcp://" + clientServerHost + ":" + std::to_string(clientPortPub);
+        std::string endpointAddressSub = "tcp://" + clientServerHost + ":" + std::to_string(clientPortSub);
+
+        mLog.Info("Enabling ZMQ client role:");
+        mLog.Info("Publish: " + endpointAddressPub, 1);
+        mLog.Info("Subscribe: " + endpointAddressSub, 1);
+
+        mZmqClientPubSocket = zmq_socket(mZmqContext, ZMQ_PUB);
+        zmq_connect(mZmqClientPubSocket, endpointAddressPub.c_str());
+
+        mZmqClientSubSocket = zmq_socket(mZmqContext, ZMQ_SUB);
+        zmq_connect(mZmqClientSubSocket, endpointAddressSub.c_str());
       }
 
       mSysInfoSubscriber = GetSubscriber("/sysinfo");
@@ -90,11 +103,28 @@ namespace lp
 
       if(mZmqContext != nullptr)
       {
-        if(mZmqServerSocket != nullptr)
+        if(mZmqServerPubSocket != nullptr)
         {
-          mLog.Info("Stopping ZMQ server.");
-          zmq_close(mZmqServerSocket);
-          mZmqServerSocket = nullptr;
+          zmq_close(mZmqServerPubSocket);
+          mZmqServerPubSocket = nullptr;
+        }
+
+        if(mZmqServerSubSocket != nullptr)
+        {
+          zmq_close(mZmqServerSubSocket);
+          mZmqServerSubSocket = nullptr;
+        }
+
+        if(mZmqClientPubSocket != nullptr)
+        {
+          zmq_close(mZmqClientPubSocket);
+          mZmqClientPubSocket = nullptr;
+        }
+
+        if(mZmqClientSubSocket != nullptr)
+        {
+          zmq_close(mZmqClientSubSocket);
+          mZmqClientSubSocket = nullptr;
         }
 
         mLog.Info("Shutting down ZMQ.");
