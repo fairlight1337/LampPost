@@ -13,13 +13,12 @@ namespace lp
     }
 
     void Link::Initialize() {
+      mLog.Info("Initializing ZMQ context.");
       mZmqContext = zmq_ctx_new();
 
       bool serverRoleIsEnabled = false;
-      int serverPort;
+      int serverPort = 6968;
       std::string serverInterface = "*";
-
-      std::cout << GetCustomConfiguration() << std::endl;
 
       if(GetCustomConfiguration().KeyExists("server-role"))
       {
@@ -28,12 +27,12 @@ namespace lp
           serverRoleIsEnabled = GetCustomConfiguration()["server-role"]["enabled"].Get<bool>();
         }
 
-        if(GetCustomConfiguration()["sever-role"].KeyExists("port"))
+        if(GetCustomConfiguration()["server-role"].KeyExists("port"))
         {
           serverPort = GetCustomConfiguration()["server-role"]["port"].Get<int>();
         }
 
-        if(GetCustomConfiguration()["sever-role"].KeyExists("interface"))
+        if(GetCustomConfiguration()["server-role"].KeyExists("interface"))
         {
           serverInterface = GetCustomConfiguration()["server-role"]["interface"].Get<std::string>();
         }
@@ -41,12 +40,12 @@ namespace lp
 
       if(serverRoleIsEnabled)
       {
-        //mZmqServerSocket = zmq_socket(mZmqContext, ZMQ_SERVER);
+        mZmqServerSocket = zmq_socket(mZmqContext, ZMQ_SERVER);
 
         std::string endpointAddress = "tcp://" + serverInterface + ":" + std::to_string(serverPort);
-        mLog.Info("Enabling server role on endpoint: " + endpointAddress);
+        mLog.Info("Enabling ZMQ server role on endpoint: " + endpointAddress);
 
-        //zmq_bind(mZmqServerSocket, endpointAddress.c_str());
+        zmq_bind(mZmqServerSocket, endpointAddress.c_str());
       }
 
       mSysInfoSubscriber = GetSubscriber("/sysinfo");
@@ -91,7 +90,17 @@ namespace lp
 
       if(mZmqContext != nullptr)
       {
+        if(mZmqServerSocket != nullptr)
+        {
+          mLog.Info("Stopping ZMQ server.");
+          zmq_close(mZmqServerSocket);
+          mZmqServerSocket = nullptr;
+        }
+
+        mLog.Info("Shutting down ZMQ.");
         zmq_ctx_shutdown(mZmqContext);
+
+        mLog.Info("Terminating ZMQ context.");
         zmq_ctx_term(mZmqContext);
 
         mZmqContext = nullptr;
