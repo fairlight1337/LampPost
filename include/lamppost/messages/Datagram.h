@@ -93,6 +93,12 @@ namespace lp
 
       bool IsEmpty();
 
+      template<typename DataType>
+      DataType Get(std::string path, DataType defaultValue = DataType())
+      {
+        return mRawDatagram->Get<DataType>(path, defaultValue);
+      }
+
       friend std::ostream& operator<<(std::ostream& outputStream, const Datagram& datagram)
       {
         outputStream << *(datagram.mRawDatagram);

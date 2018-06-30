@@ -189,6 +189,57 @@ namespace lp
         return outputStream;
       }
 
+      template<typename DataType>
+      DataType Get(std::string path, DataType defaultValue = DataType())
+      {
+        DataType returnValue = defaultValue;
+
+        if(path.empty())
+        {
+          // TODO(fairlight1337): Check if the path contains list specific tokens.
+
+          if(IsOfValueType<DataType>())
+          {
+            returnValue = Get<DataType>();
+          }
+        }
+        else
+        {
+          std::string nextToken;
+          std::string rest;
+
+          size_t delimPos = path.find_first_of('/');
+          if(delimPos == std::string::npos)
+          {
+            nextToken = path;
+            rest = "";
+          }
+          else
+          {
+            nextToken = path.substr(0, delimPos);
+
+            if(path.length() > delimPos + 1)
+            {
+              rest = path.substr(delimPos + 1);
+            }
+            else
+            {
+              rest = "";
+            }
+          }
+
+          if(GetType() == RawDatagramType::Dictionary)
+          {
+            if(KeyExists(nextToken))
+            {
+              return mDictionary[nextToken]->Get<DataType>(rest, defaultValue);
+            }
+          }
+        }
+
+        return returnValue;
+      }
+
       flatbuffers::Offset<schemas::FBDatagram> SerializeToStructure(flatbuffers::FlatBufferBuilder& builder);
       static std::shared_ptr<RawDatagram> Deserialize(const schemas::FBDatagram* structure);
       static std::shared_ptr<RawDatagram> DeserializeFromJson(const std::string& json);

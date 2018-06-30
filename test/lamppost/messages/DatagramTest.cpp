@@ -58,3 +58,28 @@ TEST(Datagram, WhenValueIsSetInDictionaryViaOperatorAndADifferentTypeIsRetrieved
 }
 
 #pragma endregion // Dictionary subscript operator
+
+#pragma region Get
+
+TEST(Datagram, WhenValueIsRequestedThroughPathAndThePathExists_ThenTheCorrectValueIsReturned)
+{
+  // Arrange.
+  lp::messages::Datagram datagram;
+  datagram["path_element_1"] = 25;
+  datagram["path_element_2"]["path_element_3"] = std::string("test");
+
+  // Act, Assert.
+  EXPECT_EQ(25, datagram.Get<int>("path_element_1"));
+  EXPECT_EQ(std::string("test"), datagram.Get<std::string>("path_element_2/path_element_3"));
+}
+
+TEST(Datagram, WhenValueIsRequestedThroughPathAndThePathDoesNotExist_ThenTheDefaultValueIsReturned)
+{
+  // Arrange.
+  lp::messages::Datagram datagram;
+
+  // Act, Assert.
+  EXPECT_EQ(std::string("default_value"), datagram.Get<std::string>("path_element_1/path_element_2", "default_value"));
+}
+
+#pragma endregion // Get
