@@ -7,6 +7,7 @@
 #include <memory>
 #include <string>
 
+#include <lamppost/exceptions/OperationFailedException.h>
 #include <lamppost/settings/SettingsManager.h>
 #include <lamppost/LampPostConfiguration.h>
 #include <lamppost/plugin/PluginManager.h>
