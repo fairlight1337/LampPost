@@ -48,13 +48,20 @@ namespace lp
   void LampPost::InstantiatePlugin(std::string identifier, PluginConfiguration pluginConfiguration)
   {
     mLog.Info("Plugin: " + identifier, 1);
-    std::shared_ptr<PluginInstance> sysInfoInstance = mPluginManager.InstantiateTemplate(identifier, pluginConfiguration);
+    std::shared_ptr<PluginInstance> instance = mPluginManager.InstantiateTemplate(identifier, pluginConfiguration);
 
-    mLog.Info("Initialize", 2);
-    sysInfoInstance->Initialize();
+    if(instance != nullptr)
+    {
+      mLog.Info("Initialize", 2);
+      instance->Initialize();
 
-    mLog.Info("Start", 2);
-    sysInfoInstance->Start();
+      mLog.Info("Start", 2);
+      instance->Start();
+    }
+    else
+    {
+      throw exceptions::OperationFailedException("Failed to instantiate plugin: '" + identifier + "'");
+    }
   }
 
   void LampPost::ReadConfigurationFile(std::string file)
@@ -83,7 +90,19 @@ namespace lp
           PluginConfiguration pluginConfiguration;
           pluginConfiguration.mCustomConfiguration = config["plugins"][i]["configuration"];
 
-          InstantiatePlugin(pluginType, pluginConfiguration);
+          try
+          {
+            InstantiatePlugin(pluginType, pluginConfiguration);
+          }
+          catch(exceptions::OperationFailedException& operationFailedException)
+          {
+            std::stringstream configSts;
+            configSts << pluginConfiguration.mCustomConfiguration;
+
+            mLog.Error("Error while processing configuration file:");
+            mLog.Error(std::string(operationFailedException.what()), 1);
+            mLog.Error("Plugin configuration: " + configSts.str(), 1);
+          }
         }
       }
     }
