@@ -10,7 +10,7 @@ if(UNIX OR APPLE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -g -O0 --coverage")
 endif(UNIX OR APPLE)
 
-add_definitions(-D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING)
+add_definitions(-D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING -DZMQ_BUILD_DRAFT_API)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
@@ -149,7 +149,7 @@ add_lp_plugin(link
     src/plugins/link/Link.cpp)
 
 link_lp_plugin(link
-    libzmq)
+    libzmq-static)
 
 
 ### Tests
