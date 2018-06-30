@@ -52,6 +52,7 @@ set(SRC
     src/lamppost/exceptions/KeyNotFoundException.cpp
     src/lamppost/exceptions/ArgumentNullException.cpp
     src/lamppost/exceptions/IndexOutOfBoundsException.cpp
+    src/lamppost/exceptions/OperationFailedException.cpp
     src/lamppost/messages/Data.cpp
     src/lamppost/exceptions/Exception.cpp
     src/lamppost/exceptions/InvalidOperationException.cpp
