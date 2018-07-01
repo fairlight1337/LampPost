@@ -75,7 +75,7 @@ namespace lp
     {
       while(mShouldRun)
       {
-        messages::Datagram request(std::string("Test request"));
+        /*messages::Datagram request(std::string("Test request"));
 
         messages::Datagram response = mSysInfoActionConsumer->Request(request);
 
@@ -90,10 +90,67 @@ namespace lp
         else
         {
           mLog.Error("Failed to receive a response.");
+        }*/
+
+        messages::Message receivedMessage;
+
+        if(ReceiveMessage(mZmqServerSubSocket, receivedMessage))
+        {
+          // TODO(fairlight1337): Properly handle logic for receiving messages as a server here.
         }
 
-        Sleep(std::chrono::seconds(1));
+        if(ReceiveMessage(mZmqClientSubSocket, receivedMessage))
+        {
+          // TODO(fairlight1337): Properly handle logic for receiving messages as a client here.
+        }
+
+        Sleep(std::chrono::milliseconds(1));
       }
+    }
+
+    bool Link::ReceiveMessage(void* zmqSocket, messages::Message& receivedMessage)
+    {
+      bool successfullyReceivedMessage = false;
+      std::shared_ptr<data::RawBytes> bytes = std::make_shared<data::RawBytes>();
+
+      if(zmqSocket != nullptr)
+      {
+        zmq_msg_t messagePart;
+        int64_t more = 0;
+        size_t sizeOfMore = sizeof(more);
+
+        do
+        {
+          if(zmq_msg_init(&messagePart) == 0)
+          {
+            int receiveResult = zmq_recvmsg(zmqSocket, &messagePart, ZMQ_DONTWAIT);
+
+            if(receiveResult == 0)
+            {
+              size_t messageSize = zmq_msg_size(&messagePart);
+              void* messageData = zmq_msg_data(&messagePart);
+
+              bytes->Append(messageData, messageSize);
+
+              zmq_getsockopt(zmqSocket, ZMQ_RCVMORE, &more, &sizeOfMore);
+            }
+            else
+            {
+              more = 0;
+            }
+
+            zmq_msg_close(&messagePart);
+          }
+        } while(more > 0);
+
+        if(bytes->GetSize() > 0)
+        {
+          receivedMessage = messages::Message::Deserialize(bytes);
+          successfullyReceivedMessage = true;
+        }
+      }
+
+      return successfullyReceivedMessage;
     }
 
     void Link::Deinitialize()

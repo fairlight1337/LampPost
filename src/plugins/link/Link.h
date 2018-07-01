@@ -28,6 +28,8 @@ namespace lp
       void* mZmqClientPubSocket;
       void* mZmqClientSubSocket;
 
+      bool ReceiveMessage(void* zmqSocket, messages::Message& receivedMessage);
+
     public:
       Link(PluginConfiguration configuration);
       ~Link() override = default;
