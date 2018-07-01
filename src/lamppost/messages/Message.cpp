@@ -3,6 +3,10 @@
 
 namespace lp {
   namespace messages {
+    Message::Message()
+    {
+    }
+
     Message::Message(std::string sender, std::string topic, Datagram datagram)
       : mSender(std::move(sender)),
         mTopic(std::move(topic)),
@@ -47,7 +51,6 @@ namespace lp {
       return messages::Message(
         deserializedMessage->sender()->str(),
         deserializedMessage->topic()->str(),
-        Datagram::Deserialize(deserializedMessage->datagram()));
         Datagram::DeserializeFromStructure(deserializedMessage->datagram()));
     }
 

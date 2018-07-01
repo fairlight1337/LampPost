@@ -25,6 +25,7 @@ namespace lp
       Datagram mDatagram;
 
     public:
+      Message();
       Message(std::string sender, std::string topic, Datagram datagram);
       ~Message() = default;
 
