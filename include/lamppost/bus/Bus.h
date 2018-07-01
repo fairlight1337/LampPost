@@ -179,6 +179,8 @@ namespace lp
       void Stop();
 
       void Detach();
+
+      void Publish(messages::Message message);
     };
   } // namespace bus
 } // namespace lp

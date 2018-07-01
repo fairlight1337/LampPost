@@ -93,31 +93,37 @@ namespace lp
 
     void Bus::Publish(std::string topic, messages::Datagram datagram)
     {
+      Publish(messages::Message(GetIdentifier(), std::move(topic), datagram));
+    }
+
+    void Bus::Publish(messages::Message message)
+    {
       if(mPublishMessageFunction != nullptr)
       {
-        mPublishMessageFunction(messages::Message(GetIdentifier(), topic, datagram));
+        mPublishMessageFunction(message);
       }
     }
 
     void Bus::DeleteSubscriber(std::shared_ptr<Subscriber> subscriber)
     {
-      DeleteManagedResource(mSubscribersMutex, mSubscribers, subscriber);
+      std::lock_guard<std::mutex> lock(mSubscribersMutex);
+      DeleteManagedResource(mSubscribersMutex, mSubscribers, std::move(subscriber));
     }
 
     void Bus::DeletePublisher(std::shared_ptr<Publisher> publisher)
     {
-      DeleteManagedResource(mPublishersMutex, mPublishers, publisher);
       std::lock_guard<std::mutex> lock(mPublishersMutex);
+      DeleteManagedResource(mPublishersMutex, mPublishers, std::move(publisher));
     }
 
     bool Bus::ContainsSubscriber(std::shared_ptr<bus::Subscriber> subscriber)
     {
-      return ContainsManagedResource(mSubscribersMutex, mSubscribers, subscriber);
+      return ContainsManagedResource(mSubscribersMutex, mSubscribers, std::move(subscriber));
     }
 
     bool Bus::ContainsPublisher(std::shared_ptr<bus::Publisher> publisher)
     {
-      return ContainsManagedResource(mPublishersMutex, mPublishers, publisher);
+      return ContainsManagedResource(mPublishersMutex, mPublishers, std::move(publisher));
     }
 
     void Bus::Start()
