@@ -18,11 +18,14 @@ namespace lp
       std::size_t mSize;
 
     public:
+      RawBytes();
       RawBytes(void* content, std::size_t size);
       ~RawBytes();
 
       const void* GetContent();
       std::size_t GetSize();
+
+      void Append(const void* data, std::size_t size);
     };
   } // namespace data
 } // namespace lp
