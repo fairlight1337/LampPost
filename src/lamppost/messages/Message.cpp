@@ -3,10 +3,6 @@
 
 namespace lp {
   namespace messages {
-    Message::Message()
-    {
-    }
-
     Message::Message(std::string sender, std::string topic, Datagram datagram)
       : mSender(std::move(sender)),
         mTopic(std::move(topic)),

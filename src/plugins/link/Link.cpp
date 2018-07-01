@@ -115,7 +115,7 @@ namespace lp
 
       if(zmqSocket != nullptr)
       {
-        zmq_msg_t messagePart;
+        zmq_msg_t messagePart = zmq_msg_t();
         int64_t more = 0;
         size_t sizeOfMore = sizeof(more);
 
