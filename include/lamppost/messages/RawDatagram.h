@@ -241,7 +241,7 @@ namespace lp
       }
 
       flatbuffers::Offset<schemas::FBDatagram> SerializeToStructure(flatbuffers::FlatBufferBuilder& builder);
-      static std::shared_ptr<RawDatagram> Deserialize(const schemas::FBDatagram* structure);
+      static std::shared_ptr<RawDatagram> DeserializeFromStructure(const schemas::FBDatagram* structure);
       static std::shared_ptr<RawDatagram> DeserializeFromJson(const std::string& json);
 
       bool operator==(const RawDatagram& rhs) const;

@@ -48,6 +48,7 @@ namespace lp {
         deserializedMessage->sender()->str(),
         deserializedMessage->topic()->str(),
         Datagram::Deserialize(deserializedMessage->datagram()));
+        Datagram::DeserializeFromStructure(deserializedMessage->datagram()));
     }
 
     bool Message::operator==(const Message& rhs) const

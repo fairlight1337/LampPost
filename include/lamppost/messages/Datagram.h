@@ -111,9 +111,9 @@ namespace lp
         return mRawDatagram->SerializeToStructure(builder);
       }
 
-      static Datagram Deserialize(const schemas::FBDatagram* structure)
+      static Datagram DeserializeFromStructure(const schemas::FBDatagram* structure)
       {
-        return Datagram(RawDatagram::Deserialize(structure));
+        return Datagram(RawDatagram::DeserializeFromStructure(structure));
       }
 
       static Datagram DeserializeFromJson(const std::string json)

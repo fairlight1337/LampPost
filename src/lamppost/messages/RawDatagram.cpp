@@ -345,7 +345,7 @@ namespace lp
         dictionaryValuesContent);
     }
 
-    std::shared_ptr<RawDatagram> RawDatagram::Deserialize(const schemas::FBDatagram* structure)
+    std::shared_ptr<RawDatagram> RawDatagram::DeserializeFromStructure(const schemas::FBDatagram* structure)
     {
       std::shared_ptr<RawDatagram> rawDatagram = std::make_shared<RawDatagram>();
 
@@ -379,7 +379,7 @@ namespace lp
 
           for(unsigned int i = 0; i < length; ++i)
           {
-            rawDatagram->Add(RawDatagram::Deserialize(structure->list_content()->operator[](i)));
+            rawDatagram->Add(RawDatagram::DeserializeFromStructure(structure->list_content()->operator[](i)));
           }
         } break;
 
@@ -389,7 +389,7 @@ namespace lp
 
           for(unsigned int i = 0; i < length; ++i)
           {
-            rawDatagram->operator[](structure->dictionary_keys()->operator[](i)->str()) = RawDatagram::Deserialize(structure->dictionary_contents()->operator[](i));
+            rawDatagram->operator[](structure->dictionary_keys()->operator[](i)->str()) = RawDatagram::DeserializeFromStructure(structure->dictionary_contents()->operator[](i));
           }
         } break;
 
