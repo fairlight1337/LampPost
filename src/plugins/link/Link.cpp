@@ -96,12 +96,17 @@ namespace lp
 
         if(ReceiveMessage(mZmqServerSubSocket, receivedMessage))
         {
-          // TODO(fairlight1337): Properly handle logic for receiving messages as a server here.
+          // TODO(fairlight1337): Properly handle logic for receiving messages as a server here. Right now,
+          // the messages inserted back into the bus here isn't marked as received through a specific link
+          // and will most probably bounce back over the same connection it came in when transmitted to this
+          // Link plugin instance again. This needs to be taken care of.
+          GetBus()->Publish(receivedMessage);
         }
 
         if(ReceiveMessage(mZmqClientSubSocket, receivedMessage))
         {
-          // TODO(fairlight1337): Properly handle logic for receiving messages as a client here.
+          // TODO(fairlight1337): Properly handle logic for receiving messages as a client here. See comment above.
+          GetBus()->Publish(receivedMessage);
         }
 
         Sleep(std::chrono::milliseconds(1));
