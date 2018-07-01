@@ -52,4 +52,9 @@ namespace lp
       }
     }
   }
+
+  std::shared_ptr<bus::Bus> PluginInstance::GetBus()
+  {
+    return mConfiguration.mBus;
+  }
 } // namespace lp

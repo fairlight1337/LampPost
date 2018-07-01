@@ -100,6 +100,8 @@ namespace lp
 
     void Start();
     void Stop();
+
+    std::shared_ptr<bus::Bus> GetBus();
   };
 } // namespace lp
 
