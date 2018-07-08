@@ -86,6 +86,8 @@ namespace lp
         return std::find(container.begin(), container.end(), instance) != container.end();
       }
 
+      bool TopicMatchesExpression(std::string expression, std::string topic);
+
     public:
       Bus(std::string name);
       Bus(std::string name, std::function<void(messages::Message)> publishMessageFunction);
