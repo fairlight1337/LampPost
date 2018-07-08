@@ -175,20 +175,9 @@ namespace lp
       mShouldRun = false;
     }
 
-    bool Bus::TopicMatchesExpression(std::string expression, std::string topic)
+    bool Bus::TopicMatchesPattern(std::string pattern, std::string topic)
     {
-      bool matches = false;
-
-      if(expression == topic)
-      {
-        matches = true;
-      }
-      else
-      {
-        // TODO(fairlight1337): Match ant-like and possibly regex expressions for topic names here.
-      }
-
-      return matches;
+      return utilities::AntMatcher::Matches(pattern, topic);
     }
 
     void Bus::Distribute(lp::messages::Message message)
@@ -199,7 +188,7 @@ namespace lp
           std::lock_guard<std::mutex> lock(mSubscribersMutex);
           for(const std::shared_ptr<Subscriber>& subscriber : mSubscribers)
           {
-            if(TopicMatchesExpression(subscriber->GetTopic(), message.GetTopic()))
+            if(TopicMatchesPattern(subscriber->GetTopic(), message.GetTopic()))
             {
               subscriber->Receive(message);
             }

@@ -66,7 +66,8 @@ set(SRC
     src/lamppost/log/Log.cpp
     src/lamppost/settings/SettingsManager.cpp
     src/lamppost/utilities/Uuid.cpp
-    src/lamppost/data/RawBytes.cpp)
+    src/lamppost/data/RawBytes.cpp
+    src/lamppost/utilities/AntMatcher.cpp)
 
 add_library(${PROJECT_NAME}
     ${SRC})

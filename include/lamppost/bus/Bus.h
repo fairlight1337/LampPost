@@ -26,6 +26,7 @@
 #include <lamppost/Identifiable.h>
 #include <lamppost/messages/Datagram.h>
 #include <lamppost/messages/Message.h>
+#include <lamppost/utilities/AntMatcher.h>
 
 
 namespace lp
@@ -86,7 +87,7 @@ namespace lp
         return std::find(container.begin(), container.end(), instance) != container.end();
       }
 
-      bool TopicMatchesExpression(std::string expression, std::string topic);
+      bool TopicMatchesPattern(std::string pattern, std::string topic);
 
     public:
       Bus(std::string name);
