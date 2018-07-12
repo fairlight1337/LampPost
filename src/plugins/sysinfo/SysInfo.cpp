@@ -34,16 +34,21 @@ namespace lp
 
           provider->Respond(invocationId, response);
         });
+
+      mSendDatagram = GetCustomConfiguration().Get<bool>("send-datagram", false);
     }
 
     void SysInfo::Run()
     {
       while(mShouldRun)
       {
-        messages::Datagram datagram(std::string("Hello Bus!"));
+        if(mSendDatagram)
+        {
+          messages::Datagram datagram(std::string("Hello Bus!"));
 
-        mSysInfoPublisher->Publish(datagram);
-        mLog.Info("Sent datagram");
+          mSysInfoPublisher->Publish(datagram);
+          mLog.Info("Sent datagram");
+        }
 
         Sleep(std::chrono::seconds(2));
       }

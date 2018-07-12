@@ -22,6 +22,8 @@ namespace lp
 
       std::shared_ptr<bus::ActionProvider> mSysInfoActionProvider;
 
+      bool mSendDatagram;
+
     public:
       SysInfo(PluginConfiguration configuration);
       ~SysInfo() override = default;
