@@ -19,6 +19,11 @@ namespace lp
       mLog.Info("Initializing ZMQ context.");
       mZmqContext = zmq_ctx_new();
 
+      if(mZmqContext == nullptr)
+      {
+        mLog.Error("Error while creating ZMQ context: " + std::string(zmq_strerror(zmq_errno())));
+      }
+
       bool serverRoleIsEnabled = GetCustomConfiguration().Get<bool>("server-role/enabled", false);
       int serverPortPub = GetCustomConfiguration().Get<int>("server-role/port-pub", 6967);
       int serverPortSub = GetCustomConfiguration().Get<int>("server-role/port-sub", 6968);
