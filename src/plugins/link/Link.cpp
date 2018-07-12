@@ -112,7 +112,6 @@ namespace lp
       return nullptr;
     }
 
-      mSysInfoActionConsumer = GetActionConsumer("/sysinfoaction");
     bool Link::ConnectZmqSocket(void* zmqSocket, std::string endpoint)
     {
       if(zmq_connect(zmqSocket, endpoint.c_str()) == 0)
