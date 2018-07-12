@@ -72,7 +72,27 @@ namespace lp
       mWildcardSubscriber->SetMessageCallback(
         [this](messages::Message message)
         {
-          mLog.Info("Got a message");
+          std::stringstream sts;
+          sts << message;
+
+          if(!message.WasSentBySender(this->GetIdentifier()))
+          {
+            if(mZmqServerPubSocket != nullptr)
+            {
+              if(!this->SendZmqMessage(mZmqServerPubSocket, message))
+              {
+                mLog.Warning("Failed to send message to server(s).");
+              }
+            }
+
+            if(mZmqClientPubSocket != nullptr)
+            {
+              if(!this->SendZmqMessage(mZmqClientPubSocket, message))
+              {
+                mLog.Warning("Failed to send message to client(s).");
+              }
+            }
+          }
         });
 
       mSysInfoActionConsumer = GetActionConsumer("/sysinfoaction");
