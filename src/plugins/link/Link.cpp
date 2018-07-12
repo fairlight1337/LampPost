@@ -46,9 +46,9 @@ namespace lp
       }
 
       bool clientRoleIsEnabled = GetCustomConfiguration().Get<bool>("client-role/enabled", false);
-      int clientPortPub = GetCustomConfiguration().Get<int>("client-role/port-pub", 6967);
-      int clientPortSub = GetCustomConfiguration().Get<int>("client-role/port-sub", 6968);
-      std::string clientServerHost = GetCustomConfiguration().Get<std::string>("client-role/server-host", "localhost");
+      int clientPortPub = GetCustomConfiguration().Get<int>("client-role/port-pub", 6968);
+      int clientPortSub = GetCustomConfiguration().Get<int>("client-role/port-sub", 6967);
+      std::string clientServerHost = GetCustomConfiguration().Get<std::string>("client-role/server-host", "127.0.0.1");
 
       if(clientRoleIsEnabled)
       {
