@@ -43,6 +43,7 @@ namespace lp
 
         mZmqServerSubSocket = CreateZmqSocket(ZMQ_SUB);
         BindZmqSocket(mZmqServerSubSocket, endpointAddressSub);
+        zmq_setsockopt(mZmqServerSubSocket, ZMQ_SUBSCRIBE, "A", 1);
       }
 
       bool clientRoleIsEnabled = GetCustomConfiguration().Get<bool>("client-role/enabled", false);
@@ -64,6 +65,7 @@ namespace lp
 
         mZmqClientSubSocket = CreateZmqSocket(ZMQ_SUB);
         ConnectZmqSocket(mZmqClientSubSocket, endpointAddressSub);
+        zmq_setsockopt(mZmqClientSubSocket, ZMQ_SUBSCRIBE, "A", 1);
       }
 
       mWildcardSubscriber = GetSubscriber("/**/*"); // Receive every message.
