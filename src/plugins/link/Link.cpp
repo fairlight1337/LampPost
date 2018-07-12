@@ -72,9 +72,6 @@ namespace lp
       mWildcardSubscriber->SetMessageCallback(
         [this](messages::Message message)
         {
-          std::stringstream sts;
-          sts << message;
-
           if(!message.WasSentBySender(this->GetIdentifier()))
           {
             if(mZmqServerPubSocket != nullptr)
