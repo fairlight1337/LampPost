@@ -27,6 +27,11 @@ namespace lp
       void* mZmqClientPubSocket;
       void* mZmqClientSubSocket;
 
+      std::mutex mServerPubMutex;
+      std::mutex mServerSubMutex;
+      std::mutex mClientPubMutex;
+      std::mutex mClientSubMutex;
+
       bool ReceiveMessage(void* zmqSocket, messages::Message& receivedMessage);
       bool SendZmqMessage(void* zmqSocket, messages::Message& messageToSend);
 

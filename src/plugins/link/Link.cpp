@@ -79,6 +79,8 @@ namespace lp
           {
             if(mZmqServerPubSocket != nullptr)
             {
+              std::lock_guard<std::mutex> serverPubLock(mServerPubMutex);
+
               if(!this->SendZmqMessage(mZmqServerPubSocket, message))
               {
                 mLog.Warning("Failed to send message to server(s).");
@@ -87,6 +89,8 @@ namespace lp
 
             if(mZmqClientPubSocket != nullptr)
             {
+              std::lock_guard<std::mutex> clientPubLock(mClientPubMutex);
+
               if(!this->SendZmqMessage(mZmqClientPubSocket, message))
               {
                 mLog.Warning("Failed to send message to client(s).");
@@ -172,6 +176,8 @@ namespace lp
           // Link plugin instance again. This needs to be taken care of.
           receivedMessage.PrependSender(this->GetIdentifier());
           GetBus()->Publish(receivedMessage);
+          std::lock_guard<std::mutex> serverSubLock(mServerSubMutex);
+
         }
 
         // Note: This is the server, a client is pushing a message up the drain.
@@ -180,6 +186,8 @@ namespace lp
           // TODO(fairlight1337): Properly handle logic for receiving messages as a client here. See comment above.
           receivedMessage.PrependSender(this->GetIdentifier());
           GetBus()->Publish(receivedMessage);
+          std::lock_guard<std::mutex> clientSubLock(mClientSubMutex);
+
         }
 
         Sleep(std::chrono::milliseconds(1));
@@ -278,6 +286,11 @@ namespace lp
     {
       DeleteSubscriber(mWildcardSubscriber);
       mWildcardSubscriber = nullptr;
+
+      std::lock_guard<std::mutex> serverPubLock(mServerPubMutex);
+      std::lock_guard<std::mutex> serverSubLock(mServerSubMutex);
+      std::lock_guard<std::mutex> clientPubLock(mClientPubMutex);
+      std::lock_guard<std::mutex> clientSubLock(mClientSubMutex);
 
       if(mZmqContext != nullptr)
       {
