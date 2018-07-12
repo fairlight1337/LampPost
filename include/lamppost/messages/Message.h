@@ -33,6 +33,10 @@ namespace lp
       std::string GetTopic();
       Datagram GetDatagram();
 
+      void PrependSender(std::string senderName);
+      void RemoveSender(std::string senderName);
+      bool WasSentBySender(std::string senderName);
+
       friend std::ostream& operator<<(std::ostream& outputStream, const Message& message)
       {
         outputStream << "[" << message.mSender << " to " << message.mTopic << "]: " << message.mDatagram;

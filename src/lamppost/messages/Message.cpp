@@ -54,5 +54,23 @@ namespace lp {
     {
       return rhs.mSender == mSender && rhs.mTopic == mTopic && rhs.mDatagram == mDatagram;
     }
+
+    void Message::PrependSender(std::string senderName)
+    {
+      mSender = senderName + "/" + mSender;
+    }
+
+    void Message::RemoveSender(std::string senderName)
+    {
+      if(mSender.substr(0, senderName.size() + 1) == senderName + "/")
+      {
+        mSender = mSender.substr(senderName.size() + 1);
+      }
+    }
+
+    bool Message::WasSentBySender(std::string senderName)
+    {
+      return mSender.substr(0, senderName.size() + 1) == senderName + "/";
+    }
   } // namespace messages
 } // namespace lp
