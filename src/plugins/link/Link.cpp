@@ -189,13 +189,15 @@ namespace lp
     bool Link::ReceiveMessage(void* zmqSocket, messages::Message& receivedMessage)
     {
       bool successfullyReceivedMessage = false;
-      std::shared_ptr<data::RawBytes> bytes = std::make_shared<data::RawBytes>();
 
       if(zmqSocket != nullptr)
       {
+        std::shared_ptr<data::RawBytes> bytes = std::make_shared<data::RawBytes>();
+
         zmq_msg_t messagePart = zmq_msg_t();
         int64_t more = 0;
         size_t sizeOfMore = sizeof(more);
+        bool topicNameSkipped = false;
 
         do
         {
@@ -203,12 +205,19 @@ namespace lp
           {
             int receiveResult = zmq_recvmsg(zmqSocket, &messagePart, ZMQ_DONTWAIT);
 
-            if(receiveResult == 0)
+            if(receiveResult > -1)
             {
               size_t messageSize = zmq_msg_size(&messagePart);
               void* messageData = zmq_msg_data(&messagePart);
 
-              bytes->Append(messageData, messageSize);
+              if(!topicNameSkipped)
+              {
+                topicNameSkipped = true;
+              }
+              else
+              {
+                bytes->Append(messageData, messageSize);
+              }
 
               zmq_getsockopt(zmqSocket, ZMQ_RCVMORE, &more, &sizeOfMore);
             }
