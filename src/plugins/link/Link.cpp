@@ -94,6 +94,23 @@ namespace lp
             }
           }
         });
+    }
+
+    void* Link::CreateZmqSocket(int zmqSocketType)
+    {
+      void* socket = zmq_socket(mZmqContext, zmqSocketType);
+
+      if(socket)
+      {
+        return socket;
+      }
+      else
+      {
+        mLog.Error("Failed to create ZMQ socket: " + std::string(zmq_strerror(zmq_errno())));
+      }
+
+      return nullptr;
+    }
 
       mSysInfoActionConsumer = GetActionConsumer("/sysinfoaction");
     bool Link::ConnectZmqSocket(void* zmqSocket, std::string endpoint)
