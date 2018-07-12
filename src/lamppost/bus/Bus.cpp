@@ -106,13 +106,11 @@ namespace lp
 
     void Bus::DeleteSubscriber(std::shared_ptr<Subscriber> subscriber)
     {
-      std::lock_guard<std::mutex> lock(mSubscribersMutex);
       DeleteManagedResource(mSubscribersMutex, mSubscribers, std::move(subscriber));
     }
 
     void Bus::DeletePublisher(std::shared_ptr<Publisher> publisher)
     {
-      std::lock_guard<std::mutex> lock(mPublishersMutex);
       DeleteManagedResource(mPublishersMutex, mPublishers, std::move(publisher));
     }
 
