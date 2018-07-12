@@ -24,5 +24,5 @@ namespace lp
 
       return result;
     }
-  }
-}
+  } // namespace utilities
+} // namespace lp

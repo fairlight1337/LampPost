@@ -101,44 +101,36 @@ namespace lp
     {
       void* socket = zmq_socket(mZmqContext, zmqSocketType);
 
-      if(socket)
-      {
-        return socket;
-      }
-      else
+      if(socket == nullptr)
       {
         mLog.Error("Failed to create ZMQ socket: " + std::string(zmq_strerror(zmq_errno())));
       }
 
-      return nullptr;
+      return socket;
     }
 
     bool Link::ConnectZmqSocket(void* zmqSocket, std::string endpoint)
     {
-      if(zmq_connect(zmqSocket, endpoint.c_str()) == 0)
-      {
-        return true;
-      }
-      else
+      bool successfullyConnected = zmq_connect(zmqSocket, endpoint.c_str()) == 0;
+
+      if(!successfullyConnected)
       {
         mLog.Error("Failed to connect socket to endpoint '" + endpoint + "': " + std::string(zmq_strerror(zmq_errno())));
       }
 
-      return false;
+      return successfullyConnected;
     }
 
     bool Link::BindZmqSocket(void* zmqSocket, std::string endpoint)
     {
-      if(zmq_bind(zmqSocket, endpoint.c_str()) == 0)
-      {
-        return true;
-      }
-      else
+      bool successfullyBound = zmq_bind(zmqSocket, endpoint.c_str()) == 0;
+
+      if(!successfullyBound)
       {
         mLog.Error("Failed to bind socket to endpoint '" + endpoint + "': " + std::string(zmq_strerror(zmq_errno())));
       }
 
-      return false;
+      return successfullyBound;
     }
 
     void Link::Run()
@@ -252,7 +244,8 @@ namespace lp
     bool Link::SendZmqMessage(void* zmqSocket, messages::Message& messageToSend)
     {
       bool successfullySent = false;
-      zmq_msg_t message;
+
+      zmq_msg_t message = zmq_msg_t();
       std::shared_ptr<data::RawBytes> rawBytes = messageToSend.SerializeToBytes();
 
       if(zmq_msg_init_size(&message, rawBytes->GetSize()) > -1)
