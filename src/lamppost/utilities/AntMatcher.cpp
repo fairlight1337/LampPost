@@ -15,7 +15,11 @@ namespace lp
       }
       else
       {
-        // TODO(fairlight1337): Implement this.
+        // TODO(fairlight1337): Implement this. The current hack only allows the pattern "/**/*" to match every expression. This is required for the Link plugin development.
+        if(pattern == "/**/*")
+        {
+          result = true;
+        }
       }
 
       return result;
