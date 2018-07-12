@@ -38,11 +38,11 @@ namespace lp
         mLog.Info("Publish: " + endpointAddressPub, 1);
         mLog.Info("Subscribe: " + endpointAddressSub, 1);
 
-        mZmqServerPubSocket = zmq_socket(mZmqContext, ZMQ_PUB);
-        zmq_bind(mZmqServerPubSocket, endpointAddressPub.c_str());
+        mZmqServerPubSocket = CreateZmqSocket(ZMQ_PUB);
+        BindZmqSocket(mZmqServerPubSocket, endpointAddressPub);
 
-        mZmqServerSubSocket = zmq_socket(mZmqContext, ZMQ_SUB);
-        zmq_bind(mZmqServerSubSocket, endpointAddressSub.c_str());
+        mZmqServerSubSocket = CreateZmqSocket(ZMQ_SUB);
+        BindZmqSocket(mZmqServerSubSocket, endpointAddressSub);
       }
 
       bool clientRoleIsEnabled = GetCustomConfiguration().Get<bool>("client-role/enabled", false);
@@ -59,11 +59,11 @@ namespace lp
         mLog.Info("Publish: " + endpointAddressPub, 1);
         mLog.Info("Subscribe: " + endpointAddressSub, 1);
 
-        mZmqClientPubSocket = zmq_socket(mZmqContext, ZMQ_PUB);
-        zmq_connect(mZmqClientPubSocket, endpointAddressPub.c_str());
+        mZmqClientPubSocket = CreateZmqSocket(ZMQ_PUB);
+        ConnectZmqSocket(mZmqClientPubSocket, endpointAddressPub);
 
-        mZmqClientSubSocket = zmq_socket(mZmqContext, ZMQ_SUB);
-        zmq_connect(mZmqClientSubSocket, endpointAddressSub.c_str());
+        mZmqClientSubSocket = CreateZmqSocket(ZMQ_SUB);
+        ConnectZmqSocket(mZmqClientSubSocket, endpointAddressSub);
       }
 
       mSysInfoSubscriber = GetSubscriber("/sysinfo");
@@ -74,6 +74,32 @@ namespace lp
         });
 
       mSysInfoActionConsumer = GetActionConsumer("/sysinfoaction");
+    bool Link::ConnectZmqSocket(void* zmqSocket, std::string endpoint)
+    {
+      if(zmq_connect(zmqSocket, endpoint.c_str()) == 0)
+      {
+        return true;
+      }
+      else
+      {
+        mLog.Error("Failed to connect socket to endpoint '" + endpoint + "': " + std::string(zmq_strerror(zmq_errno())));
+      }
+
+      return false;
+    }
+
+    bool Link::BindZmqSocket(void* zmqSocket, std::string endpoint)
+    {
+      if(zmq_bind(zmqSocket, endpoint.c_str()) == 0)
+      {
+        return true;
+      }
+      else
+      {
+        mLog.Error("Failed to bind socket to endpoint '" + endpoint + "': " + std::string(zmq_strerror(zmq_errno())));
+      }
+
+      return false;
     }
 
     void Link::Run()
@@ -161,6 +187,40 @@ namespace lp
       }
 
       return successfullyReceivedMessage;
+    }
+
+    bool Link::SendZmqMessage(void* zmqSocket, messages::Message& messageToSend)
+    {
+      bool successfullySent = false;
+      zmq_msg_t message;
+      std::shared_ptr<data::RawBytes> rawBytes = messageToSend.SerializeToBytes();
+
+      if(zmq_msg_init_size(&message, rawBytes->GetSize()) > -1)
+      {
+        std::memcpy(zmq_msg_data(&message), rawBytes->GetContent(), rawBytes->GetSize());
+
+        zmq_send(zmqSocket, "A", 1, ZMQ_SNDMORE);
+        int sendResult = zmq_msg_send(&message, zmqSocket, 0);
+
+        if(sendResult == rawBytes->GetSize())
+        {
+          successfullySent = true;
+        }
+        else
+        {
+          int errorCode = zmq_errno();
+          mLog.Error(std::string("ZMQ Error during send (received " + std::to_string(sendResult) + ", expected " + std::to_string(rawBytes->GetSize()) + "): ") + zmq_strerror(errorCode));
+        }
+
+        zmq_msg_close(&message);
+      }
+      else
+      {
+        int errorCode = zmq_errno();
+        mLog.Error(std::string("ZMQ Error during message initialization: ") + zmq_strerror(errorCode));
+      }
+
+      return successfullySent;
     }
 
     void Link::Deinitialize()

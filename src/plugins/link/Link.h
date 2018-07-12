@@ -29,6 +29,11 @@ namespace lp
       void* mZmqClientSubSocket;
 
       bool ReceiveMessage(void* zmqSocket, messages::Message& receivedMessage);
+      bool SendZmqMessage(void* zmqSocket, messages::Message& messageToSend);
+
+      void* CreateZmqSocket(int zmqSocketType);
+      bool ConnectZmqSocket(void* zmqSocket, std::string endpoint);
+      bool BindZmqSocket(void* zmqSocket, std::string endpoint);
 
     public:
       Link(PluginConfiguration configuration);
