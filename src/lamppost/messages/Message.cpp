@@ -29,11 +29,12 @@ namespace lp {
     {
       flatbuffers::FlatBufferBuilder flatBufferBuilder;
 
+      flatbuffers::Offset<flatbuffers::String> sender = flatBufferBuilder.CreateString(GetSender());
+      flatbuffers::Offset<flatbuffers::String> topic = flatBufferBuilder.CreateString(GetTopic());
+      flatbuffers::Offset<schemas::FBDatagram> serializedDatagram = mDatagram.SerializeToStructure(flatBufferBuilder);
+
       flatbuffers::Offset<schemas::FBMessage> serializedMessage = schemas::CreateFBMessage(
-        flatBufferBuilder,
-        flatBufferBuilder.CreateString(GetSender()),
-        flatBufferBuilder.CreateString(GetTopic()),
-        mDatagram.SerializeToStructure(flatBufferBuilder));
+        flatBufferBuilder, sender, topic, serializedDatagram);
 
       flatBufferBuilder.Finish(serializedMessage);
 
