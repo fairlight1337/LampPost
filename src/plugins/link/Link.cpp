@@ -66,8 +66,8 @@ namespace lp
         ConnectZmqSocket(mZmqClientSubSocket, endpointAddressSub);
       }
 
-      mSysInfoSubscriber = GetSubscriber("/sysinfo");
-      mSysInfoSubscriber->SetMessageCallback(
+      mWildcardSubscriber = GetSubscriber("/**/*"); // Receive every message.
+      mWildcardSubscriber->SetMessageCallback(
         [this](messages::Message message)
         {
           mLog.Info("Got a message");
@@ -225,8 +225,8 @@ namespace lp
 
     void Link::Deinitialize()
     {
-      DeleteSubscriber(mSysInfoSubscriber);
-      mSysInfoSubscriber = nullptr;
+      DeleteSubscriber(mWildcardSubscriber);
+      mWildcardSubscriber = nullptr;
 
       if(mZmqContext != nullptr)
       {

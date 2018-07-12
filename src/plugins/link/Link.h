@@ -19,8 +19,7 @@ namespace lp
     class Link : public PluginInstance
     {
     private:
-      std::shared_ptr<bus::Subscriber> mSysInfoSubscriber;
-      std::shared_ptr<bus::ActionConsumer> mSysInfoActionConsumer;
+      std::shared_ptr<bus::Subscriber> mWildcardSubscriber;
 
       void* mZmqContext;
       void* mZmqServerPubSocket;
