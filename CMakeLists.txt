@@ -29,6 +29,8 @@ add_subdirectory(3rdparty/libzmq)
 
 add_subdirectory(3rdparty/json-c)
 
+add_subdirectory(3rdparty/curl)
+
 include_directories(
     include
     ${gtest_SOURCE_DIR}/include
@@ -36,7 +38,8 @@ include_directories(
     3rdparty/libzmq/include
     3rdparty/libzmq/src
     3rdparty/json-c
-    ${json-c_BINARY_DIR}/include)
+    ${json-c_BINARY_DIR}/include
+    3rdparty/curl/include)
 
 set(SRC
     src/lamppost/LampPost.cpp
@@ -151,6 +154,12 @@ add_lp_plugin(link
 
 link_lp_plugin(link
     libzmq-static)
+
+add_lp_plugin(downloader
+    src/plugins/downloader/Downloader.cpp)
+
+link_lp_plugin(downloader
+    libcurl)
 
 
 ### Tests
