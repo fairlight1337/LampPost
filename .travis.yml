@@ -59,12 +59,8 @@ matrix:
     compiler:
       - clang
 
-sudo:
- - false
-
 addons:
   apt:
-    update: true
     packages:
       - cmake
 
@@ -74,7 +70,9 @@ addons:
       # https://github.com/travis-ci-tester/travis-test-gcc-cxx-11
       - g++-4.8
 
-      - libssl-dev
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq libssl-dev
 
 script:
  - cd ${TRAVIS_BUILD_DIR}
