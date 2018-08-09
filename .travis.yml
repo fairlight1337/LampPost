@@ -62,9 +62,13 @@ matrix:
     compiler:
       - clang
   - os: osx
+    before_install:
+      - brew install openssl
     compiler:
       - gcc
   - os: osx
+    before_install:
+      - brew install openssl
     compiler:
       - clang
 
