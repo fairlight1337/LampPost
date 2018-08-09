@@ -12,24 +12,25 @@ endif(UNIX OR APPLE)
 
 add_definitions(-D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING -DZMQ_BUILD_DRAFT_API)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
 set(gtest_force_shared_crt ON CACHE BOOL "Force generation of shared libraries for GTest." FORCE)
 add_subdirectory(3rdparty/googletest)
 
 set(FLATBUFFERS_BUILD_TESTS OFF CACHE BOOL "Enable the build of tests and samples." FORCE)
 add_subdirectory(3rdparty/flatbuffers)
 
-set(BUILD_TESTS OFF CACHE BOOL "Whether or not to build the tests" FORCE)
+set(BUILD_TESTS OFF CACHE BOOL "Whether or not to build zmq tests" FORCE)
 set(ZMQ_BUILD_TESTS OFF CACHE BOOL "Build the tests for ZeroMQ" FORCE)
 set(ENABLE_DRAFTS ON CACHE BOOL "Enable Draft builds" FORCE)
 add_subdirectory(3rdparty/libzmq)
 
 add_subdirectory(3rdparty/json-c)
 
+set(BUILD_TESTING OFF CACHE BOOL "Whether or not to build curl tests" FORCE)
 add_subdirectory(3rdparty/curl)
+
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 include_directories(
     include
