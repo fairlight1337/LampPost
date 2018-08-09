@@ -10,6 +10,10 @@ if(UNIX OR APPLE)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -g -O0 --coverage")
 endif(UNIX OR APPLE)
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 add_definitions(-D_SILENCE_TR1_NAMESPACE_DEPRECATION_WARNING -DZMQ_BUILD_DRAFT_API)
 
 set(gtest_force_shared_crt ON CACHE BOOL "Force generation of shared libraries for GTest." FORCE)
@@ -26,11 +30,9 @@ add_subdirectory(3rdparty/libzmq)
 add_subdirectory(3rdparty/json-c)
 
 set(BUILD_TESTING OFF CACHE BOOL "Whether or not to build curl tests" FORCE)
+set(USE_MANUAL OFF CACHE BOOL "Whether to build the curl manual" FORCE)
+set(BUILD_CURL_EXE OFF CACHE BOOL "Whether to build the curl exe" FORCE)
 add_subdirectory(3rdparty/curl)
-
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 include_directories(
     include
