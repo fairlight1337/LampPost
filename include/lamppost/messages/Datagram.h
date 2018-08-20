@@ -91,6 +91,14 @@ namespace lp
         return mRawDatagram->Get<std::string>();
       }
 
+      std::string ToString() const
+      {
+        std::stringstream sts;
+        sts << *this;
+
+        return sts.str();
+      }
+
       bool IsEmpty();
 
       template<typename DataType>
