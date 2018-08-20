@@ -6,8 +6,9 @@ namespace lp
   namespace plugins
   {
     Downloader::Downloader(PluginConfiguration configuration)
-      : PluginInstance(std::move(configuration)),
-        mDownloadActionProvider(nullptr)
+      : PluginInstance(std::move(configuration))
+      , mDownloadActionProvider(nullptr)
+      , mCurl(mLog)
     {
     }
 

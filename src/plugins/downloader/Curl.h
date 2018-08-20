@@ -2,8 +2,9 @@
 #define LAMPPOST_CURL_H
 
 
-#include <atomic>
 #include <mutex>
+
+#include <lamppost/log/Log.h>
 
 #include <curl/curl.h>
 
@@ -14,13 +15,15 @@ namespace lp
   {
     class Curl {
     private:
-      static std::atomic<unsigned int> gCurlUsers;
+      static unsigned int gCurlUsers;
       static std::mutex gCurlUsersMutex;
+
+      log::Log mLog;
 
       CURL* mHandle;
 
     public:
-      Curl();
+      Curl(log::Log log);
       virtual ~Curl();
     };
   } // namespace plugins

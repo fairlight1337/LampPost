@@ -5,12 +5,13 @@ namespace lp
 {
   namespace plugins
   {
-    std::atomic<unsigned int> Curl::gCurlUsers = 0;
+    unsigned int Curl::gCurlUsers = 0;
     std::mutex Curl::gCurlUsersMutex;
 
 
-    Curl::Curl()
-      : mHandle(nullptr)
+    Curl::Curl(log::Log log)
+      : mLog(log)
+      , mHandle(nullptr)
     {
       {
         std::lock_guard<std::mutex> lock(gCurlUsersMutex);
@@ -20,6 +21,8 @@ namespace lp
         if(gCurlUsers == 1)
         {
           curl_global_init(CURL_GLOBAL_ALL);
+
+          mLog.Info("Globally initialized Curl.");
         }
       }
 
@@ -41,8 +44,10 @@ namespace lp
         if(gCurlUsers == 0)
         {
           curl_global_cleanup();
+
+          mLog.Info("Globally deinitialized Curl.");
         }
       }
     }
-  }
-}
+  } // namespace plugins
+} // namespace lp
