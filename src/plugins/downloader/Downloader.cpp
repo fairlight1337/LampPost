@@ -17,7 +17,7 @@ namespace lp
         "/download",
         [this](std::shared_ptr<bus::ActionProvider> provider, std::string invocationId, messages::Datagram request)
         {
-          this->QueueDownload(invocationId, request["url"].Get<std::string>());
+          this->QueueDownload(invocationId, request.Get<std::string>("url"));
         });
     }
 
@@ -40,6 +40,8 @@ namespace lp
       dl.mUrl = url;
 
       mQueuedDownloads.emplace_back(dl);
+
+      mLog.Info("Queueing download: " + url);
     }
   } // namespace plugins
 } // namespace lp
