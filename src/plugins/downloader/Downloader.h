@@ -6,10 +6,10 @@
 #include <list>
 #include <memory>
 
-#include <curl/curl.h>
-
 #include <lamppost/plugin/PluginInstance.h>
 #include <lamppost/plugin/PluginTemplateInfo.h>
+
+#include "Curl.h"
 
 
 namespace lp
@@ -27,6 +27,8 @@ namespace lp
     private:
       std::list<Download> mQueuedDownloads;
       std::shared_ptr<bus::ActionProvider> mDownloadActionProvider;
+
+      Curl mCurl;
 
       void QueueDownload(std::string invocationId, std::string url);
 

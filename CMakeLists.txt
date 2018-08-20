@@ -159,7 +159,8 @@ link_lp_plugin(link
     libzmq-static)
 
 add_lp_plugin(downloader
-    src/plugins/downloader/Downloader.cpp)
+    src/plugins/downloader/Downloader.cpp
+    src/plugins/downloader/Curl.cpp)
 
 link_lp_plugin(downloader
     libcurl)
