@@ -66,11 +66,25 @@ matrix:
       - brew install openssl
     compiler:
       - gcc
+    script:
+      - cd ${TRAVIS_BUILD_DIR}
+      - mkdir build
+      - cd build
+      - cmake -DCOVERAGE=1 -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/ -DREADLINE_ROOT=/usr/local/opt/readline ..
+      - make
+      - make test
   - os: osx
     before_install:
       - brew install openssl
     compiler:
       - clang
+    script:
+      - cd ${TRAVIS_BUILD_DIR}
+      - mkdir build
+      - cd build
+      - cmake -DCOVERAGE=1 -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/ -DREADLINE_ROOT=/usr/local/opt/readline ..
+      - make
+      - make test
 
 addons:
   apt:
