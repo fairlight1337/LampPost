@@ -22,6 +22,8 @@ namespace lp
 
       std::shared_ptr<bus::ActionProvider> mSysInfoActionProvider;
 
+      std::shared_ptr<bus::ActionConsumer> mDownloadActionConsumer;
+
       bool mSendDatagram;
 
     public:

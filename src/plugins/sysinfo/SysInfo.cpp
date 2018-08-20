@@ -39,6 +39,8 @@ namespace lp
           provider->Respond(invocationId, response);
         });
 
+      mDownloadActionConsumer = GetActionConsumer("/download");
+
       mSendDatagram = GetCustomConfiguration().Get<bool>("send-datagram", false);
     }
 
@@ -52,6 +54,11 @@ namespace lp
 
           mSysInfoPublisher->Publish(datagram);
           mLog.Info("Sent datagram");
+
+          messages::Datagram download_datagram;
+          download_datagram["url"] = std::string("https://www.google.de/");
+
+          mDownloadActionConsumer->Request(download_datagram, 1000);
         }
 
         Sleep(std::chrono::seconds(2));
