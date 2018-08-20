@@ -33,7 +33,14 @@ namespace lp
 
     void ActionProvider::ProcessRequest(std::string invocationId, messages::Datagram request)
     {
-      mCallback(this->shared_from_this(), std::move(invocationId), request);
+      if(request.KeyExists("request"))
+      {
+        mCallback(this->shared_from_this(), std::move(invocationId), request["request"]);
+      }
+      else
+      {
+        // TODO(fairlight1337): Handle situation when faulty action request is received.
+      }
     }
   } // namespace bus
 } // namespace lp
