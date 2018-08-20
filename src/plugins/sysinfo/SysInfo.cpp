@@ -6,7 +6,7 @@ namespace lp
   namespace plugins
   {
     SysInfo::SysInfo(PluginConfiguration configuration)
-      : PluginInstance(configuration),
+      : PluginInstance(std::move(configuration)),
         mSysInfoPublisher(nullptr),
         mSysInfoSubscriber(nullptr),
         mSysInfoActionProvider(nullptr),
