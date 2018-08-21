@@ -146,10 +146,10 @@ endif()
 set(TBB_COPY_SOURCE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/tbb/tbb_cmake_build/tbb_cmake_build_subdir_debug/${tbb_runtime_file})
 set(TBB_COPY_DESTINATION_PATH ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${tbb_runtime_file})
 
-STRING(REGEX REPLACE "/" "\\\\" TBB_COPY_SOURCE_PATH_CLEAN ${TBB_COPY_SOURCE_PATH})
-STRING(REGEX REPLACE "/" "\\\\" TBB_COPY_DESTINATION_PATH_CLEAN ${TBB_COPY_DESTINATION_PATH})
-
-message(STATUS "${copy_command} \"${TBB_COPY_SOURCE_PATH_CLEAN}\" \"${TBB_COPY_DESTINATION_PATH_CLEAN}\"")
+if(WIN32 OR WIN64)
+  STRING(REGEX REPLACE "/" "\\\\" TBB_COPY_SOURCE_PATH ${TBB_COPY_SOURCE_PATH})
+  STRING(REGEX REPLACE "/" "\\\\" TBB_COPY_DESTINATION_PATH ${TBB_COPY_DESTINATION_PATH})
+endif()
 
 add_custom_target(tbb_target
     COMMAND git checkout "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/tbb/cmake/TBBBuild.cmake"
@@ -161,7 +161,7 @@ add_custom_target(tbb_target
       -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}"
       -DCMAKE_SYSTEM_NAME="${CMAKE_SYSTEM_NAME}"
       -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/tbb_build.cmake"
-    COMMAND ${copy_command} "${TBB_COPY_SOURCE_PATH_CLEAN}" "${TBB_COPY_DESTINATION_PATH_CLEAN}"
+    COMMAND ${copy_command} "${TBB_COPY_SOURCE_PATH}" "${TBB_COPY_DESTINATION_PATH}"
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/tbb")
 
 target_link_libraries(${PROJECT_NAME}
