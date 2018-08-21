@@ -9,7 +9,7 @@ if(WIN32 OR WIN64)
   endif()
 elseif(UNIX)
   # TBB doesn't know g++ (but does know gcc).
-  if("${CMAKE_CXX_COMPILER}" STREQUAL "g++")
+  if("${CMAKE_CXX_COMPILER}" MATCHES "g\\+\\+")
     set(CMAKE_CXX_COMPILER "gcc")
   endif()
 endif()
