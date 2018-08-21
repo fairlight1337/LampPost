@@ -1,18 +1,24 @@
 [submodule "3rdparty/googletest"]
 	path = 3rdparty/googletest
 	url = https://github.com/google/googletest.git
+	ignore = dirty
 [submodule "3rdparty/flatbuffers"]
 	path = 3rdparty/flatbuffers
 	url = https://github.com/google/flatbuffers.git
+	ignore = dirty
 [submodule "3rdparty/libzmq"]
 	path = 3rdparty/libzmq
 	url = https://github.com/zeromq/libzmq.git
+	ignore = dirty
 [submodule "3rdparty/json-c"]
 	path = 3rdparty/json-c
 	url = https://github.com/json-c/json-c.git
+	ignore = dirty
 [submodule "3rdparty/curl"]
 	path = 3rdparty/curl
 	url = https://github.com/curl/curl.git
+	ignore = dirty
 [submodule "3rdparty/tbb"]
 	path = 3rdparty/tbb
 	url = https://github.com/01org/tbb.git
+	ignore = dirty
