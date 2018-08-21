@@ -3,17 +3,17 @@ include(TBBBuild)
 
 # Dirty, dirty hack to get local compile to work (as TBB make is a bit picky when it comes to supported compilers).
 if(WIN32 OR WIN64)
+  # TBB fails when passing absolute paths.
   if("${CMAKE_CXX_COMPILER}" MATCHES "cl.exe")
     set(CMAKE_CXX_COMPILER "cl")
   endif()
-
-  #message(STATUS "asd ${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/helpers/")
-  #find_program(MAKE_TOOL gmake PATHS "${CMAKE_CURRENT_SOURCE_DIR}/../../cmake/helpers/gmake.bat")# HINTS "C:/MingW/MinGW/bin/make.exe")
+elseif(UNIX)
+  # TBB doesn't know g++ (but does know gcc).
+  if("${CMAKE_CXX_COMPILER}" MATCHES "g++")
+    set(CMAKE_CXX_COMPILER "gcc")
+  endif()
 endif()
-
-#message(STATUS "asdasd ${MAKE_TOOL}")
 
 tbb_build(
     TBB_ROOT "${CMAKE_CURRENT_SOURCE_DIR}"
-    #MAKE_TOOL "${MAKE_TOOL}"
     MAKE_ARGS "compiler=${CMAKE_CXX_COMPILER}")
