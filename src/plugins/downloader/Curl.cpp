@@ -9,6 +9,16 @@ namespace lp
     std::mutex Curl::gCurlUsersMutex;
 
 
+    size_t Curl::HandleDownloadedData(void* data, size_t size, size_t nmemb, void* userData)
+    {
+      unsigned int totalLength = size * nmemb;
+
+      // ...
+
+      return totalLength;
+    }
+
+
     Curl::Curl(log::Log log)
       : mLog(log)
       , mHandle(nullptr)
@@ -48,6 +58,15 @@ namespace lp
           mLog.Info("Globally deinitialized Curl.");
         }
       }
+    }
+
+    utilities::Uuid Curl::DownloadUrl(std::string url, std::function<void(utilities::Uuid, Curl::Result)> callback)
+    {
+      utilities::Uuid uuid = utilities::Uuid::CreateUuid();
+
+      // ...
+
+      return uuid;
     }
   } // namespace plugins
 } // namespace lp
