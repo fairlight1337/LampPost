@@ -13,10 +13,21 @@ Required build tools:
  * autoconf
  * libtool
 
-On Ubuntu, do:
+###### On Ubuntu
+
 ```bash
 sudo apt-get install automake autoconf libtool
 ```
+
+###### On Windows
+
+You have to install MinGW in order to get `make` (required for building Intel TBB):
+ * [https://code.google.com/archive/p/mingw-offline-install/downloads/](https://code.google.com/archive/p/mingw-offline-install/downloads/)
+
+And install CMake:
+ * [https://cmake.org/download/](https://cmake.org/download/)
+
+Both have to be added to your `Path` environmental variables (see [here](https://stackoverflow.com/questions/9546324/adding-directory-to-path-environment-variable-in-windows#comment14126970_9546345) for a clue on how to do that).
 
 ##### Building in-tree
 

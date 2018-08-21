@@ -4,11 +4,11 @@
 namespace lp
 {
   LampPost::LampPost(LampPostConfiguration configuration)
-    : mRunState(RunState::Unknown),
-      mConfiguration(configuration),
-      mPluginManager(configuration.mPluginManagerConfiguration),
-      mRootBus(std::make_shared<bus::Bus>("root")),
-      mLog("LampPost")
+    : mRunState(RunState::Unknown)
+    , mConfiguration(configuration)
+    , mPluginManager(configuration.mPluginManagerConfiguration)
+    , mRootBus(std::make_shared<bus::Bus>("root"))
+    , mLog("LampPost")
   {
     for(const std::string& configurationFile : mConfiguration.mConfigurationFiles)
     {
@@ -33,6 +33,7 @@ namespace lp
 
     mLog.Info("Loading templates.", 1);
     mPluginManager.LoadTemplates();
+
   }
 
   void LampPost::Teardown()

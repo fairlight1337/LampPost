@@ -42,7 +42,8 @@ include_directories(
     3rdparty/libzmq/src
     3rdparty/json-c
     ${json-c_BINARY_DIR}/include
-    3rdparty/curl/include)
+    3rdparty/curl/include
+    3rdparty/tbb/include)
 
 set(SRC
     src/lamppost/LampPost.cpp
@@ -124,6 +125,52 @@ add_dependencies(${PROJECT_NAME}
     GenerateFlatbuffersFiles)
 
 
+### Intel TBB
+if(UNIX)
+  set(tbb_lib_file ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/tbb/tbb_cmake_build/tbb_cmake_build_subdir_debug/tbb_debug.so)
+  set(tbb_runtime_file tbb_debug.so)
+
+  set(copy_command cp)
+elseif(APPLE)
+  set(tbb_lib_file ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/tbb/tbb_cmake_build/tbb_cmake_build_subdir_debug/tbb_debug.so)
+  set(tbb_runtime_file tbb_debug.so)
+
+  set(copy_command cp)
+elseif(WIN32 OR WIN64)
+  set(tbb_lib_file ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/tbb/tbb_cmake_build/tbb_cmake_build_subdir_debug/tbb_debug.lib)
+  set(tbb_runtime_file tbb_debug.dll)
+
+  set(copy_command copy)
+endif()
+
+set(TBB_COPY_SOURCE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/tbb/tbb_cmake_build/tbb_cmake_build_subdir_debug/${tbb_runtime_file})
+set(TBB_COPY_DESTINATION_PATH ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${tbb_runtime_file})
+
+STRING(REGEX REPLACE "/" "\\\\" TBB_COPY_SOURCE_PATH_CLEAN ${TBB_COPY_SOURCE_PATH})
+STRING(REGEX REPLACE "/" "\\\\" TBB_COPY_DESTINATION_PATH_CLEAN ${TBB_COPY_DESTINATION_PATH})
+
+message(STATUS "${copy_command} \"${TBB_COPY_SOURCE_PATH_CLEAN}\" \"${TBB_COPY_DESTINATION_PATH_CLEAN}\"")
+
+add_custom_target(tbb_target
+    COMMAND git checkout "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/tbb/cmake/TBBBuild.cmake"
+    COMMAND patch -t "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/tbb/cmake/TBBBuild.cmake" "${CMAKE_CURRENT_SOURCE_DIR}/patches/tbb/gmake_to_make.patch"
+    COMMAND ${CMAKE_COMMAND}
+      -DCMAKE_ARCHIVE_OUTPUT_DIRECTORY="${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}"
+      -DCMAKE_LIBRARY_OUTPUT_DIRECTORY="${CMAKE_LIBRARY_OUTPUT_DIRECTORY}"
+      -DCMAKE_RUNTIME_OUTPUT_DIRECTORY="${CMAKE_RUNTIME_OUTPUT_DIRECTORY}"
+      -DCMAKE_CXX_COMPILER="${CMAKE_CXX_COMPILER}"
+      -DCMAKE_SYSTEM_NAME="${CMAKE_SYSTEM_NAME}"
+      -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/tbb_build.cmake"
+    COMMAND ${copy_command} "${TBB_COPY_SOURCE_PATH_CLEAN}" "${TBB_COPY_DESTINATION_PATH_CLEAN}"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/tbb")
+
+target_link_libraries(${PROJECT_NAME}
+    ${tbb_lib_file})
+
+add_dependencies(${PROJECT_NAME}
+    tbb_target)
+
+
 ### Windows Service
 if(WIN32 OR WIN64)
     add_executable(${PROJECT_NAME}-service
@@ -149,6 +196,11 @@ macro(link_lp_plugin pluginname)
   target_link_libraries(plugin_${pluginname} ${libraries})
 endmacro()
 
+macro(depend_lp_plugin pluginname)
+  set(dependencies ${ARGN})
+  add_dependencies(plugin_${pluginname} ${dependencies})
+endmacro()
+
 add_lp_plugin(sysinfo
     src/plugins/sysinfo/SysInfo.cpp)
 
@@ -161,6 +213,9 @@ link_lp_plugin(link
 add_lp_plugin(downloader
     src/plugins/downloader/Downloader.cpp
     src/plugins/downloader/Curl.cpp)
+
+depend_lp_plugin(downloader
+    tbb_target)
 
 link_lp_plugin(downloader
     libcurl)

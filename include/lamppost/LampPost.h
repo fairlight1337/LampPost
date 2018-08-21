@@ -7,6 +7,8 @@
 #include <memory>
 #include <string>
 
+#include <tbb/task_scheduler_init.h>
+
 #include <lamppost/exceptions/OperationFailedException.h>
 #include <lamppost/settings/SettingsManager.h>
 #include <lamppost/LampPostConfiguration.h>
@@ -26,6 +28,8 @@ namespace lp
     log::Log mLog;
     std::atomic<RunState> mRunState;
     settings::SettingsManager mSettingsManager;
+
+    tbb::task_scheduler_init mTbbTaskSchedulerInit;
 
     void Setup();
     void Teardown();

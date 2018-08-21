@@ -1,0 +1,9 @@
+@@ -149,7 +149,7 @@
+ 
+     set(make_tool_name make)
+     if (CMAKE_SYSTEM_NAME MATCHES "Windows")
+-        set(make_tool_name gmake)
++        set(make_tool_name make)
+     elseif (CMAKE_SYSTEM_NAME MATCHES "Android")
+         set(make_tool_name ndk-build)
+     endif()
