@@ -9,7 +9,7 @@ namespace lp
     std::mutex Curl::gCurlUsersMutex;
 
 
-    size_t Curl::HandleDownloadedData(void* data, size_t size, size_t nmemb, void* userData)
+    size_t Curl::HandleDownloadedData(void* /*data*/, size_t size, size_t nmemb, void* /*userData*/)
     {
       unsigned int totalLength = size * nmemb;
 
@@ -60,7 +60,7 @@ namespace lp
       }
     }
 
-    utilities::Uuid Curl::DownloadUrl(std::string url, std::function<void(utilities::Uuid, Curl::Result)> callback)
+    utilities::Uuid Curl::DownloadUrl(std::string /*url*/, std::function<void(utilities::Uuid, Curl::Result)> /*callback*/)
     {
       utilities::Uuid uuid = utilities::Uuid::CreateUuid();
 
