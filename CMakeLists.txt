@@ -128,14 +128,14 @@ add_dependencies(${PROJECT_NAME}
 ### Intel TBB
 if(UNIX)
   set(tbb_lib_file ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/tbb/tbb_cmake_build/tbb_cmake_build_subdir_debug/tbb_debug.so)
-  set(tbb_runtime_file tbb_debug.so)
+  set(tbb_runtime_file tbb_debug.*)
 
-  set(copy_command cp)
+  set(copy_command true)
 elseif(APPLE)
   set(tbb_lib_file ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/tbb/tbb_cmake_build/tbb_cmake_build_subdir_debug/tbb_debug.so)
-  set(tbb_runtime_file tbb_debug.so)
+  set(tbb_runtime_file tbb_debug.*)
 
-  set(copy_command cp)
+  set(copy_command true)
 elseif(WIN32 OR WIN64)
   set(tbb_lib_file ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/tbb/tbb_cmake_build/tbb_cmake_build_subdir_debug/tbb_debug.lib)
   set(tbb_runtime_file tbb_debug.dll)
