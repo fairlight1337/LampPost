@@ -12,6 +12,11 @@ elseif(UNIX)
   if("${CMAKE_CXX_COMPILER}" MATCHES "g\\+\\+")
     set(CMAKE_CXX_COMPILER "gcc")
   endif()
+
+  # TBB doesn't know c++ (but does know gcc).
+  if("${CMAKE_CXX_COMPILER}" MATCHES "c\\+\\+")
+    set(CMAKE_CXX_COMPILER "gcc")
+  endif()
 endif()
 
 tbb_build(
