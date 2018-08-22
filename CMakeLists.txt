@@ -133,8 +133,8 @@ if(UNIX)
   # Disable copy on unix
   set(copy_command true)
 elseif(APPLE)
-  set(tbb_lib_file ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/tbb/tbb_cmake_build/tbb_cmake_build_subdir_debug/libtbb_debug.so)
-  set(tbb_runtime_file libtbb_debug.so)
+  set(tbb_lib_file ${CMAKE_CURRENT_SOURCE_DIR}/3rdparty/tbb/tbb_cmake_build/tbb_cmake_build_subdir_debug/libtbb_debug.dylib)
+  set(tbb_runtime_file libtbb_debug.dylib)
 
   # Disable copy on osx
   set(copy_command true)
