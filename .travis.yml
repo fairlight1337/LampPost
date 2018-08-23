@@ -72,6 +72,8 @@ matrix:
       - cd build
       - cmake -DCOVERAGE=1 -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/ -DREADLINE_ROOT=/usr/local/opt/readline ..
       - make
+      - otool -L bin/libtbb_debug.dylib
+      - install_name_tool -change @rpath/libtbb_debug.so @executable_path/libtbb_debug.so
       - make CTEST_OUTPUT_ON_FAILURE=1 test
   - os: osx
     before_install:
@@ -84,6 +86,8 @@ matrix:
       - cd build
       - cmake -DCOVERAGE=1 -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/ -DREADLINE_ROOT=/usr/local/opt/readline ..
       - make
+      - otool -L bin/libtbb_debug.dylib
+      - install_name_tool -change @rpath/libtbb_debug.so @executable_path/libtbb_debug.so
       - make CTEST_OUTPUT_ON_FAILURE=1 test
 
 addons:
