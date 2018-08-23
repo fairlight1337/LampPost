@@ -25,4 +25,4 @@ build_script:
 
 test_script:
  - cmd: ctest -C Debug -VV
- - sh: make test
+ - sh: make CTEST_OUTPUT_ON_FAILURE=1 test
