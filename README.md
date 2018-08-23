@@ -12,11 +12,12 @@ Required build tools:
  * automake
  * autoconf
  * libtool
+ * libssl-dev
 
 ###### On Ubuntu
 
 ```bash
-sudo apt-get install automake autoconf libtool
+sudo apt-get install automake autoconf libtool libssl-dev
 ```
 
 ###### On Windows
@@ -28,6 +29,20 @@ And install CMake:
  * [https://cmake.org/download/](https://cmake.org/download/)
 
 Both have to be added to your `Path` environmental variables (see [here](https://stackoverflow.com/questions/9546324/adding-directory-to-path-environment-variable-in-windows#comment14126970_9546345) for a clue on how to do that).
+
+###### On MacOS X
+
+Install Brew:
+```bash
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" < /dev/null 2> /dev/null
+```
+
+Install the required libraries using Brew:
+```bash
+brew install automake autoconf libtool
+```
+
+
 
 ##### Building in-tree
 
