@@ -73,7 +73,11 @@ matrix:
       - cmake -DCOVERAGE=1 -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/ -DREADLINE_ROOT=/usr/local/opt/readline ..
       - make
       - otool -L bin/libtbb_debug.dylib
+      - install_name_tool -change @rpath/libtbb_debug.dylib @executable_path/libtbb_debug.dylib bin/libtbb_debug.dylib
+      - otool -L bin/libtbb_debug.dylib
+      - otool -L bin/LampPost-bin
       - install_name_tool -change @rpath/libtbb_debug.dylib @executable_path/libtbb_debug.dylib bin/LampPost-bin
+      - otool -L bin/LampPost-bin
       - make CTEST_OUTPUT_ON_FAILURE=1 test
   - os: osx
     before_install:
@@ -87,7 +91,11 @@ matrix:
       - cmake -DCOVERAGE=1 -DOPENSSL_ROOT_DIR=/usr/local/opt/openssl/ -DREADLINE_ROOT=/usr/local/opt/readline ..
       - make
       - otool -L bin/libtbb_debug.dylib
+      - install_name_tool -change @rpath/libtbb_debug.dylib @executable_path/libtbb_debug.dylib bin/libtbb_debug.dylib
+      - otool -L bin/libtbb_debug.dylib
+      - otool -L bin/LampPost-bin
       - install_name_tool -change @rpath/libtbb_debug.dylib @executable_path/libtbb_debug.dylib bin/LampPost-bin
+      - otool -L bin/LampPost-bin
       - make CTEST_OUTPUT_ON_FAILURE=1 test
 
 addons:
