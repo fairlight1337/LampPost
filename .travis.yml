@@ -97,11 +97,11 @@ matrix:
       - install_name_tool -change @rpath/libtbb_debug.dylib @executable_path/libtbb_debug.dylib bin/LampPost-bin
       - install_name_tool -change @rpath/libtbb_debug.dylib @executable_path/libtbb_debug.dylib bin/LampPostConfigurationTest
       - install_name_tool -change @rpath/libtbb_debug.dylib @executable_path/libtbb_debug.dylib bin/PluginManagerConfigurationTest
-      - install_name_tool -change @rpath/libtbb_debug.dylib @executable_path/libtbb_debug.dylib BusTest
-      - install_name_tool -change @rpath/libtbb_debug.dylib @executable_path/libtbb_debug.dylib MessageTest
-      - install_name_tool -change @rpath/libtbb_debug.dylib @executable_path/libtbb_debug.dylib RawDatagramTest
-      - install_name_tool -change @rpath/libtbb_debug.dylib @executable_path/libtbb_debug.dylib DatagramTest
-      - install_name_tool -change @rpath/libtbb_debug.dylib @executable_path/libtbb_debug.dylib DataTest
+      - install_name_tool -change @rpath/libtbb_debug.dylib @executable_path/libtbb_debug.dylib bin/BusTest
+      - install_name_tool -change @rpath/libtbb_debug.dylib @executable_path/libtbb_debug.dylib bin/MessageTest
+      - install_name_tool -change @rpath/libtbb_debug.dylib @executable_path/libtbb_debug.dylib bin/RawDatagramTest
+      - install_name_tool -change @rpath/libtbb_debug.dylib @executable_path/libtbb_debug.dylib bin/DatagramTest
+      - install_name_tool -change @rpath/libtbb_debug.dylib @executable_path/libtbb_debug.dylib bin/DataTest
       - make CTEST_OUTPUT_ON_FAILURE=1 test
 
 addons:
